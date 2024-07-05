@@ -59,7 +59,7 @@ def get_image(camera_id: int, session_id: str, save_path: str, save_to_db: bool,
 
         # Check if the image size is less than a certain size
         if len(response.content) < img_size:
-            print(f"Ignoring image from camera {camera_id} as it is smaller than 10KB")
+            print(f"Ignoring image from camera {camera_id} as it is smaller than {img_size} bytes")
             return False
 
         if save_to_db:
@@ -99,9 +99,9 @@ def scrape(camera_id: int, loop: int, sleep_after_connect: int, sleep_between_do
     
     for i in range(loop):
         if play_video(camera_id, session_id, sleep_between_download, save_path, save_to_db, img_size):
-            print(f"Image saved [{camera_id}]")
+            print(f"Image saved [{camera_id}] [{i}/{loop}]")
         else:
-            print(f"Failed to play video and get image for camera {camera_id}")
+            print(f"Failed to play video and get image for camera {camera_id} [{i}/{loop}]")
 
 
 ### Scrape many cameras in sequential using list

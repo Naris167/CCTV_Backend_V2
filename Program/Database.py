@@ -99,10 +99,23 @@ def retrieve_image(img_id, output_path):
         conn = get_db_connection()
         cur = conn.cursor()
 
-        cur.execute("SELECT Image_data FROM CCTV_images WHERE Img_ID = %s", (img_id,))
-        binary_data = cur.fetchone()[0]
+        # Fetch image data and captured_at timestamp from the database
+        cur.execute("SELECT Cam_ID, Image_data, Captured_at FROM CCTV_images WHERE Img_ID = %s", (img_id,))
+        result = cur.fetchone()
 
-        binary_to_image(binary_data, output_path)
+        if result is None:
+            print(f"No image found with ID {img_id}")
+            return
+
+        cam_id, binary_data, captured_at = result
+
+        # Format the filename
+        current_time = captured_at.strftime("%Y%m%d_%H%M%S")
+        filename = f"camera_{cam_id}_{current_time}.jpg"
+        full_path = os.path.join(output_path, filename)
+
+        # Save the binary data to an image file
+        binary_to_image(binary_data, full_path)
 
         cur.close()
         conn.close()
@@ -110,6 +123,26 @@ def retrieve_image(img_id, output_path):
 
     except Exception as error:
         print(f"Error: {error}")
+
+def fetch_all_images_from_db():
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+
+        # Fetch all image IDs from the database
+        cur.execute("SELECT Img_ID FROM CCTV_images")
+        image_ids = cur.fetchall()
+
+        # Close the connection
+        cur.close()
+        conn.close()
+
+        # Convert list of tuples to list of IDs
+        return [img_id[0] for img_id in image_ids]
+
+    except Exception as error:
+        print(f"Error fetching image IDs: {error}")
+        return []
 
 def get_cam_ids():
     try:
