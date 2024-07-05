@@ -1,0 +1,6 @@
+# Ignore these files
+*.log
+tempCodeRunnerFile.py
+.env
+__pycache__/
+Images/
