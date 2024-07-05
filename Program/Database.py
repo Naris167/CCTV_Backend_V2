@@ -54,7 +54,7 @@ def add_image(cam_id, image_input, captured_at):
         conn.commit()
         cur.close()
         conn.close()
-        print("Image added successfully")
+        # print("Image added successfully")
 
     except Exception as error:
         print(f"Error: {error}")
@@ -74,25 +74,25 @@ def delete_image(img_id):
     except Exception as error:
         print(f"Error: {error}")
 
-def edit_image(img_id, new_image_input=None, new_captured_at=None):
-    try:
-        conn = get_db_connection()
-        cur = conn.cursor()
+# def edit_image(img_id, new_image_input=None, new_captured_at=None):
+#     try:
+#         conn = get_db_connection()
+#         cur = conn.cursor()
 
-        if new_image_input:
-            binary_data = image_to_binary(new_image_input)
-            cur.execute("UPDATE CCTV_images SET Image_data = %s WHERE Img_ID = %s", (binary_data, img_id))
+#         if new_image_input:
+#             binary_data = image_to_binary(new_image_input)
+#             cur.execute("UPDATE CCTV_images SET Image_data = %s WHERE Img_ID = %s", (binary_data, img_id))
 
-        if new_captured_at:
-            cur.execute("UPDATE CCTV_images SET Captured_at = %s WHERE Img_ID = %s", (new_captured_at, img_id))
+#         if new_captured_at:
+#             cur.execute("UPDATE CCTV_images SET Captured_at = %s WHERE Img_ID = %s", (new_captured_at, img_id))
 
-        conn.commit()
-        cur.close()
-        conn.close()
-        print("Image updated successfully")
+#         conn.commit()
+#         cur.close()
+#         conn.close()
+#         print("Image updated successfully")
 
-    except Exception as error:
-        print(f"Error: {error}")
+#     except Exception as error:
+#         print(f"Error: {error}")
 
 def retrieve_image(img_id, output_path):
     try:
@@ -111,15 +111,44 @@ def retrieve_image(img_id, output_path):
     except Exception as error:
         print(f"Error: {error}")
 
+def get_cam_ids():
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+
+        # Query to get all Cam_IDs from CCTV_locations
+        query = "SELECT Cam_ID FROM CCTV_locations"
+
+        # Execute the query
+        cur.execute(query)
+
+        # Fetch all results and store Cam_IDs in a list
+        cam_ids = [row[0] for row in cur.fetchall()]
+
+        # Close the cursor and the connection
+        cur.close()
+        conn.close()
+
+        return cam_ids
+    
+    except Exception as error:
+            print(f"Error: {error}")
+
+
+
 # Example Usage
-# Add an image
-# add_image(7, ".\\Images\\image1.jpg", datetime.now())
+    # Add an image
+    # add_image(7, ".\\Images\\image1.jpg", datetime.now())
 
-# Delete an image by ID
-# delete_image(1)
+    # Delete an image by ID
+    # delete_image(1)
 
-# Edit an image by ID (either update the image data or the captured time or both)
-# edit_image(1, new_image_path='new_path_to_image.jpg', new_captured_at=datetime.now())
+    # Edit an image by ID (either update the image data or the captured time or both)
+    # edit_image(1, new_image_path='new_path_to_image.jpg', new_captured_at=datetime.now())
 
-# Retrieve an image by ID
-# retrieve_image(1, '.\\retrieved_image.jpg')
+    # Retrieve an image by ID
+    # retrieve_image(1, '.\\retrieved_image.jpg')
+
+    # Get Cam_ID
+    # cam_ids_list = get_cam_ids()
+    # print(cam_ids_list)

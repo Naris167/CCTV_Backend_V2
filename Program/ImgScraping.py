@@ -1,9 +1,11 @@
 import time
 import requests
 from requests.exceptions import RequestException
-from typing import Optional
+from typing import Optional, Callable
 from datetime import datetime
 import os
+from datetime import datetime
+from Database import *
 
 """ How this works? 
 1. Make connetion to http://www.bmatraffic.com to get the sessionID.
@@ -28,8 +30,24 @@ def get_session_id(url: str) -> Optional[str]:
         print(f"Error getting session ID: {e}")
         return None
 
+def save_image_to_file(camera_id: int, image_data: bytes, save_path: str) -> bool:
+    current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
+    filename = f"camera_{camera_id}_{current_time}.jpg"
+    full_path = os.path.join(save_path, filename)
+    try:
+        with open(full_path, 'wb') as f:
+            f.write(image_data)
+        print(f"Image saved as {full_path}")
+        return True
+    except IOError as e:
+        print(f"Error saving image: {e}")
+        return False
 
-def get_image(camera_id: int, session_id: str, save_path: str) -> bool:
+def save_image_to_db(camera_id: int, image_data: bytes) -> bool:
+    add_image(camera_id, image_data, datetime.now())
+    return True
+
+def get_image(camera_id: int, session_id: str, save_path: str, save_to_db: bool, img_size: int) -> bool:
     url = f"{BASE_URL}/show.aspx"
     headers = {
         'Cookie': f'ASP.NET_SessionId={session_id};',
@@ -38,20 +56,21 @@ def get_image(camera_id: int, session_id: str, save_path: str) -> bool:
     try:
         response = requests.get(url, headers=headers)
         response.raise_for_status()
-        # Create filename with camera_id and current date and time
-        current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
-        filename = f"camera_{camera_id}_{current_time}.jpg"
-        full_path = os.path.join(save_path, filename)
-        with open(full_path, 'wb') as f:
-            f.write(response.content)
-        print(f"Image saved as {full_path}")
-        return True
+
+        # Check if the image size is less than a certain size
+        if len(response.content) < img_size:
+            print(f"Ignoring image from camera {camera_id} as it is smaller than 10KB")
+            return False
+
+        if save_to_db:
+            return save_image_to_db(camera_id, response.content)
+        else:
+            return save_image_to_file(camera_id, response.content, save_path)
     except RequestException as e:
         print(f"Error getting image: {e}")
         return False
 
-
-def play_video(camera_id: int, session_id: str, sleep: int, save_path: str) -> bool:
+def play_video(camera_id: int, session_id: str, sleep: int, save_path: str, save_to_db: bool, img_size: int) -> bool:
     url = f"{BASE_URL}/PlayVideo.aspx?ID={camera_id}"
     headers = {
         'Referer': f'{BASE_URL}/index.aspx',
@@ -62,25 +81,25 @@ def play_video(camera_id: int, session_id: str, sleep: int, save_path: str) -> b
         response = requests.get(url, headers=headers)
         response.raise_for_status()
         time.sleep(sleep)  # Give some time for the video to start streaming
-        return get_image(camera_id, session_id, save_path)
+        return get_image(camera_id, session_id, save_path, save_to_db, img_size)
     except RequestException as e:
         print(f"Error playing video: {e}")
         return False
 
-def scrape(camera_id: int, loop: int, sleep_after_connect: int, sleep_between_download: int, save_path: str):
+def scrape(camera_id: int, loop: int, sleep_after_connect: int, sleep_between_download: int, save_path: str, save_to_db: bool, img_size: int):
     session_id = get_session_id(BASE_URL)
     if not session_id:
-        print("Failed to obtain session ID")
+        print(f"Failed to obtain session ID [{camera_id}]")
         return
 
-    print(f"Session ID [{camera_id}] : {session_id}")
+    print(f"Session ID [{camera_id}]: {session_id}")
     time.sleep(sleep_after_connect)
 
-    print(f"Playing video... [{camera_id}]")
+    print(f"Playing video for [{camera_id}] ...")
     
     for i in range(loop):
-        if play_video(camera_id, session_id, sleep_between_download, save_path):
-            print(f"Image saved for camera {camera_id}")
+        if play_video(camera_id, session_id, sleep_between_download, save_path, save_to_db, img_size):
+            print(f"Image saved [{camera_id}]")
         else:
             print(f"Failed to play video and get image for camera {camera_id}")
 
