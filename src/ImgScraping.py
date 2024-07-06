@@ -1,10 +1,9 @@
 import time
 import requests
 from requests.exceptions import RequestException
-from typing import Optional, Callable
+from typing import Optional
 from datetime import datetime
 import os
-from datetime import datetime
 from Database import *
 
 """ How this works? 
@@ -87,6 +86,7 @@ def play_video(camera_id: int, session_id: str, sleep: int, save_path: str, save
         return False
 
 def scrape(camera_id: int, loop: int, sleep_after_connect: int, sleep_between_download: int, save_path: str, save_to_db: bool, img_size: int):
+    print(f"Getting sessionID for [{camera_id}]")
     session_id = get_session_id(BASE_URL)
     if not session_id:
         print(f"Failed to obtain session ID [{camera_id}]")
@@ -99,9 +99,33 @@ def scrape(camera_id: int, loop: int, sleep_after_connect: int, sleep_between_do
     
     for i in range(loop):
         if play_video(camera_id, session_id, sleep_between_download, save_path, save_to_db, img_size):
-            print(f"Image saved [{camera_id}] [{i}/{loop}]")
+            print(f"Image saved [{camera_id}] [{i+1}/{loop}]")
         else:
             print(f"Failed to play video and get image for camera {camera_id} [{i}/{loop}]")
+
+def scrape_sequential(camera_ids, loop, sleep_after_connect, sleep_between_download, save_path, save_to_db, img_size, refresh_interval, progress_gui):
+    print(f"Getting sessionID for [{camera_ids}]")
+    session_id = get_session_id(BASE_URL)
+    if not session_id:
+        print("Failed to obtain initial session ID")
+        return
+
+    for index, camera_id in enumerate(camera_ids):
+        if index > 0 and index % refresh_interval == 0:
+            session_id = get_session_id(BASE_URL)
+            if not session_id:
+                print(f"Failed to refresh session ID after {index} images")
+                return
+
+        print(f"Session ID [{camera_id}]: {session_id}")
+        time.sleep(sleep_after_connect)
+
+        for i in range(loop):
+            if play_video(camera_id, session_id, sleep_between_download, save_path, save_to_db, img_size):
+                print(f"Image saved [{camera_id}] [{i+1}/{loop}]")
+            else:
+                print(f"Failed to play video and get image for camera {camera_id} [{i}/{loop}]")
+        progress_gui.increment_progress()
 
 
 ### Scrape many cameras in sequential using list
