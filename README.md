@@ -14,7 +14,7 @@ This project scrapes images from the [BMATraffic CCTV website](http://www.bmatra
 
 Before you begin, ensure you have met the following requirements:
 
-- You have installed Python 3.x and pip.
+- You have installed Python 3.12.4 and pip.
 - You have a PostgreSQL database setup.
 - You have access to the [BMATraffic CCTV website](http://www.bmatraffic.com).
 
