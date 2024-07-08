@@ -15,7 +15,7 @@ sleep_after_connect = 1          # Waiting time (in seconds) after obtaining the
 sleep_between_download = 1       # Waiting time (in seconds) between each image download
 
 # Storage Settings
-save_path = "./Images/"          # Directory path to save images when 'save_to_db' is set to False
+save_path = "./images/"          # Directory path to save images when 'save_to_db' is set to False
 save_to_db = False               # Set to True to save images to the database
 
 # Image Quality Settings
@@ -27,8 +27,6 @@ refresh_interval = 100           # Number of images scraped before refreshing th
 
 # Multi-threading Settings
 max_workers = 2                  # Maximum number of concurrent connections to scrape images (applicable in multi-threading mode)
-
-
 
 # Create a ProgressGUI instance
 progress_gui = ProgressGUI(total_tasks=len(camera_ids))
