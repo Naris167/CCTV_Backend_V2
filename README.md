@@ -88,6 +88,9 @@ refresh_interval = 100           # Number of images scraped before refreshing th
 max_workers = 2                  # Maximum number of concurrent connections to scrape images (applicable in multi-threading mode)
 ```
 
+> **Warning:** ⚠️ 
+> Setting the `max_workers` too high might result in an IP ban from the server. Use multi-threading with caution and consider the server's capacity and policies.
+
 To run the scraping tasks, execute:
 
 ```bash

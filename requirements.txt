@@ -8,3 +8,4 @@ geopy
 matplotlib
 Pillow
 beautifulsoup4
+openpyxl
