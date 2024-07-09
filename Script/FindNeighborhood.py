@@ -5,7 +5,7 @@ from geopy.distance import great_circle
 import matplotlib.pyplot as plt
 
 # Load the data
-file_path = "C:\\Users\\naris\\Desktop\STIU\\2024-1 Internship\\Gistda\\2024-07-01 Image Scraping\\Data\\locationForClustering.xlsx"
+file_path = "C:\\Users\\naris\\Desktop\STIU\\2024-1 Internship\\Gistda\\2024-07-01 Image Scraping\\Data\\cctv_locations_master - Copy.xlsx"
 df = pd.read_excel(file_path)
 
 # Extract latitude and longitude into a numpy array

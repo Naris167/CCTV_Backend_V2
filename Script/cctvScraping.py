@@ -12,7 +12,7 @@ data_folder = os.path.join(os.path.dirname(__file__), '..', 'data')
 
 # Function to extract and process CCTV data from the webpage
 def extract_cctv_data(url):
-    print(f"Connecting to {url}")
+    print(f"\nConnecting to {url}")
     response = requests.get(url)
     response.raise_for_status()  # Check if the request was successful
 
@@ -77,7 +77,7 @@ def save_to_excel(df, folder_path):
     filename = f"cctv_locations_additional_{timestamp}.xlsx"
     file_path = os.path.join(folder_path, filename)
     df.to_excel(file_path, index=False)
-    print(f"Data saved to {file_path}")
+    print(f"Data saved to {file_path}\n")
 
 # Main function to run the script
 def main():

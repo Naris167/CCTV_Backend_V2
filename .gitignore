@@ -2,6 +2,8 @@
 *.log
 tempCodeRunnerFile.py
 .env
+.env.local
+.env.prod
 __pycache__/
 Images/
 *.zip

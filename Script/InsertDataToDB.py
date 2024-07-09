@@ -1,9 +1,27 @@
 import pandas as pd
 import psycopg2
+import os
+from dotenv import load_dotenv
 
-# Define the function to get a database connection
+# Load environment variables from .env file
+load_dotenv('.env.prod')
+
+# Verify environment variables
+# print(f"DB_NAME: {os.getenv('DB_NAME')}")
+# print(f"DB_USER: {os.getenv('DB_USER')}")
+# print(f"DB_PASSWORD: {os.getenv('DB_PASSWORD')}")
+# print(f"DB_HOST: {os.getenv('DB_HOST')}")
+# print(f"DB_PORT: {os.getenv('DB_PORT')}")
+
 def get_db_connection():
-    return psycopg2.connect("dbname=postgres user=postgres password=Pass@1373")
+    return psycopg2.connect(
+        dbname=os.getenv('DB_NAME'),
+        user=os.getenv('DB_USER'),
+        password=os.getenv('DB_PASSWORD'),
+        host=os.getenv('DB_HOST'),
+        port=os.getenv('DB_PORT')
+    )
+
 
 # Define the function to import data from Excel to the database
 def import_excel_to_db(excel_file_path):
@@ -18,7 +36,7 @@ def import_excel_to_db(excel_file_path):
         # Iterate over the rows of the dataframe and insert each row into the database
         for index, row in df.iterrows():
             cur.execute("""
-                INSERT INTO CCTV_locations (Cam_ID, Cam_Code, Cam_Group, Status, Cam_Name, Cam_Name_e, Cam_Location, Cam_Direction, Latitude, Longitude, IP, Icon)
+                INSERT INTO cctv_locations_preprocessing (Cam_ID, Cam_Code, Cam_Group, Status, Cam_Name, Cam_Name_e, Cam_Location, Cam_Direction, Latitude, Longitude, IP, Icon)
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 """, (
                 row['Cam_ID'],
@@ -48,7 +66,7 @@ def import_excel_to_db(excel_file_path):
         print(f"Error: {error}")
 
 # Path to your Excel file
-excel_file_path = "C:\\Users\\naris\\Desktop\STIU\\2024-1 Internship\\Gistda\\2024-07-01 Image Scraping\\Data\\locationForDB.xlsx"
+excel_file_path = "C:\\Users\\naris\\Desktop\STIU\\2024-1 Internship\\Gistda\\2024-07-01 Image Scraping\\Data\\locationForDB-2.xlsx"
 
 # Import the data
 import_excel_to_db(excel_file_path)

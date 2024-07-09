@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 from datetime import datetime
 
 # Load environment variables from .env file
-load_dotenv()
+load_dotenv('.env.prod')
 
 # Verify environment variables
 # print(f"DB_NAME: {os.getenv('DB_NAME')}")
@@ -150,7 +150,7 @@ def get_cam_ids():
         cur = conn.cursor()
 
         # Query to get all Cam_IDs from CCTV_locations
-        query = "SELECT Cam_ID FROM CCTV_locations"
+        query = "SELECT Cam_ID FROM cctv_locations_preprocessing"
 
         # Execute the query
         cur.execute(query)
