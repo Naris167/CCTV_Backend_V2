@@ -9,3 +9,4 @@ matplotlib
 Pillow
 beautifulsoup4
 openpyxl
+distance-metrics
