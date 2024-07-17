@@ -140,3 +140,39 @@ CREATE TABLE cctv_images (
     Captured_at TIMESTAMP
 );
 ```
+
+
+# Summary of Approach for Converting `eps` Value for DBSCAN
+
+## Purpose:
+The script `FindOptimalEPS.py` is used to accurately determine the `eps` value for the DBSCAN clustering algorithm in meters when working with `latitude` and `longitude` coordinates. The conversion method provides a precision of approximately ±1-5 meters for distances less than 2236 meters. This precision value is approximated and can vary slightly depending on the specific coordinates and distances involved.
+
+## Reason for Complexity:
+1. **Precision Requirements:** Direct conversion between geographic coordinates (latitude and longitude) and meters requires high precision for accurate clustering in small scale like in the range of 1000 meters.
+2. **Brute Force Method:** Simple Euclidean distance formulas and standard conversion factors didn't provide the required precision. Therefore, a brute force method was used to find the most precise `eps` value.
+3. **Reason for Not Using Standard Conversion Factors:** Standard methods using approximate conversion factors for latitude (111320.0 meters per degree) and longitude (111320.0 * cos(latitude)) were not accurate enough for the required precision. The brute force method provided a more precise `eps` value by iteratively testing and refining the conversion.
+
+## Steps Taken:
+
+1. **Define Coordinates and Known Distance:**
+   - Two specific coordinates (latitude and longitude) were used.
+      - Coordinate 1 = 13.769741049467855, 100.57298223507024
+      - Coordinate 2 = 13.789905618799368, 100.57434272643398
+      - Actual Distance in Km = 2235.799051227861
+
+2. **Brute Force Method to Find `eps`:**
+   - Incrementally tested different `eps` values to find the one that correctly separates the given coordinates.
+   - Used DBSCAN with the Haversine metric to ensure the clustering result matched the expected output.
+
+3. **Determine Conversion Ratio (Distance Per Degree):**
+   - Once the optimal `eps` value was found, the ratio of the actual distance in meters to the `eps` value in degrees was calculated.
+   - This ratio, referred to as `distance_per_degree`, is used to convert any distance in meters to the corresponding value in degrees.
+
+4. **Implementation of Conversion Function:**
+   - Created a function that converts a distance in meters to degrees using the `distance_per_degree` ratio.
+   - Ensured high precision in the calculations using Python’s `decimal` module.
+
+## Key Terms:
+- **Optimal `eps` Value:** The precise `eps` value in degrees found through the brute force method that can precisely separate 2 coordinate.
+- **Distance Per Degree (Ratio):** The ratio used to convert any distance in meters to degrees, ensuring accurate clustering with DBSCAN.
+

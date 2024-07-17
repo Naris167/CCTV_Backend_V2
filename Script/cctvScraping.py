@@ -7,8 +7,8 @@ from datetime import datetime
 
 # URL to connect to
 url = "http://www.bmatraffic.com/index.aspx"
-master_file_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'cctv_locations_master.xlsx')
-data_folder = os.path.join(os.path.dirname(__file__), '..', 'data')
+master_file_path = "data/cctv_locations_master.xlsx"
+data_folder = "data/"
 
 # Function to extract and process CCTV data from the webpage
 def extract_cctv_data(url):

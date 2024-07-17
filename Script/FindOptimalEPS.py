@@ -1,19 +1,23 @@
-import pandas as pd
 import numpy as np
 from sklearn.cluster import DBSCAN
 from decimal import Decimal, getcontext
 
 """
-This script used brute force method to find the most precise value for `eps` value
-that separate 2 coordinates (latitude and longitude).
+This script determines the precise `eps` value for the DBSCAN algorithm in meters
+when using latitude and longitude coordinates. Due to the complexity of accurately
+converting between geographic coordinates and meters, a brute force method is used
+to find the optimal `eps` value. This value is then used to calculate a conversion
+ratio (`distance_per_degree`) that can convert any distance in meters to degrees,
+ensuring accurate clustering. The precision of this method is approximately ±1-5 meters
+for distances less than 2236 meters.
 
 These 2 coordinates are used 
 position 1 = 13.769741049467855, 100.57298223507024
 position 2 = 13.789905618799368, 100.57434272643398
 distance in km (actual) = 2235.799051227861
-
-
 distance in degree = 0.00035269290326066755967941712679447618938866071403026580810546874999
+
+distance_per_degree = d(Km)/d(Degree)
 """
 
 
@@ -22,6 +26,10 @@ def find_eps_value(coordinates, target_array, eps, base_increment, working_preci
     getcontext().prec = decimal_places + 5  # Adding some buffer for calculations
 
     while working_precision > Decimal(f'1e-{decimal_places}'):
+        '''
+        `working_precision` start from 10^-4. The loop continues until `working_precision` is smaller than or equal to 10^-50 (very small number)
+        When the inner loop found the correct number for each decimal, it stop and return the the outer loop, which move to work on the next decimal.
+        '''
         while eps < 1:
             print(f"Testing eps = {eps}")
 
@@ -46,7 +54,7 @@ def find_eps_value(coordinates, target_array, eps, base_increment, working_preci
 
     return eps
 
-# Define the coordinates directly
+# Define coordinates
 coordinates = np.array([
     [13.769741049467855, 100.57298223507024],
     [13.789905618799368, 100.57434272643398]
@@ -55,7 +63,16 @@ coordinates = np.array([
     # distance = 2235.799051227861
 ])
 
-# Define the target array we are looking for
+'''
+Define the target array we are looking for
+'eps' is like the distance between 2 points
+When `eps` is too big, it group 2 coordinates together. [0, 0] mean 2 coordinates are in the same group.
+When `eps` is too small, it consider 2 coordinates as difference group. [0, 1] mean 2 coordinates are not in the same group. 
+
+Initially, the eps will be set to be too small so 2 coordinates are not in the same group [0, 1]
+Script will increment the decimal until 2 coordinates are in the same group [0, 0]
+Once it found the correct number, it move to the next decimal place and repeate the same step until it reach the desired decimal places.
+'''
 target_array = np.array([0, 0])
 
 # Initialize eps

@@ -66,7 +66,7 @@ def import_excel_to_db(excel_file_path):
         print(f"Error: {error}")
 
 # Path to your Excel file
-excel_file_path = "C:\\Users\\naris\\Desktop\STIU\\2024-1 Internship\\Gistda\\2024-07-01 Image Scraping\\Data\\locationForDB-2.xlsx"
+excel_file_path = "Data/locationForDB-2.xlsx"
 
 # Import the data
 import_excel_to_db(excel_file_path)
