@@ -1,6 +1,6 @@
 import time
 import requests
-from requests.exceptions import RequestException
+from requests.exceptions import RequestException, Timeout
 from typing import Optional
 from datetime import datetime
 import os
@@ -18,12 +18,15 @@ BASE_URL = "http://www.bmatraffic.com"
 
 def get_session_id(url: str) -> Optional[str]:
     try:
-        response = requests.get(url)
+        response = requests.get(url, timeout=60)  # Timeout set to 60 seconds
         response.raise_for_status()
         cookie = response.headers.get('Set-Cookie', '')
         if cookie:
             session_id = cookie.split("=")[1].split(";")[0]
             return session_id
+        return None
+    except Timeout:
+        print("Error: Request timed out while getting session ID")
         return None
     except RequestException as e:
         print(f"Error getting session ID: {e}")

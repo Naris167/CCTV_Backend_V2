@@ -2,6 +2,8 @@ import concurrent.futures
 from ImgScraping import scrape, scrape_sequential
 from Database import get_cam_ids
 from progress_gui import ProgressGUI
+import logging
+import concurrent.futures
 
 # Configuration
 
@@ -28,32 +30,42 @@ refresh_interval = 100           # Number of images scraped before refreshing th
 # Multi-threading Settings
 max_workers = 20                  # Maximum number of concurrent connections to scrape images (applicable in multi-threading mode)
 
+# Configure logging
+# logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # Create a ProgressGUI instance
 progress_gui = ProgressGUI(total_tasks=len(camera_ids))
 
 # Function to scrape for a specific camera ID
 def scrape_camera(camera_id):
+    logging.debug(f"Starting scrape for camera {camera_id}")
     scrape(camera_id, img_per_cam, sleep_after_connect, sleep_between_download, save_path, save_to_db, img_size)
     progress_gui.increment_progress()
+    logging.debug(f"Completed scrape for camera {camera_id}")
 
 def scrape_sequential_mode(camera_ids):
+    logging.debug("Starting sequential scraping mode")
     scrape_sequential(camera_ids, img_per_cam, sleep_after_connect, sleep_between_download, save_path, save_to_db, img_size, refresh_interval, progress_gui)
     progress_gui.quit()
+    logging.debug("Completed sequential scraping mode")
 
 # Run the scraping tasks with ThreadPoolExecutor
 def run_scraping_tasks():
     if multi_threading:
+        logging.debug("Starting multithreading mode")
         with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
             # Submit tasks to the executor
             futures = [executor.submit(scrape_camera, camera_id) for camera_id in camera_ids]
-            # Wait for all tasks to complete
-            concurrent.futures.wait(futures)
+            # Wait for all tasks to complete with a timeout
+            concurrent.futures.wait(futures, timeout=60)  # 300 seconds timeout, adjust as needed
         # Close the progress bar after all tasks are finished
         progress_gui.quit()
+        logging.debug("Completed multithreading mode")
     else:
         # Run sequential scraping
         scrape_sequential_mode(camera_ids)
 
 # Start the progress GUI and run the scraping tasks
+logging.debug("Starting Progress GUI and scraping tasks")
 progress_gui.run(run_scraping_tasks, ())
+logging.debug("Completed scraping tasks")

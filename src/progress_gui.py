@@ -2,14 +2,15 @@ import tkinter as tk
 from tkinter import ttk
 import threading
 import time
+import logging
 
 class ProgressGUI:
     def __init__(self, total_tasks):
         self.total_tasks = total_tasks
         self.completed_tasks = 0
         self.root = tk.Tk()
-        self.root.title("Progress")
-        self.root.geometry("300x120")
+        self.root.title("BMA CCTV Scraping Progress")
+        self.root.geometry("350x120")
 
         self.start_time = time.time()
         self.elapsed_time_var = tk.StringVar()
@@ -38,10 +39,12 @@ class ProgressGUI:
         self.progress_label.config(text=f"Task completed: {self.completed_tasks}/{self.total_tasks}")
         self.root.update_idletasks()
 
+    # logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
+
     def increment_progress(self):
-        with threading.Lock():
-            self.completed_tasks += 1
-            self.update_progress()
+        logging.debug("Incrementing progress")
+        self.completed_tasks += 1
+        self.root.after(0, self.update_progress)
 
     def run(self, target, args):
         # Run the target function in a separate thread
