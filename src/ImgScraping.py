@@ -4,6 +4,8 @@ from requests.exceptions import RequestException, Timeout
 from typing import Optional
 from datetime import datetime
 import os
+import re
+import ast
 from Database import *
 
 """ How this works? 
@@ -129,6 +131,52 @@ def scrape_sequential(camera_ids, loop, sleep_after_connect, sleep_between_downl
             else:
                 print(f"Failed to play video and get image for camera {camera_id} [{i}/{loop}]")
         progress_gui.increment_progress()
+
+
+def get_cam_ids_from_bma(url = BASE_URL):
+    print(f"\n[SCRAPER] Getting camera ID from {url}")
+    response = requests.get(url)
+    response.raise_for_status()  # Check if the request was successful
+
+    # Find the var locations = [...] data
+    data_pattern = re.compile(r"var locations = (\[.*?\]);", re.DOTALL)
+    match = data_pattern.search(response.text)
+
+    if match:
+        data_string = match.group(1)
+        
+        # Convert the JavaScript array to a Python list using ast.literal_eval
+        json_data = ast.literal_eval(data_string)
+
+        # Process data to use the specified column names
+        processed_data = []
+        for item in json_data:
+            code_match = re.match(r'^[A-Z0-9\-]+', item[1])
+            code = code_match.group(0) if code_match else ''
+            cam_name = item[1][len(code):].strip() if code else item[1]
+            
+            processed_item = (
+                item[0],       # ID
+                code or None,          # Code
+                cam_name or None,      # Cam_Name
+                item[2] or None,       # Cam_Name_e
+                item[3] or None,       # Cam_Location
+                item[4] or None,       # Cam_Direction
+                item[5] or None,       # Latitude
+                item[6] or None,       # Longitude
+                item[7] or None,       # IP
+                item[8] or None        # Icon
+            )
+            processed_data.append(processed_item)
+        
+        print("[SCRAPER] Successfully getting camera ID.\n")
+        return processed_data
+    else:
+        print("[SCRAPER] Error getting camera ID. Defaulting to CCTV List database.\n")
+        processed_data = get_cam_ids_from_db()
+        return processed_data
+
+
 
 
 ### Scrape many cameras in sequential using list

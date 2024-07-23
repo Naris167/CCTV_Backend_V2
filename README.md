@@ -66,7 +66,7 @@ Example configuration in `main.py`:
 
 ```python
 # Camera Settings
-camera_ids = get_cam_ids()       # List of camera IDs from the database
+camera_ids = get_cam_ids_from_db()       # List of camera IDs from the database
 img_per_cam = 1                  # Number of images to scrape per camera
 
 # Timing Settings
@@ -118,26 +118,26 @@ python src/main.py
 ```sql
 -- Create the cctv_locations_preprocessing table
 CREATE TABLE cctv_locations_preprocessing (
-    Cam_ID INT PRIMARY KEY NOT NULL,
-    Cam_Code VARCHAR(50),
+   Cam_ID INT PRIMARY KEY NOT NULL,
+   Cam_Code VARCHAR(50),
 	Cam_Group VARCHAR(50),
-    Status VARCHAR(255),
-    Cam_Name TEXT,
-    Cam_Name_e TEXT,
-    Cam_Location TEXT,
-    Cam_Direction TEXT,
-    Latitude DOUBLE PRECISION,
-    Longitude DOUBLE PRECISION,
-    IP VARCHAR(50),
-    Icon VARCHAR(100)
+   Cam_Name TEXT,
+   Cam_Name_e TEXT,
+   Cam_Location TEXT,
+   Cam_Direction TEXT,
+   Latitude DOUBLE PRECISION,
+   Longitude DOUBLE PRECISION,
+   IP VARCHAR(50),
+   Icon VARCHAR(100)
+   Verify BOOLEAN DEFAULT FALSE;
 );
 
 -- Create the CCTV_images table with a foreign key to CCTV_locations
 CREATE TABLE cctv_images (
-    Img_ID SERIAL PRIMARY KEY NOT NULL,
-    Cam_ID INT NOT NULL REFERENCES cctv_locations_preprocessing(Cam_ID),
-    Image_data BYTEA,
-    Captured_at TIMESTAMP
+   Img_ID SERIAL PRIMARY KEY NOT NULL,
+   Cam_ID INT NOT NULL REFERENCES cctv_locations_preprocessing(Cam_ID),
+   Image_data BYTEA,
+   Captured_at TIMESTAMP
 );
 ```
 

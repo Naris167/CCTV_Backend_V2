@@ -12,18 +12,18 @@ class ProgressGUI:
         self.root.title("BMA CCTV Scraping Progress")
         self.root.geometry("350x120")
 
-        self.start_time = time.time()
-        self.elapsed_time_var = tk.StringVar()
-        self.elapsed_time_var.set("Elapsed time: 00:00:00")
-        self.timer_label = tk.Label(self.root, textvariable=self.elapsed_time_var)
-        self.timer_label.pack()
-
         self.progress_var = tk.IntVar()
         self.progress_bar = ttk.Progressbar(self.root, maximum=self.total_tasks, variable=self.progress_var)
         self.progress_bar.pack(pady=20)
 
         self.progress_label = tk.Label(self.root, text=f"Task completed: 0/{self.total_tasks}")
         self.progress_label.pack()
+
+        self.start_time = time.time()
+        self.elapsed_time_var = tk.StringVar()
+        self.elapsed_time_var.set("Elapsed time: 00:00:00")
+        self.timer_label = tk.Label(self.root, textvariable=self.elapsed_time_var)
+        self.timer_label.pack()
 
         self.update_timer()
 
