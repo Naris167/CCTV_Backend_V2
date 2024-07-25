@@ -66,7 +66,7 @@ Example configuration in `main.py`:
 
 ```python
 # Camera Settings
-camera_ids = get_cam_ids_from_db()       # List of camera IDs from the database
+camera_ids = startUpdate(170)    # List of online CCTV IDs + update CCTV info in DB + distance in meter for clustering
 img_per_cam = 1                  # Number of images to scrape per camera
 
 # Timing Settings
@@ -75,17 +75,17 @@ sleep_between_download = 1       # Waiting time (in seconds) between each image 
 
 # Storage Settings
 save_path = "./images/"          # Directory path to save images when 'save_to_db' is set to False
-save_to_db = False               # Set to True to save images to the database
+save_to_db = True               # Set to True to save images to the database
 
 # Image Quality Settings
 img_size = 5120                  # Minimum acceptable image size in bytes (images smaller than this will be skipped)
 
 # Mode Settings
-multi_threading = False          # Enable multi-threading for scraping (recommended for >3-4 images per camera)
+multi_threading = True          # Enable multi-threading for scraping (recommended for >3-4 images per camera)
 refresh_interval = 100           # Number of images scraped before refreshing the session ID (applicable in sequential mode)
 
 # Multi-threading Settings
-max_workers = 2                  # Maximum number of concurrent connections to scrape images (applicable in multi-threading mode)
+max_workers = 20                  # Maximum number of concurrent connections to scrape images (applicable in multi-threading mode)
 ```
 
 > **Warning:** ⚠️ 

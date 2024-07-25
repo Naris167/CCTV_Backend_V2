@@ -1,7 +1,8 @@
 import psycopg2
 import os
 from dotenv import load_dotenv
-from datetime import datetime
+from utils import image_to_binary, binary_to_image
+
 
 # Load environment variables from .env file
 load_dotenv('.env.local')
@@ -24,23 +25,6 @@ def get_db_connection():
     )
 
 
-def image_to_binary(image_input):
-    if isinstance(image_input, bytes):
-        # If image_input is already in bytes, return it directly
-        return psycopg2.Binary(image_input)
-    elif isinstance(image_input, str):
-        # If image_input is a string (file path), read the file and return the binary data
-        with open(image_input, 'rb') as file:
-            return psycopg2.Binary(file.read())
-    else:
-        raise ValueError("Invalid input type for image_to_binary function.")
-
-
-def binary_to_image(binary_data, output_path):
-    with open(output_path, 'wb') as file:
-        file.write(binary_data)
-
-
 def add_image(cam_id, image_input, captured_at):
     try:
         conn = get_db_connection()
@@ -59,7 +43,7 @@ def add_image(cam_id, image_input, captured_at):
         # print("Image added successfully")
 
     except Exception as error:
-        print(f"Error: {error}")
+        print(f"[DATABASE] Error: {error}")
 
 
 def delete_image(img_id):
@@ -72,10 +56,10 @@ def delete_image(img_id):
         conn.commit()
         cur.close()
         conn.close()
-        print("Image deleted successfully")
+        print("[DATABASE] Image deleted successfully")
 
     except Exception as error:
-        print(f"Error: {error}")
+        print(f"[DATABASE] Error: {error}")
 
 
 def retrieve_images(cam_id, start_date_time, end_date_time, output_path):
@@ -93,7 +77,7 @@ def retrieve_images(cam_id, start_date_time, end_date_time, output_path):
         results = cur.fetchall()
 
         if not results:
-            print(f"No images found for camera ID {cam_id} within the specified time range")
+            print(f"[DATABASE] No images found for camera ID {cam_id} within the specified time range")
             return
 
         for result in results:
@@ -109,33 +93,59 @@ def retrieve_images(cam_id, start_date_time, end_date_time, output_path):
 
         cur.close()
         conn.close()
-        print("Images retrieved and saved successfully")
+        print("[DATABASE] Images retrieved and saved successfully")
 
     except Exception as e:
-        print(f"An error occurred: {e}")
+        print(f"[DATABASE] Error: {e}")
 
 
-def fetch_all_images_from_db():
+def add_camRecord(camera_data):
+    #Accept list of tuple
     try:
         conn = get_db_connection()
         cur = conn.cursor()
 
-        # Fetch all image IDs from the database
-        cur.execute("SELECT Img_ID FROM CCTV_images")
-        image_ids = cur.fetchall()
+        # Query to check if the camera already exists in the database
+        check_query = "SELECT 1 FROM cctv_locations_preprocessing WHERE Cam_ID = %s"
+        insert_query = """
+            INSERT INTO cctv_locations_preprocessing (
+                Cam_ID, Cam_Code, Cam_Name, Cam_Name_e, Cam_Location, 
+                Cam_Direction, Latitude, Longitude, IP, Icon
+            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """
 
-        # Close the connection
+        new_cameras_count = 0
+
+        for cam in camera_data:
+            cam_id, code, cam_name, cam_name_e, cam_location, cam_direction, latitude, longitude, ip, icon = cam
+
+            # Check if the camera already exists
+            cur.execute(check_query, (cam_id,))
+            exists = cur.fetchone()
+            
+            if not exists:
+                # Insert the new camera data into the database
+                cur.execute(insert_query, (cam_id, code, cam_name, cam_name_e, cam_location, cam_direction, latitude, longitude, ip, icon))
+                new_cameras_count += 1
+                
+        # Commit the transaction
+        conn.commit()
+
+        # Close the cursor and connection
         cur.close()
         conn.close()
 
-        # Convert list of tuples to list of IDs
-        return [img_id[0] for img_id in image_ids]
+        if new_cameras_count > 0:
+            print(f"[DATABASE] {new_cameras_count} new cameras were added to the database.\n")
+        else:
+            print("[DATABASE] No new cameras were added to the database.\n")
 
-    except Exception as error:
-        print(f"Error fetching image IDs: {error}")
-        return []
+    except Exception as e:
+        print(f"[DATABASE] An error occurred: {e}\n")
 
-def get_cam_ids_from_db():
+
+def retrieve_camID_DB():
+    #Return list of camID
     try:
         conn = get_db_connection()
         cur = conn.cursor()
@@ -159,57 +169,56 @@ def get_cam_ids_from_db():
             print(f"[DATABASE] Error: {error}")
 
 
-def insert_camera_info_into_db(camera_data):
+def update_camCluster(clustered_data):
     try:
         conn = get_db_connection()
         cur = conn.cursor()
 
-        # Query to check if the camera already exists in the database
-        check_query = "SELECT 1 FROM cctv_locations_preprocessing WHERE Cam_ID = %s"
-        insert_query = """
-            INSERT INTO cctv_locations_preprocessing (
-                Cam_ID, Cam_Code, Cam_Name, Cam_Name_e, Cam_Location, 
-                Cam_Direction, Latitude, Longitude, IP, Icon
-            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-        """
+        # SQL command to update the Cam_Group based on Cam_ID
+        update_query = "UPDATE cctv_locations_preprocessing SET Cam_Group = %s WHERE Cam_ID = %s"
 
-        new_cameras_count = 0
-        online_cam_ids = []
-
-        for cam in camera_data:
-            cam_id, code, cam_name, cam_name_e, cam_location, cam_direction, latitude, longitude, ip, icon = cam
-
-            # Add online camera to the list
-            online_cam_ids.append(cam_id)
-
-            # Check if the camera already exists
-            cur.execute(check_query, (cam_id,))
-            exists = cur.fetchone()
+        # Iterate over each camera in the clustered_data
+        for cam_id, label, lat, lon in clustered_data:
+            cur.execute(update_query, (str(label), int(cam_id)))
             
-            if not exists:
-                # Insert the new camera data into the database
-                cur.execute(insert_query, (cam_id, code, cam_name, cam_name_e, cam_location, cam_direction, latitude, longitude, ip, icon))
-                new_cameras_count += 1
-                
-        # Commit the transaction
+            # Check if the update was successful or not
+            if cur.rowcount == 0:
+                print(f"[DATABASE] Cannot update cluster for Cam[{cam_id}]. Record not found in the database.")
+
+        # Commit the changes to the database
         conn.commit()
+
+    except Exception as e:
+        print(f"[DATABASE] Error: {e}")
+    finally:
+        # Close the cursor and connection
+        cur.close()
+        conn.close()
+
+
+def retrieve_camLocation():
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+
+        # Query to retrieve Cam_ID, Latitude, and Longitude
+        query = "SELECT Cam_ID, Latitude, Longitude FROM cctv_locations_preprocessing"
+
+        # Execute the query
+        cur.execute(query)
+
+        # Fetch all results
+        cam_locations = cur.fetchall()  # This will return a list of tuples
 
         # Close the cursor and connection
         cur.close()
         conn.close()
 
-        if new_cameras_count > 0:
-            print(f"[DATABASE] {new_cameras_count} new cameras were added to the database.\n")
-        else:
-            print("[DATABASE] No new cameras were added to the database.\n")
-
-        # Return online camera ID
-        return online_cam_ids
-
+        return cam_locations
+    
     except Exception as e:
-        print(f"[DATABASE] An error occurred: {e}\n")
-        print("[DATABASE] Defaulting to CCTV List database.\n")
-        return get_cam_ids_from_db()
+        print(f"[DATABASE] Error: {e}")
+        return []
 
 
 # Example Usage

@@ -1,6 +1,6 @@
 import concurrent.futures
-from ImgScraping import scrape, scrape_sequential, get_cam_ids_from_bma
-from Database import insert_camera_info_into_db
+from ImgScraping import scrape, scrape_sequential
+from updateCamInfo import startUpdate
 from progress_gui import ProgressGUI
 import logging
 import concurrent.futures
@@ -9,7 +9,7 @@ import concurrent.futures
 
 # Camera Settings
 # camera_ids = [7, 11, 1639, 603, 1223]  # Example list of camera IDs
-camera_ids = insert_camera_info_into_db(get_cam_ids_from_bma())       # List of camera IDs from the database
+camera_ids = startUpdate(170)    # List of online CCTV IDs + update CCTV info in DB + distance in meter for clustering
 img_per_cam = 1                  # Number of images to scrape per camera
 
 # Timing Settings
