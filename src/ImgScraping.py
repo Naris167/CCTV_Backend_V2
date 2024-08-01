@@ -72,7 +72,7 @@ def play_video(camera_id: int, session_id: str, sleep: int, save_path: str, save
         print(f"Error playing video: {e}")
         return False
 
-def scrape(camera_id: int, loop: int, sleep_after_connect: int, sleep_between_download: int, save_path: str, save_to_db: bool, img_size: int):
+def scrape(camera_id: str, loop: int, sleep_after_connect: int, sleep_between_download: int, save_path: str, save_to_db: bool, img_size: int):
     print(f"Getting sessionID for [{camera_id}]")
     session_id = get_session_id(BASE_URL)
     if not session_id:
@@ -90,7 +90,7 @@ def scrape(camera_id: int, loop: int, sleep_after_connect: int, sleep_between_do
         else:
             print(f"Failed to play video and get image for camera {camera_id} [{i}/{loop}]")
 
-def scrape_sequential(camera_ids, loop, sleep_after_connect, sleep_between_download, save_path, save_to_db, img_size, refresh_interval, progress_gui):
+def scrape_sequential(camera_ids: str, loop: int, sleep_after_connect: int, sleep_between_download: int, save_path: str, save_to_db: bool, img_size: int, refresh_interval: int, progress_gui):
     print(f"Getting sessionID for [{camera_ids}]")
     session_id = get_session_id(BASE_URL)
     if not session_id:

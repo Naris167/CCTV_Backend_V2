@@ -34,7 +34,7 @@ def extract_cctv_data(url):
             cam_name = item[1][len(code):].strip() if code else item[1]
             
             processed_item = [
-                item[0],       # ID
+                item[0],       # Cam_ID
                 code,          # Code
                 cam_name,      # Cam_Name
                 item[2],       # Cam_Name_e
@@ -48,7 +48,7 @@ def extract_cctv_data(url):
             processed_data.append(processed_item)
         
         # Create a DataFrame with the specified column names
-        columns = ["ID", "Code", "Cam_Name", "Cam_Name_e", "Cam_Location", "Cam_Direction", "Latitude", "Longitude", "IP", "Icon"]
+        columns = ["Cam_ID", "Code", "Cam_Name", "Cam_Name_e", "Cam_Location", "Cam_Direction", "Latitude", "Longitude", "IP", "Icon"]
         df = pd.DataFrame(processed_data, columns=columns)
         
         return df
@@ -63,12 +63,15 @@ def remove_duplicates(new_df, master_file_path):
         return new_df
     master_df = pd.read_excel(master_file_path)
 
+    # print(master_df['ID'].fillna(0).astype(int))
+    # print(new_df['ID'])
+
     # Ensure 'ID' columns are of the same type
-    new_df['ID'] = new_df['ID'].astype(str)
-    master_df['ID'] = master_df['ID'].astype(str)
-    
+    new_df['Cam_ID'] = new_df['Cam_ID'].fillna(0).astype(int).astype(str)
+    master_df['Cam_ID'] = master_df['Cam_ID'].astype(str)
+
     # Remove duplicates
-    filtered_df = new_df[~new_df['ID'].isin(master_df['ID'])]
+    filtered_df = new_df[~new_df['Cam_ID'].isin(master_df['Cam_ID'])]
     return filtered_df
 
 # Function to save the data to an Excel file

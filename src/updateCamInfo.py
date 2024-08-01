@@ -129,4 +129,8 @@ def startUpdate(meters):
     print(f"[UPDATER] Starting scraping!\n")
 
     return online_camera_ids
+    # print(online_camera_ids)
+#     for element in online_camera_ids:
+#         print(f'Element: {element}, Type: {type(element)}')
 
+# startUpdate(170)

@@ -4,14 +4,7 @@ import os
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
-load_dotenv('.env.prod')
-
-# Verify environment variables
-# print(f"DB_NAME: {os.getenv('DB_NAME')}")
-# print(f"DB_USER: {os.getenv('DB_USER')}")
-# print(f"DB_PASSWORD: {os.getenv('DB_PASSWORD')}")
-# print(f"DB_HOST: {os.getenv('DB_HOST')}")
-# print(f"DB_PORT: {os.getenv('DB_PORT')}")
+load_dotenv('.env.local')
 
 def get_db_connection():
     return psycopg2.connect(
@@ -21,7 +14,6 @@ def get_db_connection():
         host=os.getenv('DB_HOST'),
         port=os.getenv('DB_PORT')
     )
-
 
 # Define the function to import data from Excel to the database
 def import_excel_to_db(excel_file_path):
@@ -33,25 +25,67 @@ def import_excel_to_db(excel_file_path):
         conn = get_db_connection()
         cur = conn.cursor()
 
-        # Iterate over the rows of the dataframe and insert each row into the database
+        # Iterate over the rows of the dataframe and insert/update each row in the database
         for index, row in df.iterrows():
-            cur.execute("""
-                INSERT INTO cctv_locations_preprocessing (Cam_ID, Cam_Code, Cam_Group, Status, Cam_Name, Cam_Name_e, Cam_Location, Cam_Direction, Latitude, Longitude, IP, Icon)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-                """, (
-                row['Cam_ID'],
-                row['Cam_Code'],
-                row['Group'],
-                row['Status'],
-                row['Cam_Name'],
-                row['Cam_Name_e'],
-                row['Cam_Location'],
-                row['Cam_Direction'],
-                row['Latitude'],
-                row['Longitude'],
-                row['IP'],
-                row['Icon']
-            ))
+            # Determine Latitude and Longitude from 'Correct' or fallback to 'Latitude' and 'Longitude' columns
+            if pd.notna(row['Correct']):
+                correct_values = row['Correct'].split(', ')
+                latitude = float(correct_values[0])
+                longitude = float(correct_values[1])
+            else:
+                latitude = row['Latitude']
+                longitude = row['Longitude']
+
+            if pd.notna(row['Verify']):
+                verify = bool(row['Verify'])
+            else:
+                verify = False
+            
+            # Check if Cam_ID exists in the database
+            cur.execute("SELECT 1 FROM cctv_locations_preprocessing WHERE Cam_ID = %s", (row['Cam_ID'],))
+            exists = cur.fetchone()
+
+            if exists:
+                # Update existing record
+                cur.execute("""
+                    UPDATE cctv_locations_preprocessing
+                    SET Cam_Code = %s, Cam_Group = %s, Cam_Name = %s, Cam_Name_e = %s, 
+                        Cam_Location = %s, Cam_Direction = %s, Latitude = %s, Longitude = %s, 
+                        IP = %s, Icon = %s, Verify = %s
+                    WHERE Cam_ID = %s
+                    """, (
+                    row['Cam_Code'],
+                    row['Group'],
+                    row['Cam_Name'],
+                    row['Cam_Name_e'],
+                    row['Cam_Location'],
+                    row['Cam_Direction'],
+                    latitude,
+                    longitude,
+                    row['IP'],
+                    row['Icon'],
+                    verify,
+                    row['Cam_ID']
+                ))
+            else:
+                # Insert new record
+                cur.execute("""
+                    INSERT INTO cctv_locations_preprocessing (Cam_ID, Cam_Code, Cam_Group, Cam_Name, Cam_Name_e, Cam_Location, Cam_Direction, Latitude, Longitude, IP, Icon, Verify)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                    """, (
+                    row['Cam_ID'],
+                    row['Cam_Code'],
+                    row['Group'],
+                    row['Cam_Name'],
+                    row['Cam_Name_e'],
+                    row['Cam_Location'],
+                    row['Cam_Direction'],
+                    latitude,
+                    longitude,
+                    row['IP'],
+                    row['Icon'],
+                    verify
+                ))
 
         # Commit the transaction
         conn.commit()
@@ -66,7 +100,7 @@ def import_excel_to_db(excel_file_path):
         print(f"Error: {error}")
 
 # Path to your Excel file
-excel_file_path = "Data/locationForDB-2.xlsx"
+excel_file_path = "Data/cctv_locations_master.xlsx"
 
 # Import the data
 import_excel_to_db(excel_file_path)

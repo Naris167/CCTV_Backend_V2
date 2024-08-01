@@ -1,5 +1,6 @@
 requests
 psycopg2-binary
+psycopg2
 python-dotenv
 pandas
 numpy
@@ -10,3 +11,4 @@ Pillow
 beautifulsoup4
 openpyxl
 distance-metrics
+tk

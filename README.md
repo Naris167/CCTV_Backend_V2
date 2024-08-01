@@ -108,9 +108,13 @@ python src/main.py
   - `InsertDataToDB.py`: Inserts data from the Excel file into the database.
 - **src/**: Contains the core scripts for database interactions and image scraping.
   - `Database.py`: Manages database connections and operations.
+  - `GeoCluster.py`: Apply DBSCAN to cluster CCTV location
+  - `ImgSaving.py`: Function manage image saving
   - `ImgScraping.py`: Handles image scraping logic.
   - `main.py`: Configures and initiates the scraping process.
   - `progress_gui.py`: Provides a GUI for tracking scraping progress.
+  - `updateCamInfo.py`: Managing updating CCTV list process 
+  - `utils.py`: Other functions
 - **test/**: Contains test scripts, including `prototype.py`, the basic image scraping script.
 
 ## Database Structure
