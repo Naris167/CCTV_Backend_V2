@@ -536,6 +536,9 @@ if __name__ == "__main__":
         logging.info(f"[INFO] The following CCTV IDs failed to prepare and will not be available: {cctv_fail}")
         update_isCamOnline(cctv_fail)
 
+    if scraped_cctv != (processed_cctv + fail_to_processed_cctv):
+        logging.warning(f"[INFO] number of items in `CCTV_LIST` does not equal to the sum of `processed_cctv` and `fail_to_processed_cctv`")
+
     save_cctv_sessions_to_file(sorted_cctv_sessions)
 
     logging.info("[INFO] All session IDs have been successfully prepared and saved.\n\n")

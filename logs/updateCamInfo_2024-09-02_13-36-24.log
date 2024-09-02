@@ -1,0 +1,91 @@
+2024-09-02 13:36:24,271 INFO: [MAIN] Logging setup completed!
+2024-09-02 13:36:24,271 INFO: [UPDATER] Getting camera list from http://www.bmatraffic.com
+2024-09-02 13:36:26,018 INFO: [UPDATER] Successfully getting camera list.
+2024-09-02 13:36:26,227 INFO: [DATABASE] Updated is_online to TRUE for CCTV IDs: ['7', '11', '12', '18', '19', '20', '26', '32', '36', '37', '39', '46', '47', '51', '63', '70', '73', '75', '76', '77', '78', '79', '80', '81', '82', '83', '87', '88', '89', '90', '92', '93', '94', '95', '96', '97', '98', '99', '101', '102', '103', '105', '108', '109', '111', '112', '113', '114', '116', '117', '118', '119', '120', '121', '123', '124', '125', '126', '127', '128', '129', '130', '131', '132', '133', '135', '136', '137', '138', '139', '140', '141', '146', '147', '148', '149', '150', '151', '152', '153', '154', '155', '156', '158', '159', '162', '163', '168', '169', '170', '171', '173', '176', '177', '178', '179', '180', '181', '182', '184', '185', '186', '188', '189', '190', '191', '194', '195', '196', '197', '198', '199', '200', '201', '202', '203', '206', '207', '208', '209', '211', '212', '214', '215', '216', '217', '218', '219', '220', '221', '222', '223', '224', '225', '226', '227', '229', '230', '231', '232', '233', '239', '240', '244', '248', '250', '251', '252', '253', '254', '255', '256', '257', '258', '259', '277', '291', '301', '304', '305', '309', '310', '318', '320', '332', '335', '354', '363', '364', '374', '385', '386', '387', '388', '394', '411', '413', '432', '439', '479', '481', '493', '500', '506', '526', '527', '535', '536', '542', '546', '556', '562', '569', '572', '576', '584', '595', '597', '603', '604', '609', '610', '612', '613', '615', '616', '619', '622', '623', '630', '639', '642', '648', '907', '913', '915', '924', '939', '942', '947', '953', '962', '968', '971', '991', '996', '997', '999', '1027', '1028', '1037', '1038', '1043', '1051', '1053', '1058', '1060', '1061', '1063', '1064', '1065', '1066', '1067', '1068', '1069', '1070', '1071', '1076', '1078', '1081', '1082', '1083', '1085', '1086', '1087', '1088', '1089', '1092', '1094', '1101', '1103', '1110', '1112', '1120', '1121', '1122', '1123', '1124', '1125', '1127', '1128', '1130', '1131', '1132', '1133', '1134', '1135', '1136', '1143', '1152', '1157', '1163', '1164', '1166', '1167', '1168', '1169', '1170', '1172', '1174', '1178', '1183', '1184', '1185', '1188', '1191', '1192', '1194', '1195', '1200', '1204', '1206', '1207', '1219', '1220', '1221', '1222', '1223', '1225', '1226', '1230', '1231', '1232', '1234', '1242', '1243', '1244', '1246', '1249', '1255', '1260', '1261', '1263', '1264', '1273', '1274', '1283', '1284', '1286', '1297', '1298', '1299', '1301', '1304', '1305', '1313', '1318', '1319', '1320', '1322', '1323', '1325', '1326', '1330', '1332', '1333', '1336', '1338', '1339', '1341', '1344', '1345', '1349', '1353', '1356', '1357', '1358', '1359', '1360', '1361', '1362', '1368', '1369', '1379', '1380', '1381', '1382', '1383', '1384', '1385', '1386', '1387', '1388', '1389', '1395', '1399', '1401', '1403', '1405', '1406', '1407', '1408', '1421', '1422', '1426', '1427', '1428', '1429', '1430', '1431', '1432', '1433', '1434', '1435', '1436', '1437', '1438', '1439', '1442', '1443', '1444', '1445', '1446', '1447', '1451', '1452', '1453', '1456', '1458', '1460', '1461', '1463', '1464', '1466', '1467', '1469', '1470', '1471', '1472', '1474', '1475', '1478', '1479', '1480', '1482', '1483', '1484', '1486', '1489', '1490', '1497', '1498', '1499', '1502', '1505', '1508', '1509', '1510', '1511', '1512', '1514', '1515', '1518', '1522', '1523', '1525', '1526', '1527', '1528', '1529', '1530', '1531', '1533', '1534', '1535', '1536', '1537', '1539', '1541', '1543', '1544', '1545', '1546', '1547', '1548', '1550', '1552', '1553', '1554', '1555', '1556', '1558', '1559', '1563', '1564', '1566', '1568', '1569', '1574', '1581', '1582', '1584', '1585', '1587', '1588', '1590', '1591', '1592', '1593', '1594', '1595', '1596', '1597', '1598', '1600', '1601', '1602', '1603', '1604', '1605', '1606', '1607', '1613', '1616', '1619', '1622', '1624', '1626', '1627', '1628', '1633', '1634', '1635', '1637', '1638', '1641', '1642', '1643', '1646', '1648', '1649', '1650', '1653', '1654', '1655', '1656', '1658', '1659', '1662', '1668', '1670', '1671', '1672', '1677', '1678', '1679', '1681', '1682', '1683', '1684', '1685', '1686', '1689', '1693', '1695', '1696', '1705', '1707', '1708', '1709', '1710', '1711', '1712', '1715', '1716', '1717', '1718', '1719', '1723', '1724', '1725', '1726', '1727', '1729', '1730', '1731', '1732', '1733', '1734', '1735', '1736', '1737', '1741', '1748', '1749', '1750', '1751', '1752', '1753', '1754', '1757', '1759', '1763', '1764', '1766', '1767', '1779', '1780', '1781', '1782', '1784', '1790', '1791', '1793']
+2024-09-02 13:36:26,316 INFO: [UPDATER] No new cameras found.
+2024-09-02 13:36:26,317 INFO: [UPDATER] 594 cameras are online out of 712
+2024-09-02 13:36:26,317 INFO: [UPDATER] 118 cameras are offline
+
+2024-09-02 13:36:26,317 INFO: [UPDATER] Starting scraping!
+
+2024-09-02 13:36:26,317 INFO: [INFO] Initializing all session IDs.
+2024-09-02 13:36:26,318 INFO: [PREPARE] Preparing session for camera 7
+2024-09-02 13:36:26,319 INFO: [PREPARE] Preparing session for camera 11
+2024-09-02 13:36:26,320 INFO: [PREPARE] Preparing session for camera 12
+2024-09-02 13:36:26,320 INFO: [PREPARE] Preparing session for camera 18
+2024-09-02 13:36:26,321 INFO: [PREPARE] Preparing session for camera 19
+2024-09-02 13:36:26,321 INFO: [PREPARE] Preparing session for camera 20
+2024-09-02 13:36:26,321 INFO: [PREPARE] Preparing session for camera 26
+2024-09-02 13:36:26,322 INFO: [PREPARE] Preparing session for camera 32
+2024-09-02 13:36:26,323 INFO: [PREPARE] Preparing session for camera 36
+2024-09-02 13:36:26,324 INFO: [PREPARE] Preparing session for camera 37
+2024-09-02 13:36:26,324 INFO: [PREPARE] Preparing session for camera 39
+2024-09-02 13:36:26,326 INFO: [PREPARE] Preparing session for camera 46
+2024-09-02 13:36:26,327 INFO: [PREPARE] Preparing session for camera 47
+2024-09-02 13:36:26,327 INFO: [PREPARE] Preparing session for camera 51
+2024-09-02 13:36:26,328 INFO: [PREPARE] Preparing session for camera 63
+2024-09-02 13:36:26,328 INFO: [PREPARE] Preparing session for camera 70
+2024-09-02 13:36:26,329 INFO: [PREPARE] Preparing session for camera 73
+2024-09-02 13:36:26,330 INFO: [PREPARE] Preparing session for camera 75
+2024-09-02 13:36:26,330 INFO: [PREPARE] Preparing session for camera 76
+2024-09-02 13:36:26,332 INFO: [PREPARE] Preparing session for camera 77
+2024-09-02 13:36:26,332 INFO: [PREPARE] Preparing session for camera 78
+2024-09-02 13:36:26,333 INFO: [PREPARE] Preparing session for camera 79
+2024-09-02 13:36:26,334 INFO: [PREPARE] Preparing session for camera 80
+2024-09-02 13:36:26,335 INFO: [PREPARE] Preparing session for camera 81
+2024-09-02 13:36:26,335 INFO: [PREPARE] Preparing session for camera 82
+2024-09-02 13:36:26,336 INFO: [PREPARE] Preparing session for camera 83
+2024-09-02 13:36:26,336 INFO: [PREPARE] Preparing session for camera 87
+2024-09-02 13:36:26,337 INFO: [PREPARE] Preparing session for camera 88
+2024-09-02 13:36:26,338 INFO: [PREPARE] Preparing session for camera 89
+2024-09-02 13:36:26,338 INFO: [PREPARE] Preparing session for camera 90
+2024-09-02 13:36:26,339 INFO: [PREPARE] Preparing session for camera 92
+2024-09-02 13:36:26,340 INFO: [PREPARE] Preparing session for camera 93
+2024-09-02 13:36:26,340 INFO: [PREPARE] Preparing session for camera 94
+2024-09-02 13:36:26,341 INFO: [PREPARE] Preparing session for camera 95
+2024-09-02 13:36:26,341 INFO: [PREPARE] Preparing session for camera 96
+2024-09-02 13:36:26,342 INFO: [PREPARE] Preparing session for camera 97
+2024-09-02 13:36:26,343 INFO: [PREPARE] Preparing session for camera 98
+2024-09-02 13:36:26,344 INFO: [PREPARE] Preparing session for camera 99
+2024-09-02 13:36:26,344 INFO: [PREPARE] Preparing session for camera 101
+2024-09-02 13:36:26,345 INFO: [PREPARE] Preparing session for camera 102
+2024-09-02 13:36:26,346 INFO: [PREPARE] Preparing session for camera 103
+2024-09-02 13:36:26,347 INFO: [PREPARE] Preparing session for camera 105
+2024-09-02 13:36:26,348 INFO: [PREPARE] Preparing session for camera 108
+2024-09-02 13:36:26,348 INFO: [PREPARE] Preparing session for camera 109
+2024-09-02 13:36:26,349 INFO: [PREPARE] Preparing session for camera 111
+2024-09-02 13:36:26,349 INFO: [PREPARE] Preparing session for camera 112
+2024-09-02 13:36:26,349 INFO: [PREPARE] Preparing session for camera 113
+2024-09-02 13:36:26,350 INFO: [PREPARE] Preparing session for camera 114
+2024-09-02 13:36:26,351 INFO: [PREPARE] Preparing session for camera 116
+2024-09-02 13:36:26,352 INFO: [PREPARE] Preparing session for camera 117
+2024-09-02 13:36:26,353 INFO: [PREPARE] Preparing session for camera 118
+2024-09-02 13:36:26,354 INFO: [PREPARE] Preparing session for camera 119
+2024-09-02 13:36:26,355 INFO: [PREPARE] Preparing session for camera 120
+2024-09-02 13:36:26,356 INFO: [PREPARE] Preparing session for camera 121
+2024-09-02 13:36:26,356 INFO: [PREPARE] Preparing session for camera 123
+2024-09-02 13:36:26,357 INFO: [PREPARE] Preparing session for camera 124
+2024-09-02 13:36:26,357 INFO: [PREPARE] Preparing session for camera 125
+2024-09-02 13:36:26,358 INFO: [PREPARE] Preparing session for camera 126
+2024-09-02 13:36:26,358 INFO: [PREPARE] Preparing session for camera 127
+2024-09-02 13:36:26,359 INFO: [PREPARE] Preparing session for camera 128
+2024-09-02 13:36:26,359 INFO: [PREPARE] Preparing session for camera 129
+2024-09-02 13:36:26,360 INFO: [PREPARE] Preparing session for camera 130
+2024-09-02 13:36:26,361 INFO: [PREPARE] Preparing session for camera 131
+2024-09-02 13:36:26,361 INFO: [PREPARE] Preparing session for camera 132
+2024-09-02 13:36:26,362 INFO: [PREPARE] Preparing session for camera 133
+2024-09-02 13:36:26,364 INFO: [PREPARE] Preparing session for camera 135
+2024-09-02 13:36:26,365 INFO: [PREPARE] Preparing session for camera 136
+2024-09-02 13:36:26,365 INFO: [PREPARE] Preparing session for camera 137
+2024-09-02 13:36:26,366 INFO: [PREPARE] Preparing session for camera 138
+2024-09-02 13:36:26,366 INFO: [PREPARE] Preparing session for camera 139
+2024-09-02 13:36:26,367 INFO: [PREPARE] Preparing session for camera 140
+2024-09-02 13:36:26,368 INFO: [PREPARE] Preparing session for camera 141
+2024-09-02 13:36:26,368 INFO: [PREPARE] Preparing session for camera 146
+2024-09-02 13:36:26,369 INFO: [PREPARE] Preparing session for camera 147
+2024-09-02 13:36:26,369 INFO: [PREPARE] Preparing session for camera 148
+2024-09-02 13:36:26,370 INFO: [PREPARE] Preparing session for camera 149
+2024-09-02 13:36:26,370 INFO: [PREPARE] Preparing session for camera 150
+2024-09-02 13:36:26,371 INFO: [PREPARE] Preparing session for camera 151
+2024-09-02 13:36:26,371 INFO: [PREPARE] Preparing session for camera 152
+2024-09-02 13:36:26,373 INFO: [PREPARE] Preparing session for camera 153

@@ -1,127 +1,127 @@
 const express = require('express');
-const axios = require('axios');
 const cron = require('node-cron');
 const { spawn } = require('child_process');
-const http = require('http');
-const https = require('https');
+const fs = require('fs');
+const path = require('path');
+const { format } = require('date-fns'); // Library for date formatting
 
 const app = express();
 const PORT = 8001;
-const BASE_URL = "http://www.bmatraffic.com"; // Replace with the actual base URL
-
-// Disable connection reuse by creating custom agents
-const httpAgent = new http.Agent({ keepAlive: false });
-const httpsAgent = new https.Agent({ keepAlive: false });
 
 // Dictionary to store session IDs for each CCTV ID
-const cctvSessions = {};
+let cctvSessions = {};
+
+// Function to set up logging to both console and a file
+function setupLogger() {
+    // Define the directory and log file path
+    const logDirectory = path.join(__dirname, 'logs');
+    const timestamp = format(new Date(), 'yyyy-MM-dd_HH-mm-ss');
+    const logFile = path.join(logDirectory, `backend_${timestamp}.log`);
+
+    // Check if the directory exists, if not, create it
+    if (!fs.existsSync(logDirectory)) {
+        fs.mkdirSync(logDirectory, { recursive: true });
+    }
+
+    // Create a write stream (append mode) for logging
+    const logStream = fs.createWriteStream(logFile, { flags: 'a' });
+
+    // Save original console methods
+    const originalLog = console.log;
+    const originalError = console.error;
+
+    // Override console.log
+    console.log = function (...args) {
+        originalLog.apply(console, args); // Output to console
+        logStream.write(getFormattedLog(args) + '\n'); // Write to log file
+    };
+
+    // Override console.error
+    console.error = function (...args) {
+        originalError.apply(console, args); // Output to console
+        logStream.write(getFormattedLog(args) + '\n'); // Write to log file
+    };
+
+    // Helper function to format log messages with a timestamp
+    function getFormattedLog(args) {
+        const timestamp = format(new Date(), 'yyyy-MM-dd HH:mm:ss');
+        return `${timestamp} ${args.map(arg => (typeof arg === 'string' ? arg : JSON.stringify(arg))).join(' ')}`;
+    }
+}
+
+// Initialize logging setup
+setupLogger();
 
 // Function to start the Python script and get CCTV IDs
 function startUpdate() {
   return new Promise((resolve, reject) => {
-      console.error(`Calling Python script...`);
-      const pythonProcess = spawn('python', ['./src/updateCamInfo.py', '170']); // Run Python script with argument
+    console.log(`Calling Python script...`);
+    const pythonProcess = spawn('python', ['./src/updateCamInfo.py', '170']); // Run Python script with argument
 
-      let result = '';
-      pythonProcess.stdout.on('data', (data) => {
-          result += data.toString();
-      });
+    pythonProcess.stdout.on('data', (data) => {
+      console.log('Python script output:', data.toString()); // Output log messages to stdout
+    });
 
-      pythonProcess.stderr.on('data', (data) => {
-          console.error('Error from Python script:', data.toString());
-      });
+    pythonProcess.stderr.on('data', (data) => {
+      console.error('[PY]', data.toString()); // Handles actual errors
+    });
 
-      pythonProcess.on('close', (code) => {
-          console.log(`\n\nPython script exited with code ${code}`);
-          console.log(`Full result from Python script:\n${result}`); // Debug print to see the full result
-          console.log(`\n############### Ended of Python script ###############\n\n`);
+    pythonProcess.on('close', (code) => {
+      console.log(`\n\nPython script exited with code ${code}`);
+      console.log(`\n############### End of Python script ###############\n\n`);
 
-          if (code === 0) {
-              try {
-                  // Split the output by newlines and take the last non-empty line
-                  const lines = result.trim().split('\n');
-                  const jsonString = lines[lines.length - 1]; // Get the last line
-                  
-                  // console.log(`Extracted JSON string: ${jsonString}`); // Debug print to check the extracted JSON string
-
-                  const cctvList = JSON.parse(jsonString);  // Attempt to parse the JSON string to an array
-                  resolve(cctvList);
-              } catch (error) {
-                  console.error('Failed to parse CCTV IDs:', error);
-                  reject('Failed to parse CCTV IDs');
-              }
-          } else {
-              reject(`Python process exited with code ${code}`);
-          }
-      });
+      if (code === 0) {
+        resolve(); // Resolve once the Python script has completed
+      } else {
+        reject(`Python process exited with code ${code}`);
+      }
+    });
   });
 }
 
-// Function to get session ID for a specific camera
-async function getCCTVSessionID(cameraID) {
-  try {
-    // Make a request with a new connection every time
-    const response = await axios.get(`${BASE_URL}`, {
-      timeout: 60000,
-      httpAgent,  // Use custom HTTP agent
-      httpsAgent, // Use custom HTTPS agent
-    });
-    const cookie = response.headers['set-cookie'];
-    if (cookie) {
-      const sessionID = cookie[0].split('=')[1].split(';')[0];
-      console.log(`[${cameraID}] Obtained session ID: ${sessionID}`);
-      return sessionID;
+// Function to find and read the latest JSON file from the directory
+function getLatestJsonFile(directory) {
+  const files = fs.readdirSync(directory);
+  const jsonFiles = files.filter(file => file.startsWith('cctv_sessions_') && file.endsWith('.json'));
+
+  if (jsonFiles.length === 0) {
+    console.error('No JSON files found in the directory.');
+    return null;
+  }
+
+  const latestFile = jsonFiles.reduce((latest, file) => {
+    const currentTime = fs.statSync(path.join(directory, file)).mtime.getTime();
+    const latestTime = fs.statSync(path.join(directory, latest)).mtime.getTime();
+    return currentTime > latestTime ? file : latest;
+  });
+
+  console.log(`Latest JSON file: ${latestFile}`);
+  return path.join(directory, latestFile);
+}
+
+// Function to load JSON data from the latest file into cctvSessions
+function loadCctvSessions() {
+  const directory = './cctvSessionTemp/';
+  const latestFile = getLatestJsonFile(directory);
+
+  if (latestFile) {
+    try {
+      const data = fs.readFileSync(latestFile, 'utf8');
+      cctvSessions = JSON.parse(data);
+      console.log('Loaded CCTV sessions:', cctvSessions);
+    } catch (error) {
+      console.error('Failed to read or parse the latest JSON file:', error);
     }
-    return null;
-  } catch (error) {
-    console.error(`[${cameraID}] Error getting session ID: ${error.message}`);
-    return null;
   }
 }
 
-// Function to play video for a camera session
-async function playVideo(cameraID, sessionID) {
-  const url = `${BASE_URL}/PlayVideo.aspx?ID=${cameraID}`;
-  const headers = {
-    'Referer': `${BASE_URL}/index.aspx`,
-    'Cookie': `ASP.NET_SessionId=${sessionID};`,
-    'Priority': 'u=4'
-  };
-
-  try {
-    // Make a request with a new connection every time
-    await axios.get(url, {
-      headers,
-      httpAgent,  // Use custom HTTP agent
-      httpsAgent, // Use custom HTTPS agent
-    });
-    console.log(`[${cameraID}] Playing video for session ID: ${sessionID}`);
-  } catch (error) {
-    console.error(`[${cameraID}] Error playing video: ${error.message}`);
-  }
-}
-
-// Initialize sessions for all CCTV IDs concurrently
+// Initialize sessions for all CCTV IDs
 async function initializeSessions() {
   console.log('Initializing CCTV sessions...');
 
   try {
-    const CCTV_LIST = await startUpdate(); // Dynamically fetch the CCTV list using the Python script
-    console.log('CCTV IDs fetched from Python script:', CCTV_LIST);
-    console.log(`\n\nStart scraping...\n`);
-    
-    // Create an array of promises for session initialization
-    const sessionPromises = CCTV_LIST.map(async (cameraID) => {
-      const sessionID = await getCCTVSessionID(cameraID);
-      if (sessionID) {
-        await playVideo(cameraID, sessionID);
-        cctvSessions[cameraID] = sessionID;
-      }
-    });
-
-    // Wait for all promises to resolve
-    await Promise.all(sessionPromises);
-    
+    await startUpdate(); // Wait for Python script to complete
+    loadCctvSessions(); // Load the latest CCTV sessions from the JSON file
     console.log('All sessions initialized.');
   } catch (error) {
     console.error('Failed to initialize sessions:', error);
@@ -136,6 +136,7 @@ app.get('/session_id', (req, res) => {
   if (sessionID) {
     res.json({ cctv_id: cameraID, session_id: sessionID });
   } else {
+    console.log(`Session ID not found for the given CCTV ID`);
     res.status(404).json({ error: 'Session ID not found for the given CCTV ID' });
   }
 });
