@@ -1,0 +1,2405 @@
+2024-09-02 13:04:26,484 INFO: [MAIN] Logging setup completed!
+2024-09-02 13:04:26,484 INFO: [UPDATER] Getting camera list from http://www.bmatraffic.com
+2024-09-02 13:04:29,799 INFO: [UPDATER] Successfully getting camera list.
+2024-09-02 13:04:30,117 INFO: [DATABASE] Updated is_online to TRUE for CCTV IDs: ['7', '11', '12', '18', '19', '20', '26', '32', '36', '37', '39', '46', '47', '51', '63', '70', '73', '75', '76', '77', '78', '79', '80', '81', '82', '83', '87', '88', '89', '90', '92', '93', '94', '95', '96', '97', '98', '99', '101', '102', '103', '105', '108', '109', '111', '112', '113', '114', '116', '117', '118', '119', '120', '121', '123', '124', '125', '126', '127', '128', '129', '130', '131', '132', '133', '135', '136', '137', '138', '139', '140', '141', '146', '147', '148', '149', '150', '151', '152', '153', '154', '155', '156', '158', '159', '162', '163', '168', '169', '170', '171', '173', '176', '177', '178', '179', '180', '181', '182', '184', '185', '186', '188', '189', '190', '191', '194', '195', '196', '197', '198', '199', '200', '201', '202', '203', '206', '207', '208', '209', '211', '212', '214', '215', '216', '217', '218', '219', '220', '221', '222', '223', '224', '225', '226', '227', '229', '230', '231', '232', '233', '239', '240', '244', '248', '250', '251', '252', '253', '254', '255', '256', '257', '258', '259', '277', '291', '301', '304', '305', '309', '310', '318', '320', '332', '335', '354', '363', '364', '374', '385', '386', '387', '388', '394', '411', '413', '432', '439', '479', '481', '493', '500', '506', '526', '527', '535', '536', '542', '546', '556', '562', '569', '572', '576', '584', '595', '597', '603', '604', '609', '610', '612', '613', '615', '616', '619', '622', '623', '630', '639', '642', '648', '907', '913', '915', '924', '939', '942', '947', '953', '962', '968', '971', '991', '996', '997', '999', '1027', '1028', '1037', '1038', '1043', '1051', '1053', '1058', '1060', '1061', '1063', '1064', '1065', '1066', '1067', '1068', '1069', '1070', '1071', '1076', '1078', '1081', '1082', '1083', '1085', '1086', '1087', '1088', '1089', '1092', '1094', '1101', '1103', '1110', '1112', '1120', '1121', '1122', '1123', '1124', '1125', '1127', '1128', '1130', '1131', '1132', '1133', '1134', '1135', '1136', '1143', '1152', '1157', '1163', '1164', '1166', '1167', '1168', '1169', '1170', '1172', '1174', '1178', '1179', '1183', '1184', '1185', '1188', '1191', '1192', '1194', '1195', '1200', '1204', '1206', '1207', '1219', '1220', '1221', '1222', '1223', '1225', '1226', '1230', '1231', '1232', '1234', '1242', '1243', '1244', '1246', '1249', '1255', '1260', '1261', '1263', '1264', '1273', '1274', '1283', '1284', '1286', '1297', '1298', '1299', '1301', '1304', '1305', '1313', '1318', '1319', '1320', '1322', '1323', '1325', '1326', '1330', '1332', '1333', '1336', '1338', '1339', '1341', '1344', '1345', '1349', '1353', '1356', '1357', '1358', '1359', '1360', '1361', '1362', '1368', '1369', '1379', '1380', '1381', '1382', '1383', '1384', '1385', '1386', '1387', '1388', '1389', '1395', '1399', '1401', '1403', '1405', '1406', '1407', '1408', '1421', '1422', '1426', '1427', '1428', '1429', '1430', '1431', '1432', '1433', '1434', '1435', '1436', '1437', '1438', '1439', '1442', '1443', '1444', '1445', '1446', '1447', '1451', '1452', '1453', '1456', '1458', '1460', '1461', '1463', '1464', '1466', '1467', '1469', '1470', '1471', '1472', '1474', '1475', '1478', '1479', '1480', '1482', '1483', '1484', '1486', '1489', '1490', '1497', '1498', '1499', '1502', '1505', '1508', '1509', '1510', '1511', '1512', '1514', '1515', '1518', '1522', '1523', '1525', '1526', '1527', '1528', '1529', '1530', '1531', '1533', '1534', '1535', '1536', '1537', '1539', '1541', '1543', '1544', '1545', '1546', '1547', '1548', '1550', '1552', '1553', '1554', '1555', '1556', '1558', '1559', '1563', '1564', '1566', '1568', '1569', '1574', '1581', '1582', '1584', '1585', '1587', '1588', '1590', '1591', '1592', '1593', '1594', '1595', '1597', '1598', '1600', '1601', '1602', '1603', '1604', '1605', '1606', '1607', '1613', '1616', '1619', '1622', '1624', '1626', '1627', '1628', '1633', '1634', '1635', '1637', '1638', '1641', '1642', '1643', '1646', '1648', '1649', '1650', '1653', '1654', '1655', '1656', '1658', '1659', '1662', '1668', '1670', '1671', '1672', '1677', '1678', '1679', '1681', '1682', '1683', '1684', '1685', '1686', '1689', '1693', '1695', '1696', '1705', '1707', '1708', '1709', '1710', '1711', '1712', '1715', '1716', '1717', '1718', '1719', '1723', '1724', '1725', '1726', '1727', '1729', '1730', '1731', '1732', '1733', '1734', '1735', '1736', '1737', '1741', '1748', '1749', '1750', '1751', '1752', '1753', '1754', '1757', '1759', '1763', '1764', '1766', '1767', '1779', '1780', '1781', '1782', '1784', '1790', '1791', '1793']
+2024-09-02 13:04:30,186 INFO: [UPDATER] 1 cameras are found.
+2024-09-02 13:04:30,186 INFO: [UPDATER] New camera IDs: 1179
+
+2024-09-02 13:04:30,187 INFO: [UPDATER] Initializing clustering...
+2024-09-02 13:04:30,187 INFO: [CLUSTER] Distance set to 170 meters
+2024-09-02 13:04:30,187 INFO: [CLUSTER] Starting clustering...
+2024-09-02 13:04:30,193 INFO: [CLUSTER] Clustering completed!
+
+2024-09-02 13:04:30,299 INFO: [DATABASE] 1 new cameras were added to the database.
+
+2024-09-02 13:04:30,299 INFO: [UPDATER] Added 1 new cameras to the database.
+2024-09-02 13:04:36,767 INFO: [UPDATER] Updated camera clusters in the database.
+
+2024-09-02 13:04:36,768 INFO: [UPDATER] 594 cameras are online out of 712
+2024-09-02 13:04:36,768 INFO: [UPDATER] 118 cameras are offline
+
+2024-09-02 13:04:36,768 INFO: [UPDATER] Starting scraping!
+
+2024-09-02 13:04:36,768 INFO: [INFO] Initializing all session IDs.
+2024-09-02 13:04:36,769 INFO: [PREPARE] Preparing session for camera 7
+2024-09-02 13:04:36,769 INFO: [PREPARE] Preparing session for camera 11
+2024-09-02 13:04:36,769 INFO: [PREPARE] Preparing session for camera 12
+2024-09-02 13:04:36,770 INFO: [PREPARE] Preparing session for camera 18
+2024-09-02 13:04:36,771 INFO: [PREPARE] Preparing session for camera 19
+2024-09-02 13:04:36,772 INFO: [PREPARE] Preparing session for camera 20
+2024-09-02 13:04:36,773 INFO: [PREPARE] Preparing session for camera 26
+2024-09-02 13:04:36,773 INFO: [PREPARE] Preparing session for camera 32
+2024-09-02 13:04:36,774 INFO: [PREPARE] Preparing session for camera 36
+2024-09-02 13:04:36,774 INFO: [PREPARE] Preparing session for camera 37
+2024-09-02 13:04:36,775 INFO: [PREPARE] Preparing session for camera 39
+2024-09-02 13:04:36,776 INFO: [PREPARE] Preparing session for camera 46
+2024-09-02 13:04:36,777 INFO: [PREPARE] Preparing session for camera 47
+2024-09-02 13:04:36,778 INFO: [PREPARE] Preparing session for camera 51
+2024-09-02 13:04:36,778 INFO: [PREPARE] Preparing session for camera 63
+2024-09-02 13:04:36,778 INFO: [PREPARE] Preparing session for camera 70
+2024-09-02 13:04:36,779 INFO: [PREPARE] Preparing session for camera 73
+2024-09-02 13:04:36,780 INFO: [PREPARE] Preparing session for camera 75
+2024-09-02 13:04:36,780 INFO: [PREPARE] Preparing session for camera 76
+2024-09-02 13:04:36,781 INFO: [PREPARE] Preparing session for camera 77
+2024-09-02 13:04:36,782 INFO: [PREPARE] Preparing session for camera 78
+2024-09-02 13:04:36,782 INFO: [PREPARE] Preparing session for camera 79
+2024-09-02 13:04:36,782 INFO: [PREPARE] Preparing session for camera 80
+2024-09-02 13:04:36,783 INFO: [PREPARE] Preparing session for camera 81
+2024-09-02 13:04:36,784 INFO: [PREPARE] Preparing session for camera 82
+2024-09-02 13:04:36,784 INFO: [PREPARE] Preparing session for camera 83
+2024-09-02 13:04:36,785 INFO: [PREPARE] Preparing session for camera 87
+2024-09-02 13:04:36,785 INFO: [PREPARE] Preparing session for camera 88
+2024-09-02 13:04:36,786 INFO: [PREPARE] Preparing session for camera 89
+2024-09-02 13:04:36,787 INFO: [PREPARE] Preparing session for camera 90
+2024-09-02 13:04:36,788 INFO: [PREPARE] Preparing session for camera 92
+2024-09-02 13:04:36,789 INFO: [PREPARE] Preparing session for camera 93
+2024-09-02 13:04:36,789 INFO: [PREPARE] Preparing session for camera 94
+2024-09-02 13:04:36,789 INFO: [PREPARE] Preparing session for camera 95
+2024-09-02 13:04:36,789 INFO: [PREPARE] Preparing session for camera 96
+2024-09-02 13:04:36,791 INFO: [PREPARE] Preparing session for camera 97
+2024-09-02 13:04:36,791 INFO: [PREPARE] Preparing session for camera 98
+2024-09-02 13:04:36,792 INFO: [PREPARE] Preparing session for camera 99
+2024-09-02 13:04:36,792 INFO: [PREPARE] Preparing session for camera 101
+2024-09-02 13:04:36,793 INFO: [PREPARE] Preparing session for camera 102
+2024-09-02 13:04:36,793 INFO: [PREPARE] Preparing session for camera 103
+2024-09-02 13:04:36,794 INFO: [PREPARE] Preparing session for camera 105
+2024-09-02 13:04:36,795 INFO: [PREPARE] Preparing session for camera 108
+2024-09-02 13:04:36,795 INFO: [PREPARE] Preparing session for camera 109
+2024-09-02 13:04:36,796 INFO: [PREPARE] Preparing session for camera 111
+2024-09-02 13:04:36,796 INFO: [PREPARE] Preparing session for camera 112
+2024-09-02 13:04:36,797 INFO: [PREPARE] Preparing session for camera 113
+2024-09-02 13:04:36,798 INFO: [PREPARE] Preparing session for camera 114
+2024-09-02 13:04:36,799 INFO: [PREPARE] Preparing session for camera 116
+2024-09-02 13:04:36,800 INFO: [PREPARE] Preparing session for camera 117
+2024-09-02 13:04:36,801 INFO: [PREPARE] Preparing session for camera 118
+2024-09-02 13:04:36,801 INFO: [PREPARE] Preparing session for camera 119
+2024-09-02 13:04:36,802 INFO: [PREPARE] Preparing session for camera 120
+2024-09-02 13:04:36,803 INFO: [PREPARE] Preparing session for camera 121
+2024-09-02 13:04:36,803 INFO: [PREPARE] Preparing session for camera 123
+2024-09-02 13:04:36,804 INFO: [PREPARE] Preparing session for camera 124
+2024-09-02 13:04:36,805 INFO: [PREPARE] Preparing session for camera 125
+2024-09-02 13:04:36,805 INFO: [PREPARE] Preparing session for camera 126
+2024-09-02 13:04:36,806 INFO: [PREPARE] Preparing session for camera 127
+2024-09-02 13:04:36,807 INFO: [PREPARE] Preparing session for camera 128
+2024-09-02 13:04:36,807 INFO: [PREPARE] Preparing session for camera 129
+2024-09-02 13:04:36,808 INFO: [PREPARE] Preparing session for camera 130
+2024-09-02 13:04:36,808 INFO: [PREPARE] Preparing session for camera 131
+2024-09-02 13:04:36,809 INFO: [PREPARE] Preparing session for camera 132
+2024-09-02 13:04:36,810 INFO: [PREPARE] Preparing session for camera 133
+2024-09-02 13:04:36,811 INFO: [PREPARE] Preparing session for camera 135
+2024-09-02 13:04:36,813 INFO: [PREPARE] Preparing session for camera 136
+2024-09-02 13:04:36,815 INFO: [PREPARE] Preparing session for camera 137
+2024-09-02 13:04:36,816 INFO: [PREPARE] Preparing session for camera 138
+2024-09-02 13:04:36,817 INFO: [PREPARE] Preparing session for camera 139
+2024-09-02 13:04:36,817 INFO: [PREPARE] Preparing session for camera 140
+2024-09-02 13:04:36,817 INFO: [PREPARE] Preparing session for camera 141
+2024-09-02 13:04:36,819 INFO: [PREPARE] Preparing session for camera 146
+2024-09-02 13:04:36,819 INFO: [PREPARE] Preparing session for camera 147
+2024-09-02 13:04:36,819 INFO: [PREPARE] Preparing session for camera 148
+2024-09-02 13:04:36,821 INFO: [PREPARE] Preparing session for camera 149
+2024-09-02 13:04:36,822 INFO: [PREPARE] Preparing session for camera 150
+2024-09-02 13:04:36,822 INFO: [PREPARE] Preparing session for camera 151
+2024-09-02 13:04:36,823 INFO: [PREPARE] Preparing session for camera 152
+2024-09-02 13:04:36,823 INFO: [PREPARE] Preparing session for camera 153
+2024-09-02 13:04:47,061 INFO: [129] Obtained session ID: derwxlfqpnwwuustis11iycg
+2024-09-02 13:04:47,092 INFO: [7] Obtained session ID: heshh2yk2d2keqarid4mf0nm
+2024-09-02 13:04:47,229 INFO: [7] Playing video for session ID: heshh2yk2d2keqarid4mf0nm
+2024-09-02 13:04:47,229 INFO: [129] Playing video for session ID: derwxlfqpnwwuustis11iycg
+2024-09-02 13:04:47,229 INFO: [PREPARE] Session ready for camera 7
+2024-09-02 13:04:47,229 INFO: [PREPARE] Session ready for camera 129
+2024-09-02 13:04:47,231 INFO: [PREPARE] Preparing session for camera 154
+2024-09-02 13:04:47,231 INFO: [PREPARE] Preparing session for camera 155
+2024-09-02 13:04:47,298 INFO: [70] Obtained session ID: zbslqjm21yempzmns5dywsqu
+2024-09-02 13:04:47,417 INFO: [70] Playing video for session ID: zbslqjm21yempzmns5dywsqu
+2024-09-02 13:04:47,417 INFO: [PREPARE] Session ready for camera 70
+2024-09-02 13:04:47,418 INFO: [PREPARE] Preparing session for camera 156
+2024-09-02 13:04:47,552 INFO: [138] Obtained session ID: 4tnwl5ggzpqzpxq1ncvw530n
+2024-09-02 13:04:47,597 INFO: [101] Obtained session ID: yfe5fzijhfdndhmvwtxbxfq3
+2024-09-02 13:04:47,823 INFO: [138] Playing video for session ID: 4tnwl5ggzpqzpxq1ncvw530n
+2024-09-02 13:04:47,824 INFO: [PREPARE] Session ready for camera 138
+2024-09-02 13:04:47,825 INFO: [PREPARE] Preparing session for camera 158
+2024-09-02 13:04:47,841 INFO: [101] Playing video for session ID: yfe5fzijhfdndhmvwtxbxfq3
+2024-09-02 13:04:47,842 INFO: [PREPARE] Session ready for camera 101
+2024-09-02 13:04:47,843 INFO: [PREPARE] Preparing session for camera 159
+2024-09-02 13:04:48,145 INFO: [146] Obtained session ID: tls5sbl2ryemwwy05ezupyli
+2024-09-02 13:04:48,301 INFO: [146] Playing video for session ID: tls5sbl2ryemwwy05ezupyli
+2024-09-02 13:04:48,302 INFO: [PREPARE] Session ready for camera 146
+2024-09-02 13:04:48,303 INFO: [PREPARE] Preparing session for camera 162
+2024-09-02 13:04:48,536 INFO: [73] Obtained session ID: tjjjhqm2cfet12lchn2ces1g
+2024-09-02 13:04:48,645 INFO: [18] Obtained session ID: pvsbptatwqidavxaar20khca
+2024-09-02 13:04:48,674 INFO: [73] Playing video for session ID: tjjjhqm2cfet12lchn2ces1g
+2024-09-02 13:04:48,674 INFO: [PREPARE] Session ready for camera 73
+2024-09-02 13:04:48,675 INFO: [PREPARE] Preparing session for camera 163
+2024-09-02 13:04:48,702 INFO: [95] Obtained session ID: jhcbukpv205xxdf5gdx423re
+2024-09-02 13:04:48,717 INFO: [118] Obtained session ID: tmur1ce3ay0a4dtggen5rtuj
+2024-09-02 13:04:48,779 INFO: [18] Playing video for session ID: pvsbptatwqidavxaar20khca
+2024-09-02 13:04:48,779 INFO: [PREPARE] Session ready for camera 18
+2024-09-02 13:04:48,780 INFO: [PREPARE] Preparing session for camera 168
+2024-09-02 13:04:48,786 INFO: [135] Obtained session ID: ljwwmzcxkzqlp3f4vwonrjdu
+2024-09-02 13:04:48,826 INFO: [117] Obtained session ID: nflpjqgdhreg3gwyhvtigktn
+2024-09-02 13:04:48,841 INFO: [95] Playing video for session ID: jhcbukpv205xxdf5gdx423re
+2024-09-02 13:04:48,842 INFO: [PREPARE] Session ready for camera 95
+2024-09-02 13:04:48,842 INFO: [PREPARE] Preparing session for camera 169
+2024-09-02 13:04:48,855 INFO: [12] Obtained session ID: poqcsu2paw1bst1fzurpj2w4
+2024-09-02 13:04:48,857 INFO: [118] Playing video for session ID: tmur1ce3ay0a4dtggen5rtuj
+2024-09-02 13:04:48,857 INFO: [PREPARE] Session ready for camera 118
+2024-09-02 13:04:48,858 INFO: [PREPARE] Preparing session for camera 170
+2024-09-02 13:04:48,864 INFO: [63] Obtained session ID: nqr0d3j0pyij1gdbzbfja2ig
+2024-09-02 13:04:48,910 INFO: [137] Obtained session ID: jim1apzltdtgoprtcgekmuqc
+2024-09-02 13:04:48,912 INFO: [135] Playing video for session ID: ljwwmzcxkzqlp3f4vwonrjdu
+2024-09-02 13:04:48,913 INFO: [PREPARE] Session ready for camera 135
+2024-09-02 13:04:48,914 INFO: [PREPARE] Preparing session for camera 171
+2024-09-02 13:04:48,963 INFO: [117] Playing video for session ID: nflpjqgdhreg3gwyhvtigktn
+2024-09-02 13:04:48,963 INFO: [PREPARE] Session ready for camera 117
+2024-09-02 13:04:48,964 INFO: [PREPARE] Preparing session for camera 173
+2024-09-02 13:04:48,978 INFO: [12] Playing video for session ID: poqcsu2paw1bst1fzurpj2w4
+2024-09-02 13:04:48,978 INFO: [PREPARE] Session ready for camera 12
+2024-09-02 13:04:48,979 INFO: [PREPARE] Preparing session for camera 176
+2024-09-02 13:04:48,999 INFO: [63] Playing video for session ID: nqr0d3j0pyij1gdbzbfja2ig
+2024-09-02 13:04:48,999 INFO: [PREPARE] Session ready for camera 63
+2024-09-02 13:04:48,999 INFO: [PREPARE] Preparing session for camera 177
+2024-09-02 13:04:49,040 INFO: [137] Playing video for session ID: jim1apzltdtgoprtcgekmuqc
+2024-09-02 13:04:49,040 INFO: [PREPARE] Session ready for camera 137
+2024-09-02 13:04:49,041 INFO: [PREPARE] Preparing session for camera 178
+2024-09-02 13:04:49,041 INFO: [136] Obtained session ID: 1asjleazur0oorc3exbfmwsl
+2024-09-02 13:04:49,156 INFO: [130] Obtained session ID: 550mglfjulxhhaay5u2hnm1q
+2024-09-02 13:04:49,183 INFO: [136] Playing video for session ID: 1asjleazur0oorc3exbfmwsl
+2024-09-02 13:04:49,183 INFO: [PREPARE] Session ready for camera 136
+2024-09-02 13:04:49,184 INFO: [PREPARE] Preparing session for camera 179
+2024-09-02 13:04:49,263 INFO: [75] Obtained session ID: tuso3hth5mjlsjuhut1dsrr1
+2024-09-02 13:04:49,294 INFO: [130] Playing video for session ID: 550mglfjulxhhaay5u2hnm1q
+2024-09-02 13:04:49,294 INFO: [PREPARE] Session ready for camera 130
+2024-09-02 13:04:49,295 INFO: [PREPARE] Preparing session for camera 180
+2024-09-02 13:04:49,343 INFO: [103] Obtained session ID: t04gnz3qmktk1g5hf5woa4ta
+2024-09-02 13:04:49,376 INFO: [76] Obtained session ID: 4xbm4f2g4vmlhokpr0yis2sx
+2024-09-02 13:04:49,394 INFO: [89] Obtained session ID: 5f4402yz2drl3zd4r3bmvjhs
+2024-09-02 13:04:49,431 INFO: [75] Playing video for session ID: tuso3hth5mjlsjuhut1dsrr1
+2024-09-02 13:04:49,432 INFO: [PREPARE] Session ready for camera 75
+2024-09-02 13:04:49,432 INFO: [PREPARE] Preparing session for camera 181
+2024-09-02 13:04:49,458 INFO: [98] Obtained session ID: 5yhn2ljqs2mvgzmzsruq02ys
+2024-09-02 13:04:49,503 INFO: [103] Playing video for session ID: t04gnz3qmktk1g5hf5woa4ta
+2024-09-02 13:04:49,503 INFO: [76] Playing video for session ID: 4xbm4f2g4vmlhokpr0yis2sx
+2024-09-02 13:04:49,504 INFO: [PREPARE] Session ready for camera 103
+2024-09-02 13:04:49,504 INFO: [PREPARE] Session ready for camera 76
+2024-09-02 13:04:49,505 INFO: [PREPARE] Preparing session for camera 182
+2024-09-02 13:04:49,505 INFO: [PREPARE] Preparing session for camera 184
+2024-09-02 13:04:49,511 INFO: [89] Playing video for session ID: 5f4402yz2drl3zd4r3bmvjhs
+2024-09-02 13:04:49,511 INFO: [PREPARE] Session ready for camera 89
+2024-09-02 13:04:49,512 INFO: [PREPARE] Preparing session for camera 185
+2024-09-02 13:04:49,518 INFO: [46] Obtained session ID: s3buomxpxr1h0odbajah2okx
+2024-09-02 13:04:49,551 INFO: [105] Obtained session ID: 5kdu2kck3aaj2ckeganhym3p
+2024-09-02 13:04:49,594 INFO: [19] Obtained session ID: ste4c23ndlm032omylb2u5qb
+2024-09-02 13:04:49,605 INFO: [119] Obtained session ID: 1nix5onwcv4wzkl1ntq10rif
+2024-09-02 13:04:49,617 INFO: [113] Obtained session ID: 5pab2dgwqizozrnwagdq3iud
+2024-09-02 13:04:49,618 INFO: [98] Playing video for session ID: 5yhn2ljqs2mvgzmzsruq02ys
+2024-09-02 13:04:49,618 INFO: [PREPARE] Session ready for camera 98
+2024-09-02 13:04:49,619 INFO: [PREPARE] Preparing session for camera 186
+2024-09-02 13:04:49,643 INFO: [32] Obtained session ID: unouatbtf5grsxzpwj5a1wm0
+2024-09-02 13:04:49,653 INFO: [46] Playing video for session ID: s3buomxpxr1h0odbajah2okx
+2024-09-02 13:04:49,654 INFO: [PREPARE] Session ready for camera 46
+2024-09-02 13:04:49,654 INFO: [PREPARE] Preparing session for camera 188
+2024-09-02 13:04:49,682 INFO: [26] Obtained session ID: zbn0f0embcvvd4ed4kcifafc
+2024-09-02 13:04:49,694 INFO: [105] Playing video for session ID: 5kdu2kck3aaj2ckeganhym3p
+2024-09-02 13:04:49,694 INFO: [PREPARE] Session ready for camera 105
+2024-09-02 13:04:49,695 INFO: [PREPARE] Preparing session for camera 189
+2024-09-02 13:04:49,712 INFO: [19] Playing video for session ID: ste4c23ndlm032omylb2u5qb
+2024-09-02 13:04:49,713 INFO: [PREPARE] Session ready for camera 19
+2024-09-02 13:04:49,713 INFO: [PREPARE] Preparing session for camera 190
+2024-09-02 13:04:49,734 INFO: [119] Playing video for session ID: 1nix5onwcv4wzkl1ntq10rif
+2024-09-02 13:04:49,734 INFO: [PREPARE] Session ready for camera 119
+2024-09-02 13:04:49,735 INFO: [PREPARE] Preparing session for camera 191
+2024-09-02 13:04:49,738 INFO: [113] Playing video for session ID: 5pab2dgwqizozrnwagdq3iud
+2024-09-02 13:04:49,738 INFO: [PREPARE] Session ready for camera 113
+2024-09-02 13:04:49,739 INFO: [PREPARE] Preparing session for camera 194
+2024-09-02 13:04:49,784 INFO: [32] Playing video for session ID: unouatbtf5grsxzpwj5a1wm0
+2024-09-02 13:04:49,785 INFO: [PREPARE] Session ready for camera 32
+2024-09-02 13:04:49,786 INFO: [PREPARE] Preparing session for camera 195
+2024-09-02 13:04:49,826 INFO: [152] Obtained session ID: 4afw4hnd2jenl3npn2mfkmh5
+2024-09-02 13:04:49,830 INFO: [26] Playing video for session ID: zbn0f0embcvvd4ed4kcifafc
+2024-09-02 13:04:49,831 INFO: [PREPARE] Session ready for camera 26
+2024-09-02 13:04:49,831 INFO: [PREPARE] Preparing session for camera 196
+2024-09-02 13:04:49,860 INFO: [120] Obtained session ID: kdg1wkrh2oz4c20wyf0xhu4p
+2024-09-02 13:04:49,953 INFO: [152] Playing video for session ID: 4afw4hnd2jenl3npn2mfkmh5
+2024-09-02 13:04:49,953 INFO: [PREPARE] Session ready for camera 152
+2024-09-02 13:04:49,954 INFO: [PREPARE] Preparing session for camera 197
+2024-09-02 13:04:50,012 INFO: [120] Playing video for session ID: kdg1wkrh2oz4c20wyf0xhu4p
+2024-09-02 13:04:50,012 INFO: [PREPARE] Session ready for camera 120
+2024-09-02 13:04:50,013 INFO: [PREPARE] Preparing session for camera 198
+2024-09-02 13:04:50,499 INFO: [111] Obtained session ID: lc11ecrfjrj5wbgdpsemwfrl
+2024-09-02 13:04:50,592 INFO: [149] Obtained session ID: xusql504l1km144zch41yef0
+2024-09-02 13:04:50,615 INFO: [11] Obtained session ID: gb1xk43smfkx11jgri3wvfnh
+2024-09-02 13:04:50,646 INFO: [125] Obtained session ID: vessn2h05gbnc2rmmsqyr2vx
+2024-09-02 13:04:50,669 INFO: [111] Playing video for session ID: lc11ecrfjrj5wbgdpsemwfrl
+2024-09-02 13:04:50,669 INFO: [PREPARE] Session ready for camera 111
+2024-09-02 13:04:50,671 INFO: [PREPARE] Preparing session for camera 199
+2024-09-02 13:04:50,678 INFO: [92] Obtained session ID: itndmvrj42ltqq5upeih053l
+2024-09-02 13:04:50,695 INFO: [83] Obtained session ID: 141kfohwjvqq343fov1rz5ex
+2024-09-02 13:04:50,718 INFO: [151] Obtained session ID: ega1ix3p5lqvbcqidfgslo0m
+2024-09-02 13:04:50,730 INFO: [149] Playing video for session ID: xusql504l1km144zch41yef0
+2024-09-02 13:04:50,730 INFO: [PREPARE] Session ready for camera 149
+2024-09-02 13:04:50,731 INFO: [PREPARE] Preparing session for camera 200
+2024-09-02 13:04:50,757 INFO: [11] Playing video for session ID: gb1xk43smfkx11jgri3wvfnh
+2024-09-02 13:04:50,758 INFO: [PREPARE] Session ready for camera 11
+2024-09-02 13:04:50,759 INFO: [PREPARE] Preparing session for camera 201
+2024-09-02 13:04:50,782 INFO: [125] Playing video for session ID: vessn2h05gbnc2rmmsqyr2vx
+2024-09-02 13:04:50,782 INFO: [PREPARE] Session ready for camera 125
+2024-09-02 13:04:50,783 INFO: [PREPARE] Preparing session for camera 202
+2024-09-02 13:04:50,789 INFO: [140] Obtained session ID: c2djm1pa1xkl0w35p5ote0ks
+2024-09-02 13:04:50,812 INFO: [92] Playing video for session ID: itndmvrj42ltqq5upeih053l
+2024-09-02 13:04:50,813 INFO: [PREPARE] Session ready for camera 92
+2024-09-02 13:04:50,813 INFO: [PREPARE] Preparing session for camera 203
+2024-09-02 13:04:50,833 INFO: [83] Playing video for session ID: 141kfohwjvqq343fov1rz5ex
+2024-09-02 13:04:50,834 INFO: [PREPARE] Session ready for camera 83
+2024-09-02 13:04:50,835 INFO: [PREPARE] Preparing session for camera 206
+2024-09-02 13:04:50,835 INFO: [121] Obtained session ID: q223y44zhgn5her50kc50g0u
+2024-09-02 13:04:50,843 INFO: [151] Playing video for session ID: ega1ix3p5lqvbcqidfgslo0m
+2024-09-02 13:04:50,843 INFO: [PREPARE] Session ready for camera 151
+2024-09-02 13:04:50,844 INFO: [PREPARE] Preparing session for camera 207
+2024-09-02 13:04:50,862 INFO: [150] Obtained session ID: dxfq0xh5n5md4fooza3a5ycz
+2024-09-02 13:04:50,915 INFO: [139] Obtained session ID: juhunux2jpkt4xlksthaepui
+2024-09-02 13:04:50,944 INFO: [140] Playing video for session ID: c2djm1pa1xkl0w35p5ote0ks
+2024-09-02 13:04:50,944 INFO: [PREPARE] Session ready for camera 140
+2024-09-02 13:04:50,946 INFO: [PREPARE] Preparing session for camera 208
+2024-09-02 13:04:50,966 INFO: [121] Playing video for session ID: q223y44zhgn5her50kc50g0u
+2024-09-02 13:04:50,966 INFO: [PREPARE] Session ready for camera 121
+2024-09-02 13:04:50,966 INFO: [PREPARE] Preparing session for camera 209
+2024-09-02 13:04:50,983 INFO: [47] Obtained session ID: mwdygcbtuqwnz2izqc3mce0g
+2024-09-02 13:04:50,984 INFO: [37] Obtained session ID: yfakzjrx3riz5jjcxprfn4sl
+2024-09-02 13:04:51,020 INFO: [150] Playing video for session ID: dxfq0xh5n5md4fooza3a5ycz
+2024-09-02 13:04:51,020 INFO: [PREPARE] Session ready for camera 150
+2024-09-02 13:04:51,021 INFO: [PREPARE] Preparing session for camera 211
+2024-09-02 13:04:51,072 INFO: [126] Obtained session ID: npktf2ix2fsiil2njklrf25n
+2024-09-02 13:04:51,094 INFO: [39] Obtained session ID: ufmcjbft23lswcinvyl55oxh
+2024-09-02 13:04:51,097 INFO: [139] Playing video for session ID: juhunux2jpkt4xlksthaepui
+2024-09-02 13:04:51,098 INFO: [PREPARE] Session ready for camera 139
+2024-09-02 13:04:51,098 INFO: [PREPARE] Preparing session for camera 212
+2024-09-02 13:04:51,106 INFO: [102] Obtained session ID: s0jfjn3euchg2dtcxaxlapn3
+2024-09-02 13:04:51,112 INFO: [96] Obtained session ID: qibbzmrrymdhksljrh1xmfye
+2024-09-02 13:04:51,133 INFO: [37] Playing video for session ID: yfakzjrx3riz5jjcxprfn4sl
+2024-09-02 13:04:51,133 INFO: [PREPARE] Session ready for camera 37
+2024-09-02 13:04:51,135 INFO: [47] Playing video for session ID: mwdygcbtuqwnz2izqc3mce0g
+2024-09-02 13:04:51,135 INFO: [PREPARE] Preparing session for camera 214
+2024-09-02 13:04:51,135 INFO: [PREPARE] Session ready for camera 47
+2024-09-02 13:04:51,137 INFO: [PREPARE] Preparing session for camera 215
+2024-09-02 13:04:51,139 INFO: [114] Obtained session ID: lsftshqmnm2lmufv0afx3ahd
+2024-09-02 13:04:51,193 INFO: [126] Playing video for session ID: npktf2ix2fsiil2njklrf25n
+2024-09-02 13:04:51,194 INFO: [PREPARE] Session ready for camera 126
+2024-09-02 13:04:51,195 INFO: [PREPARE] Preparing session for camera 216
+2024-09-02 13:04:51,228 INFO: [39] Playing video for session ID: ufmcjbft23lswcinvyl55oxh
+2024-09-02 13:04:51,229 INFO: [PREPARE] Session ready for camera 39
+2024-09-02 13:04:51,230 INFO: [PREPARE] Preparing session for camera 217
+2024-09-02 13:04:51,272 INFO: [114] Playing video for session ID: lsftshqmnm2lmufv0afx3ahd
+2024-09-02 13:04:51,273 INFO: [PREPARE] Session ready for camera 114
+2024-09-02 13:04:51,273 INFO: [PREPARE] Preparing session for camera 218
+2024-09-02 13:04:51,283 INFO: [96] Playing video for session ID: qibbzmrrymdhksljrh1xmfye
+2024-09-02 13:04:51,283 INFO: [PREPARE] Session ready for camera 96
+2024-09-02 13:04:51,283 INFO: [PREPARE] Preparing session for camera 219
+2024-09-02 13:04:51,299 INFO: [79] Obtained session ID: ax2taba143ai1a054l3j4rrn
+2024-09-02 13:04:51,300 INFO: [102] Playing video for session ID: s0jfjn3euchg2dtcxaxlapn3
+2024-09-02 13:04:51,301 INFO: [PREPARE] Session ready for camera 102
+2024-09-02 13:04:51,301 INFO: [PREPARE] Preparing session for camera 220
+2024-09-02 13:04:51,372 INFO: [87] Obtained session ID: nbrjcy5ci3uw14y2uphx3z2g
+2024-09-02 13:04:51,393 INFO: [109] Obtained session ID: r1l2izec5oghzdp2qwqgffpu
+2024-09-02 13:04:51,429 INFO: [77] Obtained session ID: dvaqyi1bwc3adlnzkvylzspc
+2024-09-02 13:04:51,436 INFO: [112] Obtained session ID: hzukesq4drhckr342xnpjmlk
+2024-09-02 13:04:51,464 INFO: [127] Obtained session ID: cs4mm0wf3xnp4or5otmmqr4i
+2024-09-02 13:04:51,486 INFO: [79] Playing video for session ID: ax2taba143ai1a054l3j4rrn
+2024-09-02 13:04:51,487 INFO: [PREPARE] Session ready for camera 79
+2024-09-02 13:04:51,487 INFO: [PREPARE] Preparing session for camera 221
+2024-09-02 13:04:51,520 INFO: [133] Obtained session ID: i1igwryqszmhbmcepsvmgii2
+2024-09-02 13:04:51,535 INFO: [81] Obtained session ID: r5y3jtpfyjy4vn3mfctcd4lp
+2024-09-02 13:04:51,536 INFO: [87] Playing video for session ID: nbrjcy5ci3uw14y2uphx3z2g
+2024-09-02 13:04:51,536 INFO: [PREPARE] Session ready for camera 87
+2024-09-02 13:04:51,537 INFO: [PREPARE] Preparing session for camera 222
+2024-09-02 13:04:51,545 INFO: [116] Obtained session ID: grle1nf121v4rvcrextgwcoe
+2024-09-02 13:04:51,568 INFO: [80] Obtained session ID: kzref1wrhvm0pirkrmhh03el
+2024-09-02 13:04:51,592 INFO: [109] Playing video for session ID: r1l2izec5oghzdp2qwqgffpu
+2024-09-02 13:04:51,592 INFO: [PREPARE] Session ready for camera 109
+2024-09-02 13:04:51,593 INFO: [PREPARE] Preparing session for camera 223
+2024-09-02 13:04:51,599 INFO: [82] Obtained session ID: h0345gmcgqrbwldeeclradla
+2024-09-02 13:04:51,605 INFO: [77] Playing video for session ID: dvaqyi1bwc3adlnzkvylzspc
+2024-09-02 13:04:51,605 INFO: [PREPARE] Session ready for camera 77
+2024-09-02 13:04:51,606 INFO: [PREPARE] Preparing session for camera 224
+2024-09-02 13:04:51,606 INFO: [112] Playing video for session ID: hzukesq4drhckr342xnpjmlk
+2024-09-02 13:04:51,607 INFO: [PREPARE] Session ready for camera 112
+2024-09-02 13:04:51,608 INFO: [PREPARE] Preparing session for camera 225
+2024-09-02 13:04:51,608 INFO: [127] Playing video for session ID: cs4mm0wf3xnp4or5otmmqr4i
+2024-09-02 13:04:51,609 INFO: [PREPARE] Session ready for camera 127
+2024-09-02 13:04:51,609 INFO: [PREPARE] Preparing session for camera 226
+2024-09-02 13:04:51,614 INFO: [124] Obtained session ID: l4303ge1bftnps5520fn25t5
+2024-09-02 13:04:51,646 INFO: [133] Playing video for session ID: i1igwryqszmhbmcepsvmgii2
+2024-09-02 13:04:51,646 INFO: [PREPARE] Session ready for camera 133
+2024-09-02 13:04:51,647 INFO: [PREPARE] Preparing session for camera 227
+2024-09-02 13:04:51,673 INFO: [116] Playing video for session ID: grle1nf121v4rvcrextgwcoe
+2024-09-02 13:04:51,673 INFO: [PREPARE] Session ready for camera 116
+2024-09-02 13:04:51,673 INFO: [PREPARE] Preparing session for camera 229
+2024-09-02 13:04:51,674 INFO: [81] Playing video for session ID: r5y3jtpfyjy4vn3mfctcd4lp
+2024-09-02 13:04:51,674 INFO: [PREPARE] Session ready for camera 81
+2024-09-02 13:04:51,675 INFO: [PREPARE] Preparing session for camera 230
+2024-09-02 13:04:51,707 INFO: [80] Playing video for session ID: kzref1wrhvm0pirkrmhh03el
+2024-09-02 13:04:51,707 INFO: [PREPARE] Session ready for camera 80
+2024-09-02 13:04:51,708 INFO: [PREPARE] Preparing session for camera 231
+2024-09-02 13:04:51,717 INFO: [82] Playing video for session ID: h0345gmcgqrbwldeeclradla
+2024-09-02 13:04:51,718 INFO: [PREPARE] Session ready for camera 82
+2024-09-02 13:04:51,718 INFO: [PREPARE] Preparing session for camera 232
+2024-09-02 13:04:51,733 INFO: [124] Playing video for session ID: l4303ge1bftnps5520fn25t5
+2024-09-02 13:04:51,733 INFO: [PREPARE] Session ready for camera 124
+2024-09-02 13:04:51,733 INFO: [PREPARE] Preparing session for camera 233
+2024-09-02 13:04:52,017 INFO: [90] Obtained session ID: 2w3lj20ctliw24bqg3opwvaj
+2024-09-02 13:04:52,027 INFO: [99] Obtained session ID: 5y0ly4thwyvkqoefvyibsbg2
+2024-09-02 13:04:52,144 INFO: [90] Playing video for session ID: 2w3lj20ctliw24bqg3opwvaj
+2024-09-02 13:04:52,145 INFO: [PREPARE] Session ready for camera 90
+2024-09-02 13:04:52,146 INFO: [PREPARE] Preparing session for camera 239
+2024-09-02 13:04:52,156 INFO: [99] Playing video for session ID: 5y0ly4thwyvkqoefvyibsbg2
+2024-09-02 13:04:52,156 INFO: [PREPARE] Session ready for camera 99
+2024-09-02 13:04:52,157 INFO: [PREPARE] Preparing session for camera 240
+2024-09-02 13:04:52,262 INFO: [123] Obtained session ID: 4jnu4s52qw0drciwd0sgjzxt
+2024-09-02 13:04:52,405 INFO: [123] Playing video for session ID: 4jnu4s52qw0drciwd0sgjzxt
+2024-09-02 13:04:52,405 INFO: [PREPARE] Session ready for camera 123
+2024-09-02 13:04:52,406 INFO: [PREPARE] Preparing session for camera 244
+2024-09-02 13:04:52,409 INFO: [132] Obtained session ID: 3ics3oiv5mtqghmmezkok002
+2024-09-02 13:04:52,558 INFO: [153] Obtained session ID: pw25k0uybzhpclst2qb0agfh
+2024-09-02 13:04:52,601 INFO: [88] Obtained session ID: 00dsj3ogxxlvqxznkvk22004
+2024-09-02 13:04:52,888 INFO: [132] Playing video for session ID: 3ics3oiv5mtqghmmezkok002
+2024-09-02 13:04:52,889 INFO: [PREPARE] Session ready for camera 132
+2024-09-02 13:04:52,889 INFO: [153] Playing video for session ID: pw25k0uybzhpclst2qb0agfh
+2024-09-02 13:04:52,891 INFO: [88] Playing video for session ID: 00dsj3ogxxlvqxznkvk22004
+2024-09-02 13:04:52,891 INFO: [PREPARE] Preparing session for camera 248
+2024-09-02 13:04:52,891 INFO: [PREPARE] Session ready for camera 153
+2024-09-02 13:04:52,891 INFO: [PREPARE] Session ready for camera 88
+2024-09-02 13:04:52,893 INFO: [PREPARE] Preparing session for camera 250
+2024-09-02 13:04:52,894 INFO: [PREPARE] Preparing session for camera 251
+2024-09-02 13:04:52,935 INFO: [36] Obtained session ID: qadmxacd0wgxxcxlkzfemgyj
+2024-09-02 13:04:52,987 INFO: [148] Obtained session ID: 5lpux1ymu45ipdis1r3tdsxx
+2024-09-02 13:04:53,045 INFO: [131] Obtained session ID: vocyahegyusvoiq0ysohies5
+2024-09-02 13:04:53,088 INFO: [36] Playing video for session ID: qadmxacd0wgxxcxlkzfemgyj
+2024-09-02 13:04:53,088 INFO: [PREPARE] Session ready for camera 36
+2024-09-02 13:04:53,089 INFO: [PREPARE] Preparing session for camera 252
+2024-09-02 13:04:53,112 INFO: [148] Playing video for session ID: 5lpux1ymu45ipdis1r3tdsxx
+2024-09-02 13:04:53,112 INFO: [PREPARE] Session ready for camera 148
+2024-09-02 13:04:53,113 INFO: [PREPARE] Preparing session for camera 253
+2024-09-02 13:04:53,178 INFO: [93] Obtained session ID: 1gziqlnuqtwcq1vazemhgtz1
+2024-09-02 13:04:53,194 INFO: [131] Playing video for session ID: vocyahegyusvoiq0ysohies5
+2024-09-02 13:04:53,195 INFO: [PREPARE] Session ready for camera 131
+2024-09-02 13:04:53,196 INFO: [PREPARE] Preparing session for camera 254
+2024-09-02 13:04:53,226 INFO: [97] Obtained session ID: n1hfzjanfbcm1dp1yuyyd3tt
+2024-09-02 13:04:53,317 INFO: [93] Playing video for session ID: 1gziqlnuqtwcq1vazemhgtz1
+2024-09-02 13:04:53,317 INFO: [PREPARE] Session ready for camera 93
+2024-09-02 13:04:53,318 INFO: [PREPARE] Preparing session for camera 255
+2024-09-02 13:04:53,352 INFO: [94] Obtained session ID: lar5cped5sa305jcrtczeyn5
+2024-09-02 13:04:53,355 INFO: [97] Playing video for session ID: n1hfzjanfbcm1dp1yuyyd3tt
+2024-09-02 13:04:53,356 INFO: [PREPARE] Session ready for camera 97
+2024-09-02 13:04:53,356 INFO: [PREPARE] Preparing session for camera 256
+2024-09-02 13:04:53,448 INFO: [20] Obtained session ID: hk1zx2xowqqpdbz35hqmd3tr
+2024-09-02 13:04:53,472 INFO: [94] Playing video for session ID: lar5cped5sa305jcrtczeyn5
+2024-09-02 13:04:53,472 INFO: [PREPARE] Session ready for camera 94
+2024-09-02 13:04:53,473 INFO: [PREPARE] Preparing session for camera 257
+2024-09-02 13:04:53,576 INFO: [51] Obtained session ID: jeqrunezxrgnztxbibxqhu1a
+2024-09-02 13:04:53,589 INFO: [20] Playing video for session ID: hk1zx2xowqqpdbz35hqmd3tr
+2024-09-02 13:04:53,589 INFO: [PREPARE] Session ready for camera 20
+2024-09-02 13:04:53,591 INFO: [PREPARE] Preparing session for camera 258
+2024-09-02 13:04:53,730 INFO: [51] Playing video for session ID: jeqrunezxrgnztxbibxqhu1a
+2024-09-02 13:04:53,731 INFO: [PREPARE] Session ready for camera 51
+2024-09-02 13:04:53,731 INFO: [PREPARE] Preparing session for camera 259
+2024-09-02 13:04:54,069 INFO: [141] Obtained session ID: d2nyzxib01zgwx50ijsdllxj
+2024-09-02 13:04:54,461 INFO: [141] Playing video for session ID: d2nyzxib01zgwx50ijsdllxj
+2024-09-02 13:04:54,462 INFO: [PREPARE] Session ready for camera 141
+2024-09-02 13:04:54,463 INFO: [PREPARE] Preparing session for camera 277
+2024-09-02 13:04:54,487 INFO: [108] Obtained session ID: yerjx4bceohalxa3lm1dnnjj
+2024-09-02 13:04:54,606 INFO: [147] Obtained session ID: oedqj0jmf2qtykpaljf0vqqk
+2024-09-02 13:04:54,643 INFO: [108] Playing video for session ID: yerjx4bceohalxa3lm1dnnjj
+2024-09-02 13:04:54,643 INFO: [PREPARE] Session ready for camera 108
+2024-09-02 13:04:54,645 INFO: [PREPARE] Preparing session for camera 291
+2024-09-02 13:04:54,750 INFO: [147] Playing video for session ID: oedqj0jmf2qtykpaljf0vqqk
+2024-09-02 13:04:54,751 INFO: [PREPARE] Session ready for camera 147
+2024-09-02 13:04:54,753 INFO: [PREPARE] Preparing session for camera 301
+2024-09-02 13:04:54,807 INFO: [78] Obtained session ID: pxz5zb2s2wtb4ezcy0jdj03m
+2024-09-02 13:04:54,949 INFO: [78] Playing video for session ID: pxz5zb2s2wtb4ezcy0jdj03m
+2024-09-02 13:04:54,951 INFO: [PREPARE] Session ready for camera 78
+2024-09-02 13:04:54,953 INFO: [PREPARE] Preparing session for camera 304
+2024-09-02 13:04:57,758 INFO: [128] Obtained session ID: dkmqryuabipu1fc020sxqmql
+2024-09-02 13:04:57,924 INFO: [128] Playing video for session ID: dkmqryuabipu1fc020sxqmql
+2024-09-02 13:04:57,925 INFO: [PREPARE] Session ready for camera 128
+2024-09-02 13:04:57,926 INFO: [PREPARE] Preparing session for camera 305
+2024-09-02 13:04:59,172 INFO: [158] Obtained session ID: w3hswd150atjebzkshpgxwxj
+2024-09-02 13:04:59,292 INFO: [158] Playing video for session ID: w3hswd150atjebzkshpgxwxj
+2024-09-02 13:04:59,292 INFO: [PREPARE] Session ready for camera 158
+2024-09-02 13:04:59,293 INFO: [PREPARE] Preparing session for camera 309
+2024-09-02 13:04:59,768 INFO: [154] Obtained session ID: qelsjd3flgp42txnhscmqthd
+2024-09-02 13:04:59,912 INFO: [154] Playing video for session ID: qelsjd3flgp42txnhscmqthd
+2024-09-02 13:04:59,913 INFO: [PREPARE] Session ready for camera 154
+2024-09-02 13:04:59,914 INFO: [PREPARE] Preparing session for camera 310
+2024-09-02 13:05:00,754 INFO: [156] Obtained session ID: cbe11q5g1amnbgfo1d5dzwjh
+2024-09-02 13:05:00,891 INFO: [156] Playing video for session ID: cbe11q5g1amnbgfo1d5dzwjh
+2024-09-02 13:05:00,892 INFO: [PREPARE] Session ready for camera 156
+2024-09-02 13:05:00,893 INFO: [PREPARE] Preparing session for camera 318
+2024-09-02 13:05:00,916 INFO: [179] Obtained session ID: ai20dl5ruu4myxl2vdgz30vy
+2024-09-02 13:05:01,063 INFO: [179] Playing video for session ID: ai20dl5ruu4myxl2vdgz30vy
+2024-09-02 13:05:01,063 INFO: [PREPARE] Session ready for camera 179
+2024-09-02 13:05:01,064 INFO: [PREPARE] Preparing session for camera 320
+2024-09-02 13:05:02,032 INFO: [168] Obtained session ID: nyb0igz0xi1i1axflvzoykbs
+2024-09-02 13:05:02,071 INFO: [170] Obtained session ID: w414e2zxxzgcmhf0hon111dz
+2024-09-02 13:05:02,173 INFO: [168] Playing video for session ID: nyb0igz0xi1i1axflvzoykbs
+2024-09-02 13:05:02,173 INFO: [PREPARE] Session ready for camera 168
+2024-09-02 13:05:02,174 INFO: [PREPARE] Preparing session for camera 332
+2024-09-02 13:05:02,204 INFO: [170] Playing video for session ID: w414e2zxxzgcmhf0hon111dz
+2024-09-02 13:05:02,204 INFO: [PREPARE] Session ready for camera 170
+2024-09-02 13:05:02,205 INFO: [PREPARE] Preparing session for camera 335
+2024-09-02 13:05:02,563 INFO: [195] Obtained session ID: uq3wd32yind1o4mmds3c0lrj
+2024-09-02 13:05:02,585 INFO: [181] Obtained session ID: zryqdf3hlj4ysxuv4w2npxzp
+2024-09-02 13:05:02,714 INFO: [195] Playing video for session ID: uq3wd32yind1o4mmds3c0lrj
+2024-09-02 13:05:02,715 INFO: [PREPARE] Session ready for camera 195
+2024-09-02 13:05:02,717 INFO: [181] Playing video for session ID: zryqdf3hlj4ysxuv4w2npxzp
+2024-09-02 13:05:02,717 INFO: [PREPARE] Preparing session for camera 354
+2024-09-02 13:05:02,717 INFO: [PREPARE] Session ready for camera 181
+2024-09-02 13:05:02,719 INFO: [PREPARE] Preparing session for camera 363
+2024-09-02 13:05:02,782 INFO: [189] Obtained session ID: 003qxmgsc0trjk1enbb1jcwt
+2024-09-02 13:05:02,941 INFO: [189] Playing video for session ID: 003qxmgsc0trjk1enbb1jcwt
+2024-09-02 13:05:02,942 INFO: [PREPARE] Session ready for camera 189
+2024-09-02 13:05:02,943 INFO: [PREPARE] Preparing session for camera 364
+2024-09-02 13:05:03,402 INFO: [155] Obtained session ID: dh2um1p4srrhzytvjtfmug3c
+2024-09-02 13:05:03,501 INFO: [186] Obtained session ID: eci3kq1xn3vhvgm3mxhk2zrm
+2024-09-02 13:05:03,549 INFO: [178] Obtained session ID: jpu1vzzzhpbz10o4uelpvbx1
+2024-09-02 13:05:03,552 INFO: [155] Playing video for session ID: dh2um1p4srrhzytvjtfmug3c
+2024-09-02 13:05:03,552 INFO: [PREPARE] Session ready for camera 155
+2024-09-02 13:05:03,552 INFO: [PREPARE] Preparing session for camera 374
+2024-09-02 13:05:03,620 INFO: [180] Obtained session ID: w1c5wbv2bqdjpzvl2gb0dpp5
+2024-09-02 13:05:03,637 INFO: [186] Playing video for session ID: eci3kq1xn3vhvgm3mxhk2zrm
+2024-09-02 13:05:03,638 INFO: [PREPARE] Session ready for camera 186
+2024-09-02 13:05:03,639 INFO: [PREPARE] Preparing session for camera 385
+2024-09-02 13:05:03,669 INFO: [178] Playing video for session ID: jpu1vzzzhpbz10o4uelpvbx1
+2024-09-02 13:05:03,669 INFO: [PREPARE] Session ready for camera 178
+2024-09-02 13:05:03,670 INFO: [PREPARE] Preparing session for camera 386
+2024-09-02 13:05:03,769 INFO: [180] Playing video for session ID: w1c5wbv2bqdjpzvl2gb0dpp5
+2024-09-02 13:05:03,771 INFO: [PREPARE] Session ready for camera 180
+2024-09-02 13:05:03,771 INFO: [PREPARE] Preparing session for camera 387
+2024-09-02 13:05:03,958 INFO: [173] Obtained session ID: sejf4sbjlilzhjxdab0m41g1
+2024-09-02 13:05:04,024 INFO: [162] Obtained session ID: vofncxxbxljs2hm12hov2ki3
+2024-09-02 13:05:04,098 INFO: [173] Playing video for session ID: sejf4sbjlilzhjxdab0m41g1
+2024-09-02 13:05:04,098 INFO: [PREPARE] Session ready for camera 173
+2024-09-02 13:05:04,100 INFO: [PREPARE] Preparing session for camera 388
+2024-09-02 13:05:04,159 INFO: [162] Playing video for session ID: vofncxxbxljs2hm12hov2ki3
+2024-09-02 13:05:04,160 INFO: [PREPARE] Session ready for camera 162
+2024-09-02 13:05:04,160 INFO: [PREPARE] Preparing session for camera 394
+2024-09-02 13:05:04,550 INFO: [182] Obtained session ID: ivuxco5tavgdgrythplzbvx2
+2024-09-02 13:05:04,696 INFO: [182] Playing video for session ID: ivuxco5tavgdgrythplzbvx2
+2024-09-02 13:05:04,697 INFO: [PREPARE] Session ready for camera 182
+2024-09-02 13:05:04,698 INFO: [PREPARE] Preparing session for camera 411
+2024-09-02 13:05:04,959 INFO: [222] Obtained session ID: rnkdispqkbbvizjx1dp3pivp
+2024-09-02 13:05:05,008 INFO: [215] Obtained session ID: busa5tt2mbi3avugwhhecf3e
+2024-09-02 13:05:05,028 INFO: [191] Obtained session ID: 1j2ltwozlyv2xeqnwdrcqkrm
+2024-09-02 13:05:05,098 INFO: [222] Playing video for session ID: rnkdispqkbbvizjx1dp3pivp
+2024-09-02 13:05:05,098 INFO: [PREPARE] Session ready for camera 222
+2024-09-02 13:05:05,099 INFO: [PREPARE] Preparing session for camera 413
+2024-09-02 13:05:05,111 INFO: [196] Obtained session ID: weuaxzl4bwplnqzm3ucskemw
+2024-09-02 13:05:05,157 INFO: [215] Playing video for session ID: busa5tt2mbi3avugwhhecf3e
+2024-09-02 13:05:05,158 INFO: [198] Obtained session ID: ipqjni2ufu2qu1cl1bhimxiv
+2024-09-02 13:05:05,158 INFO: [PREPARE] Session ready for camera 215
+2024-09-02 13:05:05,159 INFO: [PREPARE] Preparing session for camera 432
+2024-09-02 13:05:05,177 INFO: [191] Playing video for session ID: 1j2ltwozlyv2xeqnwdrcqkrm
+2024-09-02 13:05:05,178 INFO: [PREPARE] Session ready for camera 191
+2024-09-02 13:05:05,178 INFO: [PREPARE] Preparing session for camera 439
+2024-09-02 13:05:05,224 INFO: [216] Obtained session ID: ofe0tpy1twxebyxgtrn2r2hh
+2024-09-02 13:05:05,230 INFO: [196] Playing video for session ID: weuaxzl4bwplnqzm3ucskemw
+2024-09-02 13:05:05,230 INFO: [PREPARE] Session ready for camera 196
+2024-09-02 13:05:05,231 INFO: [PREPARE] Preparing session for camera 479
+2024-09-02 13:05:05,287 INFO: [198] Playing video for session ID: ipqjni2ufu2qu1cl1bhimxiv
+2024-09-02 13:05:05,287 INFO: [PREPARE] Session ready for camera 198
+2024-09-02 13:05:05,288 INFO: [PREPARE] Preparing session for camera 481
+2024-09-02 13:05:05,398 INFO: [216] Playing video for session ID: ofe0tpy1twxebyxgtrn2r2hh
+2024-09-02 13:05:05,399 INFO: [PREPARE] Session ready for camera 216
+2024-09-02 13:05:05,400 INFO: [PREPARE] Preparing session for camera 493
+2024-09-02 13:05:05,586 INFO: [185] Obtained session ID: ugdezllnqufs2xgnq4fvamiv
+2024-09-02 13:05:05,705 INFO: [185] Playing video for session ID: ugdezllnqufs2xgnq4fvamiv
+2024-09-02 13:05:05,706 INFO: [PREPARE] Session ready for camera 185
+2024-09-02 13:05:05,707 INFO: [PREPARE] Preparing session for camera 500
+2024-09-02 13:05:05,796 INFO: [159] Obtained session ID: dh0hueupecg0fcazgbopn0dl
+2024-09-02 13:05:05,939 INFO: [159] Playing video for session ID: dh0hueupecg0fcazgbopn0dl
+2024-09-02 13:05:05,941 INFO: [PREPARE] Session ready for camera 159
+2024-09-02 13:05:05,942 INFO: [PREPARE] Preparing session for camera 506
+2024-09-02 13:05:07,549 INFO: [224] Obtained session ID: jcdijftuejfs3hj5odd24uii
+2024-09-02 13:05:07,567 INFO: [163] Obtained session ID: arlaoaoc0i0sigcl0ftf5ckw
+2024-09-02 13:05:07,679 INFO: [224] Playing video for session ID: jcdijftuejfs3hj5odd24uii
+2024-09-02 13:05:07,680 INFO: [PREPARE] Session ready for camera 224
+2024-09-02 13:05:07,680 INFO: [PREPARE] Preparing session for camera 526
+2024-09-02 13:05:07,705 INFO: [163] Playing video for session ID: arlaoaoc0i0sigcl0ftf5ckw
+2024-09-02 13:05:07,706 INFO: [PREPARE] Session ready for camera 163
+2024-09-02 13:05:07,706 INFO: [PREPARE] Preparing session for camera 527
+2024-09-02 13:05:07,757 INFO: [197] Obtained session ID: ybxbj5o2k1hi4vildwz1wsvy
+2024-09-02 13:05:07,896 INFO: [197] Playing video for session ID: ybxbj5o2k1hi4vildwz1wsvy
+2024-09-02 13:05:07,896 INFO: [PREPARE] Session ready for camera 197
+2024-09-02 13:05:07,897 INFO: [PREPARE] Preparing session for camera 535
+2024-09-02 13:05:08,287 INFO: [202] Obtained session ID: 5u3hjxlijfxobr4wfkmeofbs
+2024-09-02 13:05:08,418 INFO: [202] Playing video for session ID: 5u3hjxlijfxobr4wfkmeofbs
+2024-09-02 13:05:08,418 INFO: [PREPARE] Session ready for camera 202
+2024-09-02 13:05:08,419 INFO: [PREPARE] Preparing session for camera 536
+2024-09-02 13:05:08,854 INFO: [176] Obtained session ID: 5m2w5ynvhntmuhzltmysusch
+2024-09-02 13:05:08,976 INFO: [176] Playing video for session ID: 5m2w5ynvhntmuhzltmysusch
+2024-09-02 13:05:08,977 INFO: [PREPARE] Session ready for camera 176
+2024-09-02 13:05:08,978 INFO: [PREPARE] Preparing session for camera 542
+2024-09-02 13:05:09,044 INFO: [169] Obtained session ID: jpw0xjqzzlq2j4a01r1jlxst
+2024-09-02 13:05:09,173 INFO: [169] Playing video for session ID: jpw0xjqzzlq2j4a01r1jlxst
+2024-09-02 13:05:09,174 INFO: [PREPARE] Session ready for camera 169
+2024-09-02 13:05:09,175 INFO: [PREPARE] Preparing session for camera 546
+2024-09-02 13:05:09,806 INFO: [233] Obtained session ID: poyzkkdp0dgzx0jk21g4cdpm
+2024-09-02 13:05:09,834 INFO: [218] Obtained session ID: mx4nptv5kqkpnxnbrvxtkibt
+2024-09-02 13:05:09,870 INFO: [220] Obtained session ID: dhfxgjrvi3s14upocxl1pi2b
+2024-09-02 13:05:09,885 INFO: [231] Obtained session ID: 5p1nxk2euwaojtmmiggtiad5
+2024-09-02 13:05:09,946 INFO: [233] Playing video for session ID: poyzkkdp0dgzx0jk21g4cdpm
+2024-09-02 13:05:09,947 INFO: [PREPARE] Session ready for camera 233
+2024-09-02 13:05:09,948 INFO: [PREPARE] Preparing session for camera 556
+2024-09-02 13:05:09,955 INFO: [218] Playing video for session ID: mx4nptv5kqkpnxnbrvxtkibt
+2024-09-02 13:05:09,956 INFO: [PREPARE] Session ready for camera 218
+2024-09-02 13:05:09,956 INFO: [PREPARE] Preparing session for camera 562
+2024-09-02 13:05:10,007 INFO: [220] Playing video for session ID: dhfxgjrvi3s14upocxl1pi2b
+2024-09-02 13:05:10,008 INFO: [PREPARE] Session ready for camera 220
+2024-09-02 13:05:10,009 INFO: [PREPARE] Preparing session for camera 569
+2024-09-02 13:05:10,024 INFO: [231] Playing video for session ID: 5p1nxk2euwaojtmmiggtiad5
+2024-09-02 13:05:10,024 INFO: [PREPARE] Session ready for camera 231
+2024-09-02 13:05:10,025 INFO: [PREPARE] Preparing session for camera 572
+2024-09-02 13:05:10,568 INFO: [200] Obtained session ID: qfnpgxcwe3iah5fhims5al4q
+2024-09-02 13:05:10,620 INFO: [223] Obtained session ID: v1n5l31pi1g020xergkmedtc
+2024-09-02 13:05:10,627 INFO: [229] Obtained session ID: smstmocgkdfolezmqozeqmxh
+2024-09-02 13:05:10,671 INFO: [171] Obtained session ID: 0wkiljesse4nqpbc5n321jjt
+2024-09-02 13:05:10,690 INFO: [184] Obtained session ID: fqpf4ystav5rx4tgot2brujn
+2024-09-02 13:05:10,711 INFO: [200] Playing video for session ID: qfnpgxcwe3iah5fhims5al4q
+2024-09-02 13:05:10,711 INFO: [PREPARE] Session ready for camera 200
+2024-09-02 13:05:10,712 INFO: [PREPARE] Preparing session for camera 576
+2024-09-02 13:05:10,789 INFO: [194] Obtained session ID: czvzjptkyi3eqd01wloqx520
+2024-09-02 13:05:10,791 INFO: [223] Playing video for session ID: v1n5l31pi1g020xergkmedtc
+2024-09-02 13:05:10,792 INFO: [PREPARE] Session ready for camera 223
+2024-09-02 13:05:10,793 INFO: [229] Playing video for session ID: smstmocgkdfolezmqozeqmxh
+2024-09-02 13:05:10,793 INFO: [PREPARE] Preparing session for camera 584
+2024-09-02 13:05:10,793 INFO: [PREPARE] Session ready for camera 229
+2024-09-02 13:05:10,794 INFO: [PREPARE] Preparing session for camera 595
+2024-09-02 13:05:10,817 INFO: [171] Playing video for session ID: 0wkiljesse4nqpbc5n321jjt
+2024-09-02 13:05:10,817 INFO: [PREPARE] Session ready for camera 171
+2024-09-02 13:05:10,818 INFO: [PREPARE] Preparing session for camera 597
+2024-09-02 13:05:10,825 INFO: [184] Playing video for session ID: fqpf4ystav5rx4tgot2brujn
+2024-09-02 13:05:10,825 INFO: [PREPARE] Session ready for camera 184
+2024-09-02 13:05:10,826 INFO: [PREPARE] Preparing session for camera 603
+2024-09-02 13:05:10,865 INFO: [230] Obtained session ID: zayfe5zx1pnsw5nvgqhne2nv
+2024-09-02 13:05:10,888 INFO: [203] Obtained session ID: pfrhblu2pxzz2n3kj1eq0gdn
+2024-09-02 13:05:10,926 INFO: [255] Obtained session ID: 0nilikmttgefjd1crijdbimn
+2024-09-02 13:05:10,937 INFO: [194] Playing video for session ID: czvzjptkyi3eqd01wloqx520
+2024-09-02 13:05:10,938 INFO: [PREPARE] Session ready for camera 194
+2024-09-02 13:05:10,938 INFO: [PREPARE] Preparing session for camera 604
+2024-09-02 13:05:10,951 INFO: [248] Obtained session ID: ohwcgguk4sbrhemvcvecdxnv
+2024-09-02 13:05:10,976 INFO: [206] Obtained session ID: zak3vdmhpwjdaq4v5wzgafda
+2024-09-02 13:05:10,991 INFO: [230] Playing video for session ID: zayfe5zx1pnsw5nvgqhne2nv
+2024-09-02 13:05:10,991 INFO: [PREPARE] Session ready for camera 230
+2024-09-02 13:05:10,992 INFO: [PREPARE] Preparing session for camera 609
+2024-09-02 13:05:11,014 INFO: [190] Obtained session ID: jqdnsbfkwt3q4tkw1r00fwp2
+2024-09-02 13:05:11,035 INFO: [203] Playing video for session ID: pfrhblu2pxzz2n3kj1eq0gdn
+2024-09-02 13:05:11,036 INFO: [PREPARE] Session ready for camera 203
+2024-09-02 13:05:11,037 INFO: [PREPARE] Preparing session for camera 610
+2024-09-02 13:05:11,066 INFO: [255] Playing video for session ID: 0nilikmttgefjd1crijdbimn
+2024-09-02 13:05:11,067 INFO: [PREPARE] Session ready for camera 255
+2024-09-02 13:05:11,067 INFO: [PREPARE] Preparing session for camera 612
+2024-09-02 13:05:11,081 INFO: [248] Playing video for session ID: ohwcgguk4sbrhemvcvecdxnv
+2024-09-02 13:05:11,081 INFO: [PREPARE] Session ready for camera 248
+2024-09-02 13:05:11,082 INFO: [PREPARE] Preparing session for camera 613
+2024-09-02 13:05:11,114 INFO: [206] Playing video for session ID: zak3vdmhpwjdaq4v5wzgafda
+2024-09-02 13:05:11,114 INFO: [PREPARE] Session ready for camera 206
+2024-09-02 13:05:11,115 INFO: [PREPARE] Preparing session for camera 615
+2024-09-02 13:05:11,141 INFO: [190] Playing video for session ID: jqdnsbfkwt3q4tkw1r00fwp2
+2024-09-02 13:05:11,141 INFO: [PREPARE] Session ready for camera 190
+2024-09-02 13:05:11,141 INFO: [PREPARE] Preparing session for camera 616
+2024-09-02 13:05:11,243 INFO: [239] Obtained session ID: fn1e3qxeelixua1fd3pt4wyw
+2024-09-02 13:05:11,324 INFO: [188] Obtained session ID: v4uthmfghoht3chh3xulozkq
+2024-09-02 13:05:11,395 INFO: [239] Playing video for session ID: fn1e3qxeelixua1fd3pt4wyw
+2024-09-02 13:05:11,395 INFO: [PREPARE] Session ready for camera 239
+2024-09-02 13:05:11,397 INFO: [PREPARE] Preparing session for camera 619
+2024-09-02 13:05:11,432 INFO: [252] Obtained session ID: trds5gvz1hohomd5fpgaslgk
+2024-09-02 13:05:11,464 INFO: [188] Playing video for session ID: v4uthmfghoht3chh3xulozkq
+2024-09-02 13:05:11,465 INFO: [PREPARE] Session ready for camera 188
+2024-09-02 13:05:11,466 INFO: [PREPARE] Preparing session for camera 622
+2024-09-02 13:05:11,468 INFO: [256] Obtained session ID: aap2avipqaecxyw2j3uo5e0r
+2024-09-02 13:05:11,574 INFO: [252] Playing video for session ID: trds5gvz1hohomd5fpgaslgk
+2024-09-02 13:05:11,575 INFO: [PREPARE] Session ready for camera 252
+2024-09-02 13:05:11,577 INFO: [PREPARE] Preparing session for camera 623
+2024-09-02 13:05:11,588 INFO: [256] Playing video for session ID: aap2avipqaecxyw2j3uo5e0r
+2024-09-02 13:05:11,588 INFO: [PREPARE] Session ready for camera 256
+2024-09-02 13:05:11,589 INFO: [PREPARE] Preparing session for camera 630
+2024-09-02 13:05:12,374 INFO: [221] Obtained session ID: tzpoaj34ktjmlxrjjanazro4
+2024-09-02 13:05:12,387 INFO: [257] Obtained session ID: pq22gmqnfoxbnt1gycjnpagt
+2024-09-02 13:05:12,424 INFO: [254] Obtained session ID: jfmefowqla5yaydkr0iqrvnl
+2024-09-02 13:05:12,457 INFO: [225] Obtained session ID: f3roczdugrtsmfytj5nwtdb3
+2024-09-02 13:05:12,462 INFO: [232] Obtained session ID: 0tkybp2wutbyq41klrjvcbs1
+2024-09-02 13:05:12,482 INFO: [214] Obtained session ID: d2irj5zoh30iuuswfp2tjjy1
+2024-09-02 13:05:12,488 INFO: [207] Obtained session ID: ojna33fh44sva43nj2wmi4fa
+2024-09-02 13:05:12,515 INFO: [221] Playing video for session ID: tzpoaj34ktjmlxrjjanazro4
+2024-09-02 13:05:12,515 INFO: [PREPARE] Session ready for camera 221
+2024-09-02 13:05:12,516 INFO: [PREPARE] Preparing session for camera 639
+2024-09-02 13:05:12,549 INFO: [257] Playing video for session ID: pq22gmqnfoxbnt1gycjnpagt
+2024-09-02 13:05:12,549 INFO: [PREPARE] Session ready for camera 257
+2024-09-02 13:05:12,549 INFO: [PREPARE] Preparing session for camera 642
+2024-09-02 13:05:12,576 INFO: [254] Playing video for session ID: jfmefowqla5yaydkr0iqrvnl
+2024-09-02 13:05:12,576 INFO: [PREPARE] Session ready for camera 254
+2024-09-02 13:05:12,576 INFO: [PREPARE] Preparing session for camera 648
+2024-09-02 13:05:12,585 INFO: [199] Obtained session ID: nke5ntbkmzurgbtsgswmvhmf
+2024-09-02 13:05:12,619 INFO: [225] Playing video for session ID: f3roczdugrtsmfytj5nwtdb3
+2024-09-02 13:05:12,619 INFO: [232] Playing video for session ID: 0tkybp2wutbyq41klrjvcbs1
+2024-09-02 13:05:12,620 INFO: [PREPARE] Session ready for camera 225
+2024-09-02 13:05:12,620 INFO: [PREPARE] Session ready for camera 232
+2024-09-02 13:05:12,621 INFO: [PREPARE] Preparing session for camera 907
+2024-09-02 13:05:12,621 INFO: [PREPARE] Preparing session for camera 913
+2024-09-02 13:05:12,625 INFO: [217] Obtained session ID: w0zroxawfmzb1ajiwyczouql
+2024-09-02 13:05:12,638 INFO: [214] Playing video for session ID: d2irj5zoh30iuuswfp2tjjy1
+2024-09-02 13:05:12,639 INFO: [PREPARE] Session ready for camera 214
+2024-09-02 13:05:12,639 INFO: [PREPARE] Preparing session for camera 915
+2024-09-02 13:05:12,652 INFO: [219] Obtained session ID: j01t0kqfmasjwxwm0wyyaqnv
+2024-09-02 13:05:12,653 INFO: [207] Playing video for session ID: ojna33fh44sva43nj2wmi4fa
+2024-09-02 13:05:12,653 INFO: [PREPARE] Session ready for camera 207
+2024-09-02 13:05:12,654 INFO: [PREPARE] Preparing session for camera 924
+2024-09-02 13:05:12,846 INFO: [212] Obtained session ID: aorbzycgxqc3zym5d02dayiu
+2024-09-02 13:05:12,864 INFO: [226] Obtained session ID: 1luztrvdbvmdh4dqauh4xexn
+2024-09-02 13:05:12,887 INFO: [219] Playing video for session ID: j01t0kqfmasjwxwm0wyyaqnv
+2024-09-02 13:05:12,888 INFO: [PREPARE] Session ready for camera 219
+2024-09-02 13:05:12,888 INFO: [PREPARE] Preparing session for camera 939
+2024-09-02 13:05:12,889 INFO: [217] Playing video for session ID: w0zroxawfmzb1ajiwyczouql
+2024-09-02 13:05:12,889 INFO: [PREPARE] Session ready for camera 217
+2024-09-02 13:05:12,889 INFO: [199] Playing video for session ID: nke5ntbkmzurgbtsgswmvhmf
+2024-09-02 13:05:12,889 INFO: [PREPARE] Session ready for camera 199
+2024-09-02 13:05:12,889 INFO: [PREPARE] Preparing session for camera 942
+2024-09-02 13:05:12,891 INFO: [PREPARE] Preparing session for camera 947
+2024-09-02 13:05:12,892 INFO: [301] Obtained session ID: 0z0vihhkw3nflwnxqshs5md2
+2024-09-02 13:05:13,392 INFO: [226] Playing video for session ID: 1luztrvdbvmdh4dqauh4xexn
+2024-09-02 13:05:13,393 INFO: [PREPARE] Session ready for camera 226
+2024-09-02 13:05:13,394 INFO: [212] Playing video for session ID: aorbzycgxqc3zym5d02dayiu
+2024-09-02 13:05:13,394 INFO: [PREPARE] Preparing session for camera 953
+2024-09-02 13:05:13,394 INFO: [301] Playing video for session ID: 0z0vihhkw3nflwnxqshs5md2
+2024-09-02 13:05:13,395 INFO: [PREPARE] Session ready for camera 212
+2024-09-02 13:05:13,396 INFO: [PREPARE] Session ready for camera 301
+2024-09-02 13:05:13,397 INFO: [PREPARE] Preparing session for camera 962
+2024-09-02 13:05:13,397 INFO: [PREPARE] Preparing session for camera 968
+2024-09-02 13:05:13,415 INFO: [208] Obtained session ID: vxbd3jp4dvk05iebyeqmi5e2
+2024-09-02 13:05:13,562 INFO: [209] Obtained session ID: fvg4ywrob2mhwyvnmyel4qly
+2024-09-02 13:05:13,578 INFO: [208] Playing video for session ID: vxbd3jp4dvk05iebyeqmi5e2
+2024-09-02 13:05:13,579 INFO: [PREPARE] Session ready for camera 208
+2024-09-02 13:05:13,580 INFO: [PREPARE] Preparing session for camera 971
+2024-09-02 13:05:13,612 INFO: [240] Obtained session ID: 2i2gasmfnrzhz2k12rnq1oj0
+2024-09-02 13:05:13,663 INFO: [201] Obtained session ID: 1zswu4diztm03phausu3qhtx
+2024-09-02 13:05:13,699 INFO: [258] Obtained session ID: hk5lqclyu4dfwctg5xspkkym
+2024-09-02 13:05:13,707 INFO: [209] Playing video for session ID: fvg4ywrob2mhwyvnmyel4qly
+2024-09-02 13:05:13,707 INFO: [PREPARE] Session ready for camera 209
+2024-09-02 13:05:13,708 INFO: [PREPARE] Preparing session for camera 991
+2024-09-02 13:05:13,727 INFO: [304] Obtained session ID: p3rcpqcgw13xjn2542ovy05x
+2024-09-02 13:05:13,730 INFO: [177] Obtained session ID: hj5eyihim2cay20skkoevv0t
+2024-09-02 13:05:13,778 INFO: [240] Playing video for session ID: 2i2gasmfnrzhz2k12rnq1oj0
+2024-09-02 13:05:13,779 INFO: [PREPARE] Session ready for camera 240
+2024-09-02 13:05:13,779 INFO: [PREPARE] Preparing session for camera 996
+2024-09-02 13:05:13,816 INFO: [201] Playing video for session ID: 1zswu4diztm03phausu3qhtx
+2024-09-02 13:05:13,816 INFO: [PREPARE] Session ready for camera 201
+2024-09-02 13:05:13,817 INFO: [PREPARE] Preparing session for camera 997
+2024-09-02 13:05:13,827 INFO: [211] Obtained session ID: 4dqa24i23f2oqr4p2vpkcze3
+2024-09-02 13:05:13,862 INFO: [227] Obtained session ID: cpenpafq0du5r2mv5m1dicrr
+2024-09-02 13:05:13,863 INFO: [258] Playing video for session ID: hk5lqclyu4dfwctg5xspkkym
+2024-09-02 13:05:13,864 INFO: [PREPARE] Session ready for camera 258
+2024-09-02 13:05:13,864 INFO: [177] Playing video for session ID: hj5eyihim2cay20skkoevv0t
+2024-09-02 13:05:13,864 INFO: [304] Playing video for session ID: p3rcpqcgw13xjn2542ovy05x
+2024-09-02 13:05:13,865 INFO: [PREPARE] Session ready for camera 177
+2024-09-02 13:05:13,865 INFO: [PREPARE] Preparing session for camera 999
+2024-09-02 13:05:13,865 INFO: [PREPARE] Session ready for camera 304
+2024-09-02 13:05:13,866 INFO: [PREPARE] Preparing session for camera 1027
+2024-09-02 13:05:13,868 INFO: [PREPARE] Preparing session for camera 1028
+2024-09-02 13:05:13,968 INFO: [251] Obtained session ID: 5nudhfnq5z30rpm2qsy5yxvy
+2024-09-02 13:05:13,976 INFO: [211] Playing video for session ID: 4dqa24i23f2oqr4p2vpkcze3
+2024-09-02 13:05:13,977 INFO: [PREPARE] Session ready for camera 211
+2024-09-02 13:05:13,978 INFO: [PREPARE] Preparing session for camera 1037
+2024-09-02 13:05:13,989 INFO: [227] Playing video for session ID: cpenpafq0du5r2mv5m1dicrr
+2024-09-02 13:05:13,990 INFO: [PREPARE] Session ready for camera 227
+2024-09-02 13:05:13,991 INFO: [PREPARE] Preparing session for camera 1038
+2024-09-02 13:05:14,043 INFO: [250] Obtained session ID: v5pifxtka02gnoksp3wsnhrf
+2024-09-02 13:05:14,099 INFO: [251] Playing video for session ID: 5nudhfnq5z30rpm2qsy5yxvy
+2024-09-02 13:05:14,100 INFO: [PREPARE] Session ready for camera 251
+2024-09-02 13:05:14,100 INFO: [PREPARE] Preparing session for camera 1043
+2024-09-02 13:05:14,171 INFO: [253] Obtained session ID: kvwosassivxvwabpvtzper1j
+2024-09-02 13:05:14,178 INFO: [250] Playing video for session ID: v5pifxtka02gnoksp3wsnhrf
+2024-09-02 13:05:14,179 INFO: [PREPARE] Session ready for camera 250
+2024-09-02 13:05:14,180 INFO: [PREPARE] Preparing session for camera 1051
+2024-09-02 13:05:14,301 INFO: [253] Playing video for session ID: kvwosassivxvwabpvtzper1j
+2024-09-02 13:05:14,302 INFO: [PREPARE] Session ready for camera 253
+2024-09-02 13:05:14,303 INFO: [PREPARE] Preparing session for camera 1053
+2024-09-02 13:05:14,550 INFO: [291] Obtained session ID: smzsyqlp1kfyxvaja33jttra
+2024-09-02 13:05:14,593 INFO: [309] Obtained session ID: txwzx5poxxa031o1nzryt10x
+2024-09-02 13:05:14,687 INFO: [291] Playing video for session ID: smzsyqlp1kfyxvaja33jttra
+2024-09-02 13:05:14,687 INFO: [PREPARE] Session ready for camera 291
+2024-09-02 13:05:14,688 INFO: [PREPARE] Preparing session for camera 1058
+2024-09-02 13:05:14,733 INFO: [309] Playing video for session ID: txwzx5poxxa031o1nzryt10x
+2024-09-02 13:05:14,733 INFO: [PREPARE] Session ready for camera 309
+2024-09-02 13:05:14,734 INFO: [PREPARE] Preparing session for camera 1060
+2024-09-02 13:05:15,108 INFO: [259] Obtained session ID: 3p2ysh3ldo0hpwfzsvdfkszw
+2024-09-02 13:05:15,230 INFO: [259] Playing video for session ID: 3p2ysh3ldo0hpwfzsvdfkszw
+2024-09-02 13:05:15,230 INFO: [PREPARE] Session ready for camera 259
+2024-09-02 13:05:15,231 INFO: [PREPARE] Preparing session for camera 1061
+2024-09-02 13:05:20,781 INFO: [320] Obtained session ID: z5pvd5difxjmiv2mgdxzwerd
+2024-09-02 13:05:20,814 INFO: [310] Obtained session ID: i3a54ewryqme1dqqogbe3aw0
+2024-09-02 13:05:20,939 INFO: [320] Playing video for session ID: z5pvd5difxjmiv2mgdxzwerd
+2024-09-02 13:05:20,940 INFO: [PREPARE] Session ready for camera 320
+2024-09-02 13:05:20,941 INFO: [PREPARE] Preparing session for camera 1063
+2024-09-02 13:05:20,946 INFO: [310] Playing video for session ID: i3a54ewryqme1dqqogbe3aw0
+2024-09-02 13:05:20,946 INFO: [PREPARE] Session ready for camera 310
+2024-09-02 13:05:20,947 INFO: [PREPARE] Preparing session for camera 1064
+2024-09-02 13:05:21,324 INFO: [277] Obtained session ID: xxpwt3fj4ittxijb4fktyuku
+2024-09-02 13:05:21,464 INFO: [277] Playing video for session ID: xxpwt3fj4ittxijb4fktyuku
+2024-09-02 13:05:21,465 INFO: [PREPARE] Session ready for camera 277
+2024-09-02 13:05:21,466 INFO: [PREPARE] Preparing session for camera 1065
+2024-09-02 13:05:23,221 INFO: [244] Obtained session ID: w50zd510nufok1tpqdriipi3
+2024-09-02 13:05:23,342 INFO: [244] Playing video for session ID: w50zd510nufok1tpqdriipi3
+2024-09-02 13:05:23,343 INFO: [PREPARE] Session ready for camera 244
+2024-09-02 13:05:23,344 INFO: [PREPARE] Preparing session for camera 1066
+2024-09-02 13:05:24,827 INFO: [305] Obtained session ID: qhhvizwaz0wwoymr5tv0ee5a
+2024-09-02 13:05:24,955 INFO: [305] Playing video for session ID: qhhvizwaz0wwoymr5tv0ee5a
+2024-09-02 13:05:24,956 INFO: [PREPARE] Session ready for camera 305
+2024-09-02 13:05:24,958 INFO: [PREPARE] Preparing session for camera 1067
+2024-09-02 13:05:28,793 INFO: [354] Obtained session ID: wiutwa22tdps2xrrakkej1jc
+2024-09-02 13:05:28,933 INFO: [354] Playing video for session ID: wiutwa22tdps2xrrakkej1jc
+2024-09-02 13:05:28,934 INFO: [PREPARE] Session ready for camera 354
+2024-09-02 13:05:28,934 INFO: [PREPARE] Preparing session for camera 1068
+2024-09-02 13:05:30,323 INFO: [386] Obtained session ID: qebhludlatikxc0vny2nj0yc
+2024-09-02 13:05:30,474 INFO: [386] Playing video for session ID: qebhludlatikxc0vny2nj0yc
+2024-09-02 13:05:30,474 INFO: [PREPARE] Session ready for camera 386
+2024-09-02 13:05:30,475 INFO: [PREPARE] Preparing session for camera 1069
+2024-09-02 13:05:30,889 INFO: [439] Obtained session ID: sl2aeseho2iwap05lavvigsq
+2024-09-02 13:05:31,002 INFO: [332] Obtained session ID: mpo3rslu43kxadcfhdhz3z2r
+2024-09-02 13:05:31,018 INFO: [439] Playing video for session ID: sl2aeseho2iwap05lavvigsq
+2024-09-02 13:05:31,019 INFO: [PREPARE] Session ready for camera 439
+2024-09-02 13:05:31,019 INFO: [PREPARE] Preparing session for camera 1070
+2024-09-02 13:05:31,146 INFO: [332] Playing video for session ID: mpo3rslu43kxadcfhdhz3z2r
+2024-09-02 13:05:31,147 INFO: [PREPARE] Session ready for camera 332
+2024-09-02 13:05:31,149 INFO: [PREPARE] Preparing session for camera 1071
+2024-09-02 13:05:31,387 INFO: [385] Obtained session ID: fhike1eookle5y5tw0eqggov
+2024-09-02 13:05:31,519 INFO: [385] Playing video for session ID: fhike1eookle5y5tw0eqggov
+2024-09-02 13:05:31,521 INFO: [PREPARE] Session ready for camera 385
+2024-09-02 13:05:31,523 INFO: [PREPARE] Preparing session for camera 1076
+2024-09-02 13:05:32,670 INFO: [526] Obtained session ID: r0h1x5frugsuvpmkyxbuxbpg
+2024-09-02 13:05:32,709 INFO: [500] Obtained session ID: jwi2qmhoizieqhgs2i1ko1tx
+2024-09-02 13:05:32,801 INFO: [526] Playing video for session ID: r0h1x5frugsuvpmkyxbuxbpg
+2024-09-02 13:05:32,801 INFO: [PREPARE] Session ready for camera 526
+2024-09-02 13:05:32,802 INFO: [PREPARE] Preparing session for camera 1078
+2024-09-02 13:05:32,844 INFO: [500] Playing video for session ID: jwi2qmhoizieqhgs2i1ko1tx
+2024-09-02 13:05:32,845 INFO: [PREPARE] Session ready for camera 500
+2024-09-02 13:05:32,845 INFO: [PREPARE] Preparing session for camera 1081
+2024-09-02 13:05:32,898 INFO: [374] Obtained session ID: 4w0zyinvjp5cvs4oksoeqbww
+2024-09-02 13:05:33,052 INFO: [374] Playing video for session ID: 4w0zyinvjp5cvs4oksoeqbww
+2024-09-02 13:05:33,053 INFO: [PREPARE] Session ready for camera 374
+2024-09-02 13:05:33,054 INFO: [PREPARE] Preparing session for camera 1082
+2024-09-02 13:05:33,139 INFO: [388] Obtained session ID: urekirshvptk2qlj0offe2yd
+2024-09-02 13:05:33,260 INFO: [318] Obtained session ID: qmybmfooxa3ldqljp2m1i05m
+2024-09-02 13:05:33,282 INFO: [388] Playing video for session ID: urekirshvptk2qlj0offe2yd
+2024-09-02 13:05:33,282 INFO: [PREPARE] Session ready for camera 388
+2024-09-02 13:05:33,283 INFO: [PREPARE] Preparing session for camera 1083
+2024-09-02 13:05:33,329 INFO: [542] Obtained session ID: eg4hlbp3ux3xouo3nygh0vw1
+2024-09-02 13:05:33,400 INFO: [318] Playing video for session ID: qmybmfooxa3ldqljp2m1i05m
+2024-09-02 13:05:33,401 INFO: [PREPARE] Session ready for camera 318
+2024-09-02 13:05:33,402 INFO: [PREPARE] Preparing session for camera 1085
+2024-09-02 13:05:33,462 INFO: [542] Playing video for session ID: eg4hlbp3ux3xouo3nygh0vw1
+2024-09-02 13:05:33,463 INFO: [PREPARE] Session ready for camera 542
+2024-09-02 13:05:33,464 INFO: [PREPARE] Preparing session for camera 1086
+2024-09-02 13:05:33,910 INFO: [572] Obtained session ID: hlqvorvxnlnhvkogo5d1ej0q
+2024-09-02 13:05:33,961 INFO: [622] Obtained session ID: sbdxqbisw25zmcdzzs13uf1m
+2024-09-02 13:05:34,012 INFO: [506] Obtained session ID: slltwtugqdxhr2b3wd1pu4v2
+2024-09-02 13:05:34,018 INFO: [411] Obtained session ID: uuxr4kkds4ggugqzyc2iqfht
+2024-09-02 13:05:34,065 INFO: [572] Playing video for session ID: hlqvorvxnlnhvkogo5d1ej0q
+2024-09-02 13:05:34,065 INFO: [PREPARE] Session ready for camera 572
+2024-09-02 13:05:34,065 INFO: [PREPARE] Preparing session for camera 1087
+2024-09-02 13:05:34,074 INFO: [546] Obtained session ID: vdxfemjy11ktztsagbpmznkb
+2024-09-02 13:05:34,078 INFO: [493] Obtained session ID: pbfcpxeohtdi1fsu4novrd2m
+2024-09-02 13:05:34,103 INFO: [622] Playing video for session ID: sbdxqbisw25zmcdzzs13uf1m
+2024-09-02 13:05:34,104 INFO: [PREPARE] Session ready for camera 622
+2024-09-02 13:05:34,105 INFO: [PREPARE] Preparing session for camera 1088
+2024-09-02 13:05:34,131 INFO: [363] Obtained session ID: jrmzyvrx3f0xtpaiqjgmxqxq
+2024-09-02 13:05:34,139 INFO: [411] Playing video for session ID: uuxr4kkds4ggugqzyc2iqfht
+2024-09-02 13:05:34,139 INFO: [PREPARE] Session ready for camera 411
+2024-09-02 13:05:34,140 INFO: [PREPARE] Preparing session for camera 1089
+2024-09-02 13:05:34,167 INFO: [506] Playing video for session ID: slltwtugqdxhr2b3wd1pu4v2
+2024-09-02 13:05:34,167 INFO: [PREPARE] Session ready for camera 506
+2024-09-02 13:05:34,168 INFO: [PREPARE] Preparing session for camera 1092
+2024-09-02 13:05:34,205 INFO: [493] Playing video for session ID: pbfcpxeohtdi1fsu4novrd2m
+2024-09-02 13:05:34,206 INFO: [PREPARE] Session ready for camera 493
+2024-09-02 13:05:34,206 INFO: [PREPARE] Preparing session for camera 1094
+2024-09-02 13:05:34,223 INFO: [546] Playing video for session ID: vdxfemjy11ktztsagbpmznkb
+2024-09-02 13:05:34,223 INFO: [PREPARE] Session ready for camera 546
+2024-09-02 13:05:34,224 INFO: [PREPARE] Preparing session for camera 1101
+2024-09-02 13:05:34,265 INFO: [363] Playing video for session ID: jrmzyvrx3f0xtpaiqjgmxqxq
+2024-09-02 13:05:34,265 INFO: [PREPARE] Session ready for camera 363
+2024-09-02 13:05:34,266 INFO: [PREPARE] Preparing session for camera 1103
+2024-09-02 13:05:34,310 INFO: [535] Obtained session ID: h21faxmryx0q2f1mxe4dumqz
+2024-09-02 13:05:34,454 INFO: [535] Playing video for session ID: h21faxmryx0q2f1mxe4dumqz
+2024-09-02 13:05:34,455 INFO: [PREPARE] Session ready for camera 535
+2024-09-02 13:05:34,455 INFO: [PREPARE] Preparing session for camera 1110
+2024-09-02 13:05:34,635 INFO: [481] Obtained session ID: efhgj0pervqpquucg4mppcqf
+2024-09-02 13:05:34,791 INFO: [481] Playing video for session ID: efhgj0pervqpquucg4mppcqf
+2024-09-02 13:05:34,792 INFO: [PREPARE] Session ready for camera 481
+2024-09-02 13:05:34,792 INFO: [PREPARE] Preparing session for camera 1112
+2024-09-02 13:05:34,894 INFO: [556] Obtained session ID: pxekz5eguxx1a5kchnfulouw
+2024-09-02 13:05:35,031 INFO: [556] Playing video for session ID: pxekz5eguxx1a5kchnfulouw
+2024-09-02 13:05:35,033 INFO: [PREPARE] Session ready for camera 556
+2024-09-02 13:05:35,035 INFO: [PREPARE] Preparing session for camera 1120
+2024-09-02 13:05:35,088 INFO: [335] Obtained session ID: qeoobjgcixlcrluodd0j42ly
+2024-09-02 13:05:35,226 INFO: [335] Playing video for session ID: qeoobjgcixlcrluodd0j42ly
+2024-09-02 13:05:35,227 INFO: [PREPARE] Session ready for camera 335
+2024-09-02 13:05:35,228 INFO: [PREPARE] Preparing session for camera 1121
+2024-09-02 13:05:35,726 INFO: [615] Obtained session ID: egc3ehpzxvherfu1ifynfttg
+2024-09-02 13:05:35,785 INFO: [387] Obtained session ID: jjozwmxx5z4jaoirc0djyz2i
+2024-09-02 13:05:35,863 INFO: [615] Playing video for session ID: egc3ehpzxvherfu1ifynfttg
+2024-09-02 13:05:35,863 INFO: [PREPARE] Session ready for camera 615
+2024-09-02 13:05:35,864 INFO: [PREPARE] Preparing session for camera 1122
+2024-09-02 13:05:35,922 INFO: [387] Playing video for session ID: jjozwmxx5z4jaoirc0djyz2i
+2024-09-02 13:05:35,923 INFO: [PREPARE] Session ready for camera 387
+2024-09-02 13:05:35,924 INFO: [PREPARE] Preparing session for camera 1123
+2024-09-02 13:05:36,146 INFO: [609] Obtained session ID: yhse2jd154wludzwq1mizmxe
+2024-09-02 13:05:36,291 INFO: [609] Playing video for session ID: yhse2jd154wludzwq1mizmxe
+2024-09-02 13:05:36,291 INFO: [PREPARE] Session ready for camera 609
+2024-09-02 13:05:36,292 INFO: [PREPARE] Preparing session for camera 1124
+2024-09-02 13:05:37,355 INFO: [364] Obtained session ID: d0x3jqt5flwkosuuhf1hvd0c
+2024-09-02 13:05:37,491 INFO: [364] Playing video for session ID: d0x3jqt5flwkosuuhf1hvd0c
+2024-09-02 13:05:37,492 INFO: [PREPARE] Session ready for camera 364
+2024-09-02 13:05:37,492 INFO: [PREPARE] Preparing session for camera 1125
+2024-09-02 13:05:37,519 INFO: [413] Obtained session ID: do0eeynttw1ran0kap41ilj1
+2024-09-02 13:05:37,640 INFO: [413] Playing video for session ID: do0eeynttw1ran0kap41ilj1
+2024-09-02 13:05:37,641 INFO: [PREPARE] Session ready for camera 413
+2024-09-02 13:05:37,642 INFO: [PREPARE] Preparing session for camera 1127
+2024-09-02 13:05:38,178 INFO: [619] Obtained session ID: r1zdx0xlsqz51f2tim4u0hg1
+2024-09-02 13:05:38,314 INFO: [619] Playing video for session ID: r1zdx0xlsqz51f2tim4u0hg1
+2024-09-02 13:05:38,314 INFO: [PREPARE] Session ready for camera 619
+2024-09-02 13:05:38,315 INFO: [PREPARE] Preparing session for camera 1128
+2024-09-02 13:05:38,772 INFO: [604] Obtained session ID: z2teo4ynficpa2j4dv20tmeq
+2024-09-02 13:05:38,818 INFO: [584] Obtained session ID: fiswh54nmsgp53woubqrkafs
+2024-09-02 13:05:38,905 INFO: [604] Playing video for session ID: z2teo4ynficpa2j4dv20tmeq
+2024-09-02 13:05:38,905 INFO: [PREPARE] Session ready for camera 604
+2024-09-02 13:05:38,907 INFO: [PREPARE] Preparing session for camera 1130
+2024-09-02 13:05:38,971 INFO: [584] Playing video for session ID: fiswh54nmsgp53woubqrkafs
+2024-09-02 13:05:38,971 INFO: [PREPARE] Session ready for camera 584
+2024-09-02 13:05:38,972 INFO: [PREPARE] Preparing session for camera 1131
+2024-09-02 13:05:39,300 INFO: [527] Obtained session ID: qg2myirkh51abfjkarjue3sb
+2024-09-02 13:05:39,376 INFO: [562] Obtained session ID: 1nw4orl0eklh33ri5xktfimw
+2024-09-02 13:05:39,429 INFO: [527] Playing video for session ID: qg2myirkh51abfjkarjue3sb
+2024-09-02 13:05:39,429 INFO: [PREPARE] Session ready for camera 527
+2024-09-02 13:05:39,431 INFO: [PREPARE] Preparing session for camera 1132
+2024-09-02 13:05:39,493 INFO: [562] Playing video for session ID: 1nw4orl0eklh33ri5xktfimw
+2024-09-02 13:05:39,493 INFO: [PREPARE] Session ready for camera 562
+2024-09-02 13:05:39,494 INFO: [PREPARE] Preparing session for camera 1133
+2024-09-02 13:05:39,754 INFO: [630] Obtained session ID: fcxpef4xshxqoxe3jdenufda
+2024-09-02 13:05:40,624 INFO: [630] Playing video for session ID: fcxpef4xshxqoxe3jdenufda
+2024-09-02 13:05:40,625 INFO: [PREPARE] Session ready for camera 630
+2024-09-02 13:05:40,625 INFO: [PREPARE] Preparing session for camera 1134
+2024-09-02 13:05:40,770 INFO: [569] Obtained session ID: wlah3bq23bj0vzefbmilfe1d
+2024-09-02 13:05:40,866 INFO: [616] Obtained session ID: blmq4wwxblbz3hw4vadf2lpb
+2024-09-02 13:05:40,889 INFO: [536] Obtained session ID: 4xrxg3jd4zev4afxtuls2uw4
+2024-09-02 13:05:40,935 INFO: [569] Playing video for session ID: wlah3bq23bj0vzefbmilfe1d
+2024-09-02 13:05:40,935 INFO: [PREPARE] Session ready for camera 569
+2024-09-02 13:05:40,936 INFO: [PREPARE] Preparing session for camera 1135
+2024-09-02 13:05:40,968 INFO: [610] Obtained session ID: 5hr4bjask1g2v4mr4f11psve
+2024-09-02 13:05:40,969 INFO: [576] Obtained session ID: jncm3eutn10q1xtdpbs0uoqv
+2024-09-02 13:05:41,020 INFO: [597] Obtained session ID: dh4i3ltnfmejziknaricryde
+2024-09-02 13:05:41,023 INFO: [536] Playing video for session ID: 4xrxg3jd4zev4afxtuls2uw4
+2024-09-02 13:05:41,023 INFO: [616] Playing video for session ID: blmq4wwxblbz3hw4vadf2lpb
+2024-09-02 13:05:41,023 INFO: [PREPARE] Session ready for camera 536
+2024-09-02 13:05:41,023 INFO: [PREPARE] Session ready for camera 616
+2024-09-02 13:05:41,024 INFO: [PREPARE] Preparing session for camera 1136
+2024-09-02 13:05:41,024 INFO: [PREPARE] Preparing session for camera 1143
+2024-09-02 13:05:41,119 INFO: [610] Playing video for session ID: 5hr4bjask1g2v4mr4f11psve
+2024-09-02 13:05:41,121 INFO: [576] Playing video for session ID: jncm3eutn10q1xtdpbs0uoqv
+2024-09-02 13:05:41,121 INFO: [PREPARE] Session ready for camera 610
+2024-09-02 13:05:41,122 INFO: [PREPARE] Session ready for camera 576
+2024-09-02 13:05:41,123 INFO: [PREPARE] Preparing session for camera 1152
+2024-09-02 13:05:41,123 INFO: [PREPARE] Preparing session for camera 1157
+2024-09-02 13:05:41,137 INFO: [394] Obtained session ID: 1vd3505aiaefbwwszf5oanm5
+2024-09-02 13:05:41,163 INFO: [597] Playing video for session ID: dh4i3ltnfmejziknaricryde
+2024-09-02 13:05:41,163 INFO: [PREPARE] Session ready for camera 597
+2024-09-02 13:05:41,164 INFO: [PREPARE] Preparing session for camera 1163
+2024-09-02 13:05:41,169 INFO: [623] Obtained session ID: dhjkfp44wswv2olhmts0dcbx
+2024-09-02 13:05:41,265 INFO: [394] Playing video for session ID: 1vd3505aiaefbwwszf5oanm5
+2024-09-02 13:05:41,266 INFO: [PREPARE] Session ready for camera 394
+2024-09-02 13:05:41,268 INFO: [PREPARE] Preparing session for camera 1164
+2024-09-02 13:05:41,294 INFO: [623] Playing video for session ID: dhjkfp44wswv2olhmts0dcbx
+2024-09-02 13:05:41,294 INFO: [PREPARE] Session ready for camera 623
+2024-09-02 13:05:41,295 INFO: [PREPARE] Preparing session for camera 1166
+2024-09-02 13:05:41,343 INFO: [432] Obtained session ID: f2rruvuwoi104rtk0tgxjpsw
+2024-09-02 13:05:41,379 INFO: [1037] Obtained session ID: pndrtt1t5io02mtw2cu12ibk
+2024-09-02 13:05:41,484 INFO: [432] Playing video for session ID: f2rruvuwoi104rtk0tgxjpsw
+2024-09-02 13:05:41,485 INFO: [PREPARE] Session ready for camera 432
+2024-09-02 13:05:41,486 INFO: [PREPARE] Preparing session for camera 1167
+2024-09-02 13:05:41,512 INFO: [1037] Playing video for session ID: pndrtt1t5io02mtw2cu12ibk
+2024-09-02 13:05:41,512 INFO: [PREPARE] Session ready for camera 1037
+2024-09-02 13:05:41,513 INFO: [PREPARE] Preparing session for camera 1168
+2024-09-02 13:05:42,293 INFO: [613] Obtained session ID: 1ieopq1qkeyytveo5geffaro
+2024-09-02 13:05:42,424 INFO: [613] Playing video for session ID: 1ieopq1qkeyytveo5geffaro
+2024-09-02 13:05:42,426 INFO: [PREPARE] Session ready for camera 613
+2024-09-02 13:05:42,427 INFO: [PREPARE] Preparing session for camera 1169
+2024-09-02 13:05:43,804 INFO: [1027] Obtained session ID: 1hleynq0xrily4zpx1tc2hmj
+2024-09-02 13:05:43,831 INFO: [996] Obtained session ID: rwd0wxmxwv5jhboqpygeiibz
+2024-09-02 13:05:43,863 INFO: [962] Obtained session ID: rwzd24tr0jfitu0mqdgmmfvw
+2024-09-02 13:05:44,422 INFO: [1027] Playing video for session ID: 1hleynq0xrily4zpx1tc2hmj
+2024-09-02 13:05:44,422 INFO: [996] Playing video for session ID: rwd0wxmxwv5jhboqpygeiibz
+2024-09-02 13:05:44,423 INFO: [962] Playing video for session ID: rwzd24tr0jfitu0mqdgmmfvw
+2024-09-02 13:05:44,423 INFO: [PREPARE] Session ready for camera 1027
+2024-09-02 13:05:44,423 INFO: [PREPARE] Session ready for camera 996
+2024-09-02 13:05:44,424 INFO: [PREPARE] Session ready for camera 962
+2024-09-02 13:05:44,425 INFO: [PREPARE] Preparing session for camera 1170
+2024-09-02 13:05:44,425 INFO: [PREPARE] Preparing session for camera 1172
+2024-09-02 13:05:44,425 INFO: [PREPARE] Preparing session for camera 1174
+2024-09-02 13:05:44,611 INFO: [907] Obtained session ID: vtozmq3g4jvhe4dus4lrvszn
+2024-09-02 13:05:44,639 INFO: [603] Obtained session ID: kkzwcwuwued1syx23ldsz2qb
+2024-09-02 13:05:44,688 INFO: [1051] Obtained session ID: vvzrzn3nuwfprcckoghimkb3
+2024-09-02 13:05:44,705 INFO: [1061] Obtained session ID: kfxek50lhyqnwo5ejaaa0b0b
+2024-09-02 13:05:44,781 INFO: [907] Playing video for session ID: vtozmq3g4jvhe4dus4lrvszn
+2024-09-02 13:05:44,781 INFO: [PREPARE] Session ready for camera 907
+2024-09-02 13:05:44,781 INFO: [PREPARE] Preparing session for camera 1178
+2024-09-02 13:05:44,788 INFO: [603] Playing video for session ID: kkzwcwuwued1syx23ldsz2qb
+2024-09-02 13:05:44,788 INFO: [PREPARE] Session ready for camera 603
+2024-09-02 13:05:44,789 INFO: [PREPARE] Preparing session for camera 1179
+2024-09-02 13:05:44,791 INFO: [479] Obtained session ID: uvss402d5wh5lccceqhgg2yj
+2024-09-02 13:05:44,819 INFO: [991] Obtained session ID: af3kk0miblbf0auj21q1qq3f
+2024-09-02 13:05:44,824 INFO: [1051] Playing video for session ID: vvzrzn3nuwfprcckoghimkb3
+2024-09-02 13:05:44,825 INFO: [PREPARE] Session ready for camera 1051
+2024-09-02 13:05:44,825 INFO: [PREPARE] Preparing session for camera 1183
+2024-09-02 13:05:44,840 INFO: [1061] Playing video for session ID: kfxek50lhyqnwo5ejaaa0b0b
+2024-09-02 13:05:44,840 INFO: [PREPARE] Session ready for camera 1061
+2024-09-02 13:05:44,841 INFO: [PREPARE] Preparing session for camera 1184
+2024-09-02 13:05:44,861 INFO: [595] Obtained session ID: l2zdbhlpgbgdrypxz3msxkmu
+2024-09-02 13:05:44,918 INFO: [479] Playing video for session ID: uvss402d5wh5lccceqhgg2yj
+2024-09-02 13:05:44,918 INFO: [PREPARE] Session ready for camera 479
+2024-09-02 13:05:44,919 INFO: [PREPARE] Preparing session for camera 1185
+2024-09-02 13:05:44,937 INFO: [924] Obtained session ID: bnimjptmju4bkgto2g3en0ri
+2024-09-02 13:05:44,939 INFO: [991] Playing video for session ID: af3kk0miblbf0auj21q1qq3f
+2024-09-02 13:05:44,939 INFO: [PREPARE] Session ready for camera 991
+2024-09-02 13:05:44,939 INFO: [PREPARE] Preparing session for camera 1188
+2024-09-02 13:05:45,007 INFO: [595] Playing video for session ID: l2zdbhlpgbgdrypxz3msxkmu
+2024-09-02 13:05:45,008 INFO: [PREPARE] Session ready for camera 595
+2024-09-02 13:05:45,009 INFO: [PREPARE] Preparing session for camera 1191
+2024-09-02 13:05:45,338 INFO: [924] Playing video for session ID: bnimjptmju4bkgto2g3en0ri
+2024-09-02 13:05:45,338 INFO: [PREPARE] Session ready for camera 924
+2024-09-02 13:05:45,339 INFO: [PREPARE] Preparing session for camera 1192
+2024-09-02 13:05:45,470 INFO: [915] Obtained session ID: 5br1ro3zx3xh42t5zda2g3cd
+2024-09-02 13:05:45,623 INFO: [915] Playing video for session ID: 5br1ro3zx3xh42t5zda2g3cd
+2024-09-02 13:05:45,624 INFO: [PREPARE] Session ready for camera 915
+2024-09-02 13:05:45,624 INFO: [PREPARE] Preparing session for camera 1194
+2024-09-02 13:05:45,692 INFO: [1053] Obtained session ID: 11a3sqlimct2l0nkqrkywufd
+2024-09-02 13:05:45,767 INFO: [953] Obtained session ID: nxlazxehw531t3zv1qmk30pk
+2024-09-02 13:05:45,826 INFO: [612] Obtained session ID: nmrdlkzwambagqstryj45lwi
+2024-09-02 13:05:45,827 INFO: [1053] Playing video for session ID: 11a3sqlimct2l0nkqrkywufd
+2024-09-02 13:05:45,827 INFO: [PREPARE] Session ready for camera 1053
+2024-09-02 13:05:45,828 INFO: [PREPARE] Preparing session for camera 1195
+2024-09-02 13:05:45,862 INFO: [648] Obtained session ID: 51ajky4waqotmfcwzgc1qxrm
+2024-09-02 13:05:45,886 INFO: [953] Playing video for session ID: nxlazxehw531t3zv1qmk30pk
+2024-09-02 13:05:45,887 INFO: [PREPARE] Session ready for camera 953
+2024-09-02 13:05:45,887 INFO: [PREPARE] Preparing session for camera 1200
+2024-09-02 13:05:45,953 INFO: [612] Playing video for session ID: nmrdlkzwambagqstryj45lwi
+2024-09-02 13:05:45,953 INFO: [PREPARE] Session ready for camera 612
+2024-09-02 13:05:45,954 INFO: [PREPARE] Preparing session for camera 1204
+2024-09-02 13:05:45,969 INFO: [971] Obtained session ID: oudkeprquuqrd2n4auyjzuh4
+2024-09-02 13:05:45,996 INFO: [648] Playing video for session ID: 51ajky4waqotmfcwzgc1qxrm
+2024-09-02 13:05:45,996 INFO: [PREPARE] Session ready for camera 648
+2024-09-02 13:05:45,997 INFO: [PREPARE] Preparing session for camera 1206
+2024-09-02 13:05:46,041 INFO: [1060] Obtained session ID: 1qyxedzg2axery0c0rbgtbgh
+2024-09-02 13:05:46,104 INFO: [971] Playing video for session ID: oudkeprquuqrd2n4auyjzuh4
+2024-09-02 13:05:46,104 INFO: [PREPARE] Session ready for camera 971
+2024-09-02 13:05:46,105 INFO: [PREPARE] Preparing session for camera 1207
+2024-09-02 13:05:46,182 INFO: [1060] Playing video for session ID: 1qyxedzg2axery0c0rbgtbgh
+2024-09-02 13:05:46,183 INFO: [PREPARE] Session ready for camera 1060
+2024-09-02 13:05:46,183 INFO: [PREPARE] Preparing session for camera 1219
+2024-09-02 13:05:46,416 INFO: [639] Obtained session ID: xiyhdc0d5m2siq41agq1cuil
+2024-09-02 13:05:46,560 INFO: [639] Playing video for session ID: xiyhdc0d5m2siq41agq1cuil
+2024-09-02 13:05:46,560 INFO: [PREPARE] Session ready for camera 639
+2024-09-02 13:05:46,561 INFO: [PREPARE] Preparing session for camera 1220
+2024-09-02 13:05:46,572 INFO: [913] Obtained session ID: idp1o51btt4kzl4ltxnjojdf
+2024-09-02 13:05:46,717 INFO: [913] Playing video for session ID: idp1o51btt4kzl4ltxnjojdf
+2024-09-02 13:05:46,717 INFO: [PREPARE] Session ready for camera 913
+2024-09-02 13:05:46,718 INFO: [PREPARE] Preparing session for camera 1221
+2024-09-02 13:05:47,093 INFO: [1043] Obtained session ID: irdxpwmjquhai34tklt3tnql
+2024-09-02 13:05:47,213 INFO: [1043] Playing video for session ID: irdxpwmjquhai34tklt3tnql
+2024-09-02 13:05:47,213 INFO: [PREPARE] Session ready for camera 1043
+2024-09-02 13:05:47,213 INFO: [PREPARE] Preparing session for camera 1222
+2024-09-02 13:05:47,456 INFO: [968] Obtained session ID: 3m5vtxg034g2kdrtc4lhivvf
+2024-09-02 13:05:47,511 INFO: [642] Obtained session ID: scfqxjrvxuuwmdv1tuxx3bru
+2024-09-02 13:05:47,595 INFO: [968] Playing video for session ID: 3m5vtxg034g2kdrtc4lhivvf
+2024-09-02 13:05:47,595 INFO: [PREPARE] Session ready for camera 968
+2024-09-02 13:05:47,596 INFO: [PREPARE] Preparing session for camera 1223
+2024-09-02 13:05:47,630 INFO: [642] Playing video for session ID: scfqxjrvxuuwmdv1tuxx3bru
+2024-09-02 13:05:47,630 INFO: [PREPARE] Session ready for camera 642
+2024-09-02 13:05:47,631 INFO: [PREPARE] Preparing session for camera 1225
+2024-09-02 13:05:48,551 INFO: [1058] Obtained session ID: 0poaueam4vybnf1wubjbwdne
+2024-09-02 13:05:48,691 INFO: [1058] Playing video for session ID: 0poaueam4vybnf1wubjbwdne
+2024-09-02 13:05:48,691 INFO: [PREPARE] Session ready for camera 1058
+2024-09-02 13:05:48,691 INFO: [PREPARE] Preparing session for camera 1226
+2024-09-02 13:05:49,334 INFO: [942] Obtained session ID: ep022rzsj1fy2fvluqoym4hw
+2024-09-02 13:05:49,492 INFO: [942] Playing video for session ID: ep022rzsj1fy2fvluqoym4hw
+2024-09-02 13:05:49,493 INFO: [PREPARE] Session ready for camera 942
+2024-09-02 13:05:49,494 INFO: [PREPARE] Preparing session for camera 1230
+2024-09-02 13:05:50,178 INFO: [947] Obtained session ID: z54rtjcwbwrq3veohely2yzv
+2024-09-02 13:05:50,302 INFO: [947] Playing video for session ID: z54rtjcwbwrq3veohely2yzv
+2024-09-02 13:05:50,302 INFO: [PREPARE] Session ready for camera 947
+2024-09-02 13:05:50,303 INFO: [PREPARE] Preparing session for camera 1231
+2024-09-02 13:05:51,530 INFO: [939] Obtained session ID: jwux300vdfe3irs2zyarjvyb
+2024-09-02 13:05:51,581 INFO: [1063] Obtained session ID: qx25xk1ichlrwq2lduxjvhyh
+2024-09-02 13:05:51,667 INFO: [939] Playing video for session ID: jwux300vdfe3irs2zyarjvyb
+2024-09-02 13:05:51,668 INFO: [PREPARE] Session ready for camera 939
+2024-09-02 13:05:51,669 INFO: [PREPARE] Preparing session for camera 1232
+2024-09-02 13:05:51,711 INFO: [1063] Playing video for session ID: qx25xk1ichlrwq2lduxjvhyh
+2024-09-02 13:05:51,712 INFO: [PREPARE] Session ready for camera 1063
+2024-09-02 13:05:51,713 INFO: [PREPARE] Preparing session for camera 1234
+2024-09-02 13:05:52,328 INFO: [1094] Obtained session ID: jacebbotrb21i1uiqcbab5m4
+2024-09-02 13:05:52,452 INFO: [1094] Playing video for session ID: jacebbotrb21i1uiqcbab5m4
+2024-09-02 13:05:52,453 INFO: [PREPARE] Session ready for camera 1094
+2024-09-02 13:05:52,454 INFO: [PREPARE] Preparing session for camera 1242
+2024-09-02 13:05:52,471 INFO: [1069] Obtained session ID: 4pykk0em2qywo1azhfqphhds
+2024-09-02 13:05:52,484 INFO: [999] Obtained session ID: rsgoh3efuqv1rpqki3l1wupr
+2024-09-02 13:05:52,608 INFO: [999] Playing video for session ID: rsgoh3efuqv1rpqki3l1wupr
+2024-09-02 13:05:52,609 INFO: [PREPARE] Session ready for camera 999
+2024-09-02 13:05:52,611 INFO: [PREPARE] Preparing session for camera 1243
+2024-09-02 13:05:52,613 INFO: [1069] Playing video for session ID: 4pykk0em2qywo1azhfqphhds
+2024-09-02 13:05:52,614 INFO: [PREPARE] Session ready for camera 1069
+2024-09-02 13:05:52,615 INFO: [PREPARE] Preparing session for camera 1244
+2024-09-02 13:05:52,618 INFO: [1028] Obtained session ID: 4tpmxeifi5xx4r3eddwjbl4o
+2024-09-02 13:05:52,753 INFO: [1028] Playing video for session ID: 4tpmxeifi5xx4r3eddwjbl4o
+2024-09-02 13:05:52,754 INFO: [PREPARE] Session ready for camera 1028
+2024-09-02 13:05:52,754 INFO: [PREPARE] Preparing session for camera 1246
+2024-09-02 13:05:52,868 INFO: [1038] Obtained session ID: cwktdbgat33eomeyptu31xzi
+2024-09-02 13:05:52,889 INFO: [997] Obtained session ID: rhhji0j1jvimkdsjarylac1k
+2024-09-02 13:05:53,463 INFO: [997] Playing video for session ID: rhhji0j1jvimkdsjarylac1k
+2024-09-02 13:05:53,464 INFO: [PREPARE] Session ready for camera 997
+2024-09-02 13:05:53,464 INFO: [PREPARE] Preparing session for camera 1249
+2024-09-02 13:05:53,466 INFO: [1038] Playing video for session ID: cwktdbgat33eomeyptu31xzi
+2024-09-02 13:05:53,466 INFO: [PREPARE] Session ready for camera 1038
+2024-09-02 13:05:53,467 INFO: [PREPARE] Preparing session for camera 1255
+2024-09-02 13:05:54,013 INFO: [1064] Obtained session ID: nvsg5hfnq3ldamkaiu1rldfs
+2024-09-02 13:05:54,052 INFO: [1071] Obtained session ID: qgjb4z1icxsqgj01nnssyasi
+2024-09-02 13:05:54,106 INFO: [1089] Obtained session ID: fvgkr45dkvnat3d0anznebys
+2024-09-02 13:05:54,121 INFO: [1078] Obtained session ID: m0wzlkrfcom0bxddqonv1vmg
+2024-09-02 13:05:54,164 INFO: [1064] Playing video for session ID: nvsg5hfnq3ldamkaiu1rldfs
+2024-09-02 13:05:54,164 INFO: [PREPARE] Session ready for camera 1064
+2024-09-02 13:05:54,166 INFO: [PREPARE] Preparing session for camera 1260
+2024-09-02 13:05:54,187 INFO: [1071] Playing video for session ID: qgjb4z1icxsqgj01nnssyasi
+2024-09-02 13:05:54,188 INFO: [PREPARE] Session ready for camera 1071
+2024-09-02 13:05:54,188 INFO: [PREPARE] Preparing session for camera 1261
+2024-09-02 13:05:54,189 INFO: [1067] Obtained session ID: wxnw4qq4y5vpu32nrqqwoeff
+2024-09-02 13:05:54,216 INFO: [1066] Obtained session ID: ikwb4l3gugtuwwxqk2yufvvi
+2024-09-02 13:05:54,243 INFO: [1089] Playing video for session ID: fvgkr45dkvnat3d0anznebys
+2024-09-02 13:05:54,243 INFO: [PREPARE] Session ready for camera 1089
+2024-09-02 13:05:54,244 INFO: [PREPARE] Preparing session for camera 1263
+2024-09-02 13:05:54,271 INFO: [1078] Playing video for session ID: m0wzlkrfcom0bxddqonv1vmg
+2024-09-02 13:05:54,272 INFO: [PREPARE] Session ready for camera 1078
+2024-09-02 13:05:54,272 INFO: [PREPARE] Preparing session for camera 1264
+2024-09-02 13:05:54,319 INFO: [1067] Playing video for session ID: wxnw4qq4y5vpu32nrqqwoeff
+2024-09-02 13:05:54,319 INFO: [PREPARE] Session ready for camera 1067
+2024-09-02 13:05:54,319 INFO: [PREPARE] Preparing session for camera 1273
+2024-09-02 13:05:54,349 INFO: [1066] Playing video for session ID: ikwb4l3gugtuwwxqk2yufvvi
+2024-09-02 13:05:54,349 INFO: [PREPARE] Session ready for camera 1066
+2024-09-02 13:05:54,350 INFO: [PREPARE] Preparing session for camera 1274
+2024-09-02 13:05:55,035 INFO: [1065] Obtained session ID: l4ip2cqove3mhb0nfueycgan
+2024-09-02 13:05:55,036 INFO: [1068] Obtained session ID: ztuismch4obvxh0rbip1tcun
+2024-09-02 13:05:55,172 INFO: [1065] Playing video for session ID: l4ip2cqove3mhb0nfueycgan
+2024-09-02 13:05:55,172 INFO: [1068] Playing video for session ID: ztuismch4obvxh0rbip1tcun
+2024-09-02 13:05:55,173 INFO: [PREPARE] Session ready for camera 1065
+2024-09-02 13:05:55,173 INFO: [PREPARE] Session ready for camera 1068
+2024-09-02 13:05:55,173 INFO: [PREPARE] Preparing session for camera 1283
+2024-09-02 13:05:55,174 INFO: [PREPARE] Preparing session for camera 1284
+2024-09-02 13:05:55,557 INFO: [1132] Obtained session ID: kcxk24jyid3wk2u0jdw1zdp3
+2024-09-02 13:05:55,658 INFO: [1083] Obtained session ID: c5vuc1pfpl2qvr3oc3ykqpyo
+2024-09-02 13:05:55,698 INFO: [1132] Playing video for session ID: kcxk24jyid3wk2u0jdw1zdp3
+2024-09-02 13:05:55,698 INFO: [PREPARE] Session ready for camera 1132
+2024-09-02 13:05:55,699 INFO: [PREPARE] Preparing session for camera 1286
+2024-09-02 13:05:55,716 INFO: [1123] Obtained session ID: qhczmwmv2avlajam1qell4fq
+2024-09-02 13:05:55,786 INFO: [1083] Playing video for session ID: c5vuc1pfpl2qvr3oc3ykqpyo
+2024-09-02 13:05:55,787 INFO: [PREPARE] Session ready for camera 1083
+2024-09-02 13:05:55,787 INFO: [PREPARE] Preparing session for camera 1297
+2024-09-02 13:05:55,848 INFO: [1123] Playing video for session ID: qhczmwmv2avlajam1qell4fq
+2024-09-02 13:05:55,848 INFO: [PREPARE] Session ready for camera 1123
+2024-09-02 13:05:55,850 INFO: [PREPARE] Preparing session for camera 1298
+2024-09-02 13:05:55,905 INFO: [1086] Obtained session ID: 32podqwuh0rat1lb5zzcpaej
+2024-09-02 13:05:56,004 INFO: [1088] Obtained session ID: pz1b55yogmprob5jxrm54vw2
+2024-09-02 13:05:56,026 INFO: [1076] Obtained session ID: ocilgh0kgc0jjl1txck51fqh
+2024-09-02 13:05:56,032 INFO: [1086] Playing video for session ID: 32podqwuh0rat1lb5zzcpaej
+2024-09-02 13:05:56,033 INFO: [PREPARE] Session ready for camera 1086
+2024-09-02 13:05:56,033 INFO: [PREPARE] Preparing session for camera 1299
+2024-09-02 13:05:56,129 INFO: [1088] Playing video for session ID: pz1b55yogmprob5jxrm54vw2
+2024-09-02 13:05:56,130 INFO: [PREPARE] Session ready for camera 1088
+2024-09-02 13:05:56,131 INFO: [PREPARE] Preparing session for camera 1301
+2024-09-02 13:05:56,145 INFO: [1076] Playing video for session ID: ocilgh0kgc0jjl1txck51fqh
+2024-09-02 13:05:56,146 INFO: [PREPARE] Session ready for camera 1076
+2024-09-02 13:05:56,146 INFO: [PREPARE] Preparing session for camera 1304
+2024-09-02 13:05:56,889 INFO: [1101] Obtained session ID: if0cipo1b0fwh20rtsy1za4z
+2024-09-02 13:05:57,028 INFO: [1101] Playing video for session ID: if0cipo1b0fwh20rtsy1za4z
+2024-09-02 13:05:57,029 INFO: [PREPARE] Session ready for camera 1101
+2024-09-02 13:05:57,031 INFO: [PREPARE] Preparing session for camera 1305
+2024-09-02 13:05:57,522 INFO: [1070] Obtained session ID: mnzy3wjhb4olxfr1kl3z4ytz
+2024-09-02 13:05:57,661 INFO: [1070] Playing video for session ID: mnzy3wjhb4olxfr1kl3z4ytz
+2024-09-02 13:05:57,662 INFO: [PREPARE] Session ready for camera 1070
+2024-09-02 13:05:57,663 INFO: [PREPARE] Preparing session for camera 1313
+2024-09-02 13:05:57,761 INFO: [1081] Obtained session ID: qdvfxgvk1cy1lqqmbie3ipsj
+2024-09-02 13:05:57,921 INFO: [1081] Playing video for session ID: qdvfxgvk1cy1lqqmbie3ipsj
+2024-09-02 13:05:57,922 INFO: [PREPARE] Session ready for camera 1081
+2024-09-02 13:05:57,922 INFO: [PREPARE] Preparing session for camera 1318
+2024-09-02 13:05:58,908 INFO: [1092] Obtained session ID: wao3unbona2f3f1u4nomerzn
+2024-09-02 13:05:59,056 INFO: [1092] Playing video for session ID: wao3unbona2f3f1u4nomerzn
+2024-09-02 13:05:59,057 INFO: [PREPARE] Session ready for camera 1092
+2024-09-02 13:05:59,058 INFO: [PREPARE] Preparing session for camera 1319
+2024-09-02 13:05:59,562 INFO: [1128] Obtained session ID: taubb5cfnjy4ekvahmt5lf0p
+2024-09-02 13:05:59,655 INFO: [1082] Obtained session ID: 4isqufmxxjbayw4kffwfpauk
+2024-09-02 13:05:59,698 INFO: [1127] Obtained session ID: osvyoxeiynhq0l5h4z5jpxav
+2024-09-02 13:05:59,699 INFO: [1128] Playing video for session ID: taubb5cfnjy4ekvahmt5lf0p
+2024-09-02 13:05:59,700 INFO: [PREPARE] Session ready for camera 1128
+2024-09-02 13:05:59,701 INFO: [PREPARE] Preparing session for camera 1320
+2024-09-02 13:05:59,794 INFO: [1082] Playing video for session ID: 4isqufmxxjbayw4kffwfpauk
+2024-09-02 13:05:59,795 INFO: [PREPARE] Session ready for camera 1082
+2024-09-02 13:05:59,795 INFO: [PREPARE] Preparing session for camera 1322
+2024-09-02 13:05:59,824 INFO: [1127] Playing video for session ID: osvyoxeiynhq0l5h4z5jpxav
+2024-09-02 13:05:59,824 INFO: [PREPARE] Session ready for camera 1127
+2024-09-02 13:05:59,825 INFO: [PREPARE] Preparing session for camera 1323
+2024-09-02 13:06:00,112 INFO: [1087] Obtained session ID: yekp13idb5lbow2lj5ycwqq5
+2024-09-02 13:06:00,241 INFO: [1087] Playing video for session ID: yekp13idb5lbow2lj5ycwqq5
+2024-09-02 13:06:00,242 INFO: [PREPARE] Session ready for camera 1087
+2024-09-02 13:06:00,243 INFO: [PREPARE] Preparing session for camera 1325
+2024-09-02 13:06:01,830 INFO: [1167] Obtained session ID: 3w2cjb0sthgxgissjijyk1rv
+2024-09-02 13:06:01,846 INFO: [1125] Obtained session ID: gu4uonlrq0w3amnwqwoiyiyw
+2024-09-02 13:06:01,876 INFO: [1085] Obtained session ID: vphnttt0pbu2eva3puek5zwr
+2024-09-02 13:06:01,916 INFO: [1166] Obtained session ID: kbz2pw41u3d21dqw3mctn2yn
+2024-09-02 13:06:01,968 INFO: [1157] Obtained session ID: 2wbalkgw0lyuvovit2t4jga3
+2024-09-02 13:06:01,981 INFO: [1125] Playing video for session ID: gu4uonlrq0w3amnwqwoiyiyw
+2024-09-02 13:06:01,981 INFO: [1167] Playing video for session ID: 3w2cjb0sthgxgissjijyk1rv
+2024-09-02 13:06:01,981 INFO: [PREPARE] Session ready for camera 1125
+2024-09-02 13:06:01,981 INFO: [PREPARE] Session ready for camera 1167
+2024-09-02 13:06:01,982 INFO: [PREPARE] Preparing session for camera 1326
+2024-09-02 13:06:01,983 INFO: [PREPARE] Preparing session for camera 1330
+2024-09-02 13:06:02,008 INFO: [1085] Playing video for session ID: vphnttt0pbu2eva3puek5zwr
+2024-09-02 13:06:02,009 INFO: [PREPARE] Session ready for camera 1085
+2024-09-02 13:06:02,009 INFO: [PREPARE] Preparing session for camera 1332
+2024-09-02 13:06:02,041 INFO: [1143] Obtained session ID: 0fiv4wk0hg1e2igefolp3r2d
+2024-09-02 13:06:02,050 INFO: [1166] Playing video for session ID: kbz2pw41u3d21dqw3mctn2yn
+2024-09-02 13:06:02,051 INFO: [PREPARE] Session ready for camera 1166
+2024-09-02 13:06:02,051 INFO: [PREPARE] Preparing session for camera 1333
+2024-09-02 13:06:02,124 INFO: [1157] Playing video for session ID: 2wbalkgw0lyuvovit2t4jga3
+2024-09-02 13:06:02,124 INFO: [PREPARE] Session ready for camera 1157
+2024-09-02 13:06:02,125 INFO: [PREPARE] Preparing session for camera 1336
+2024-09-02 13:06:02,171 INFO: [1170] Obtained session ID: s50l3004hzjapmpizgodtlj4
+2024-09-02 13:06:02,174 INFO: [1143] Playing video for session ID: 0fiv4wk0hg1e2igefolp3r2d
+2024-09-02 13:06:02,174 INFO: [PREPARE] Session ready for camera 1143
+2024-09-02 13:06:02,175 INFO: [PREPARE] Preparing session for camera 1338
+2024-09-02 13:06:02,226 INFO: [1121] Obtained session ID: oaamnyw0jwecatz4tdoeuoa4
+2024-09-02 13:06:02,310 INFO: [1170] Playing video for session ID: s50l3004hzjapmpizgodtlj4
+2024-09-02 13:06:02,311 INFO: [PREPARE] Session ready for camera 1170
+2024-09-02 13:06:02,311 INFO: [PREPARE] Preparing session for camera 1339
+2024-09-02 13:06:02,361 INFO: [1121] Playing video for session ID: oaamnyw0jwecatz4tdoeuoa4
+2024-09-02 13:06:02,361 INFO: [PREPARE] Session ready for camera 1121
+2024-09-02 13:06:02,361 INFO: [PREPARE] Preparing session for camera 1341
+2024-09-02 13:06:02,376 INFO: [1163] Obtained session ID: 4dkkypzdrum2saxhcq0jkko1
+2024-09-02 13:06:02,517 INFO: [1163] Playing video for session ID: 4dkkypzdrum2saxhcq0jkko1
+2024-09-02 13:06:02,518 INFO: [PREPARE] Session ready for camera 1163
+2024-09-02 13:06:02,518 INFO: [PREPARE] Preparing session for camera 1344
+2024-09-02 13:06:03,092 INFO: [1133] Obtained session ID: loimicwzornsov1w5ccg3f5q
+2024-09-02 13:06:03,122 INFO: [1135] Obtained session ID: egoyoau4zdipo1sl4cf114hl
+2024-09-02 13:06:03,228 INFO: [1133] Playing video for session ID: loimicwzornsov1w5ccg3f5q
+2024-09-02 13:06:03,229 INFO: [PREPARE] Session ready for camera 1133
+2024-09-02 13:06:03,231 INFO: [PREPARE] Preparing session for camera 1345
+2024-09-02 13:06:03,258 INFO: [1135] Playing video for session ID: egoyoau4zdipo1sl4cf114hl
+2024-09-02 13:06:03,258 INFO: [PREPARE] Session ready for camera 1135
+2024-09-02 13:06:03,259 INFO: [PREPARE] Preparing session for camera 1349
+2024-09-02 13:06:05,059 INFO: [1131] Obtained session ID: 5oobnkwlwbvvqr4kamvdt43m
+2024-09-02 13:06:05,186 INFO: [1131] Playing video for session ID: 5oobnkwlwbvvqr4kamvdt43m
+2024-09-02 13:06:05,187 INFO: [PREPARE] Session ready for camera 1131
+2024-09-02 13:06:05,188 INFO: [PREPARE] Preparing session for camera 1353
+2024-09-02 13:06:05,524 INFO: [1103] Obtained session ID: 30405ubagntgl020f4rv2zzk
+2024-09-02 13:06:05,625 INFO: [1120] Obtained session ID: mbhxtrf4ozr40qbmyr0kdzqx
+2024-09-02 13:06:05,651 INFO: [1103] Playing video for session ID: 30405ubagntgl020f4rv2zzk
+2024-09-02 13:06:05,651 INFO: [PREPARE] Session ready for camera 1103
+2024-09-02 13:06:05,651 INFO: [PREPARE] Preparing session for camera 1356
+2024-09-02 13:06:05,759 INFO: [1120] Playing video for session ID: mbhxtrf4ozr40qbmyr0kdzqx
+2024-09-02 13:06:05,759 INFO: [PREPARE] Session ready for camera 1120
+2024-09-02 13:06:05,761 INFO: [PREPARE] Preparing session for camera 1357
+2024-09-02 13:06:07,064 INFO: [1164] Obtained session ID: 4akeqlaqlxcnx1zzcerp21m0
+2024-09-02 13:06:07,068 INFO: [1110] Obtained session ID: zm0ndtkgmyhr5gfxaf5nyumu
+2024-09-02 13:06:07,125 INFO: [1168] Obtained session ID: puvpxuhpiwgeys1yk1dluz1c
+2024-09-02 13:06:07,142 INFO: [1178] Obtained session ID: dytxfqow4cyieulyb4pi4nyy
+2024-09-02 13:06:07,190 INFO: [1191] Obtained session ID: zxjr43psjdssr0yc1b0tm2sa
+2024-09-02 13:06:07,216 INFO: [1124] Obtained session ID: qvglcifmrkqxznjcdn4jak25
+2024-09-02 13:06:07,222 INFO: [1122] Obtained session ID: emwgfsohxi5ar2fucheayval
+2024-09-02 13:06:07,261 INFO: [1110] Playing video for session ID: zm0ndtkgmyhr5gfxaf5nyumu
+2024-09-02 13:06:07,262 INFO: [PREPARE] Session ready for camera 1110
+2024-09-02 13:06:07,262 INFO: [PREPARE] Preparing session for camera 1358
+2024-09-02 13:06:07,263 INFO: [1164] Playing video for session ID: 4akeqlaqlxcnx1zzcerp21m0
+2024-09-02 13:06:07,263 INFO: [PREPARE] Session ready for camera 1164
+2024-09-02 13:06:07,263 INFO: [PREPARE] Preparing session for camera 1359
+2024-09-02 13:06:07,268 INFO: [1168] Playing video for session ID: puvpxuhpiwgeys1yk1dluz1c
+2024-09-02 13:06:07,268 INFO: [1178] Playing video for session ID: dytxfqow4cyieulyb4pi4nyy
+2024-09-02 13:06:07,269 INFO: [PREPARE] Session ready for camera 1168
+2024-09-02 13:06:07,269 INFO: [PREPARE] Session ready for camera 1178
+2024-09-02 13:06:07,270 INFO: [PREPARE] Preparing session for camera 1360
+2024-09-02 13:06:07,270 INFO: [PREPARE] Preparing session for camera 1361
+2024-09-02 13:06:07,323 INFO: [1191] Playing video for session ID: zxjr43psjdssr0yc1b0tm2sa
+2024-09-02 13:06:07,323 INFO: [PREPARE] Session ready for camera 1191
+2024-09-02 13:06:07,323 INFO: [PREPARE] Preparing session for camera 1362
+2024-09-02 13:06:07,351 INFO: [1124] Playing video for session ID: qvglcifmrkqxznjcdn4jak25
+2024-09-02 13:06:07,351 INFO: [1122] Playing video for session ID: emwgfsohxi5ar2fucheayval
+2024-09-02 13:06:07,352 INFO: [PREPARE] Session ready for camera 1124
+2024-09-02 13:06:07,352 INFO: [PREPARE] Session ready for camera 1122
+2024-09-02 13:06:07,353 INFO: [PREPARE] Preparing session for camera 1368
+2024-09-02 13:06:07,353 INFO: [PREPARE] Preparing session for camera 1369
+2024-09-02 13:06:07,363 INFO: [1112] Obtained session ID: lli3nvwi24h2rwchsbyvpcjj
+2024-09-02 13:06:07,399 INFO: [1174] Obtained session ID: e4044uq1vi2d0yfmglyyy21b
+2024-09-02 13:06:07,499 INFO: [1112] Playing video for session ID: lli3nvwi24h2rwchsbyvpcjj
+2024-09-02 13:06:07,499 INFO: [PREPARE] Session ready for camera 1112
+2024-09-02 13:06:07,500 INFO: [PREPARE] Preparing session for camera 1379
+2024-09-02 13:06:07,639 INFO: [1174] Playing video for session ID: e4044uq1vi2d0yfmglyyy21b
+2024-09-02 13:06:07,640 INFO: [PREPARE] Session ready for camera 1174
+2024-09-02 13:06:07,641 INFO: [PREPARE] Preparing session for camera 1380
+2024-09-02 13:06:07,769 INFO: [1169] Obtained session ID: e25xk4ay4oxtkh2civr2vuj2
+2024-09-02 13:06:07,895 INFO: [1169] Playing video for session ID: e25xk4ay4oxtkh2civr2vuj2
+2024-09-02 13:06:07,896 INFO: [PREPARE] Session ready for camera 1169
+2024-09-02 13:06:07,897 INFO: [PREPARE] Preparing session for camera 1381
+2024-09-02 13:06:08,083 INFO: [1136] Obtained session ID: mkbv1fmb54sfsxhsj0y2bosj
+2024-09-02 13:06:08,209 INFO: [1136] Playing video for session ID: mkbv1fmb54sfsxhsj0y2bosj
+2024-09-02 13:06:08,210 INFO: [PREPARE] Session ready for camera 1136
+2024-09-02 13:06:08,211 INFO: [PREPARE] Preparing session for camera 1382
+2024-09-02 13:06:09,054 INFO: [1134] Obtained session ID: ektmokxvfjn1imhcjj2ii2dv
+2024-09-02 13:06:09,188 INFO: [1134] Playing video for session ID: ektmokxvfjn1imhcjj2ii2dv
+2024-09-02 13:06:09,189 INFO: [PREPARE] Session ready for camera 1134
+2024-09-02 13:06:09,190 INFO: [PREPARE] Preparing session for camera 1383
+2024-09-02 13:06:09,242 INFO: [1188] Obtained session ID: xosyiqi00gysp3p0qitffvbw
+2024-09-02 13:06:09,352 INFO: [1225] Obtained session ID: dhav4pu4av3qdngb2lyxn3bq
+2024-09-02 13:06:09,360 INFO: [1188] Playing video for session ID: xosyiqi00gysp3p0qitffvbw
+2024-09-02 13:06:09,361 INFO: [PREPARE] Session ready for camera 1188
+2024-09-02 13:06:09,362 INFO: [PREPARE] Preparing session for camera 1384
+2024-09-02 13:06:09,422 INFO: [1195] Obtained session ID: d1mupqr5ceo4c5ywkaktr0pb
+2024-09-02 13:06:09,485 INFO: [1225] Playing video for session ID: dhav4pu4av3qdngb2lyxn3bq
+2024-09-02 13:06:09,486 INFO: [PREPARE] Session ready for camera 1225
+2024-09-02 13:06:09,487 INFO: [PREPARE] Preparing session for camera 1385
+2024-09-02 13:06:09,559 INFO: [1195] Playing video for session ID: d1mupqr5ceo4c5ywkaktr0pb
+2024-09-02 13:06:09,560 INFO: [PREPARE] Session ready for camera 1195
+2024-09-02 13:06:09,561 INFO: [PREPARE] Preparing session for camera 1386
+2024-09-02 13:06:09,960 INFO: [1206] Obtained session ID: gedkj43rn0ryrhiw4k14thp0
+2024-09-02 13:06:10,015 INFO: [1220] Obtained session ID: pydfr22pl3tnvgdy0ipi4lv0
+2024-09-02 13:06:10,089 INFO: [1206] Playing video for session ID: gedkj43rn0ryrhiw4k14thp0
+2024-09-02 13:06:10,091 INFO: [PREPARE] Session ready for camera 1206
+2024-09-02 13:06:10,091 INFO: [PREPARE] Preparing session for camera 1387
+2024-09-02 13:06:10,132 INFO: [1194] Obtained session ID: 0fpf1p5flhbqnwojncpumxca
+2024-09-02 13:06:10,161 INFO: [1220] Playing video for session ID: pydfr22pl3tnvgdy0ipi4lv0
+2024-09-02 13:06:10,161 INFO: [PREPARE] Session ready for camera 1220
+2024-09-02 13:06:10,162 INFO: [PREPARE] Preparing session for camera 1388
+2024-09-02 13:06:10,233 INFO: [1223] Obtained session ID: 140nausqalrvdmvrpstvjqfv
+2024-09-02 13:06:10,269 INFO: [1194] Playing video for session ID: 0fpf1p5flhbqnwojncpumxca
+2024-09-02 13:06:10,269 INFO: [PREPARE] Session ready for camera 1194
+2024-09-02 13:06:10,270 INFO: [PREPARE] Preparing session for camera 1389
+2024-09-02 13:06:10,365 INFO: [1223] Playing video for session ID: 140nausqalrvdmvrpstvjqfv
+2024-09-02 13:06:10,366 INFO: [PREPARE] Session ready for camera 1223
+2024-09-02 13:06:10,367 INFO: [PREPARE] Preparing session for camera 1395
+2024-09-02 13:06:11,012 INFO: [1226] Obtained session ID: e2hk0avkgjm5sgnqotmndwb5
+2024-09-02 13:06:11,152 INFO: [1226] Playing video for session ID: e2hk0avkgjm5sgnqotmndwb5
+2024-09-02 13:06:11,153 INFO: [PREPARE] Session ready for camera 1226
+2024-09-02 13:06:11,154 INFO: [PREPARE] Preparing session for camera 1399
+2024-09-02 13:06:11,353 INFO: [1207] Obtained session ID: rbxpelfddhkuklupar5wdtrm
+2024-09-02 13:06:11,632 INFO: [1207] Playing video for session ID: rbxpelfddhkuklupar5wdtrm
+2024-09-02 13:06:11,632 INFO: [PREPARE] Session ready for camera 1207
+2024-09-02 13:06:11,634 INFO: [PREPARE] Preparing session for camera 1401
+2024-09-02 13:06:11,674 INFO: [1234] Obtained session ID: v01zmvuc4g0xhruh0xcxvvm5
+2024-09-02 13:06:11,715 INFO: [1130] Obtained session ID: zyr35fkuamp2nffslrvn5jmx
+2024-09-02 13:06:11,835 INFO: [1234] Playing video for session ID: v01zmvuc4g0xhruh0xcxvvm5
+2024-09-02 13:06:11,836 INFO: [PREPARE] Session ready for camera 1234
+2024-09-02 13:06:11,837 INFO: [PREPARE] Preparing session for camera 1403
+2024-09-02 13:06:11,851 INFO: [1130] Playing video for session ID: zyr35fkuamp2nffslrvn5jmx
+2024-09-02 13:06:11,852 INFO: [PREPARE] Session ready for camera 1130
+2024-09-02 13:06:11,853 INFO: [PREPARE] Preparing session for camera 1405
+2024-09-02 13:06:12,008 INFO: [1222] Obtained session ID: 1g1ouavszix1x1oukqlcg3nu
+2024-09-02 13:06:12,148 INFO: [1222] Playing video for session ID: 1g1ouavszix1x1oukqlcg3nu
+2024-09-02 13:06:12,149 INFO: [PREPARE] Session ready for camera 1222
+2024-09-02 13:06:12,150 INFO: [PREPARE] Preparing session for camera 1406
+2024-09-02 13:06:13,087 INFO: [1179] Obtained session ID: iclyo05ftkmz4zfnkqv0vsxi
+2024-09-02 13:06:13,280 INFO: [1179] Playing video for session ID: iclyo05ftkmz4zfnkqv0vsxi
+2024-09-02 13:06:13,280 INFO: [PREPARE] Session ready for camera 1179
+2024-09-02 13:06:13,282 INFO: [PREPARE] Preparing session for camera 1407
+2024-09-02 13:06:13,286 INFO: [1185] Obtained session ID: zg5gx2mufxmddbqj3qm5hljw
+2024-09-02 13:06:13,392 INFO: [1260] Obtained session ID: hpwcnt4af5nx4eiwxigmpnx5
+2024-09-02 13:06:13,451 INFO: [1185] Playing video for session ID: zg5gx2mufxmddbqj3qm5hljw
+2024-09-02 13:06:13,451 INFO: [PREPARE] Session ready for camera 1185
+2024-09-02 13:06:13,452 INFO: [PREPARE] Preparing session for camera 1408
+2024-09-02 13:06:13,486 INFO: [1152] Obtained session ID: ohkncwc0fbdulb1zuodgyueb
+2024-09-02 13:06:13,499 INFO: [1204] Obtained session ID: ifen51w3dofpproxumtegwhr
+2024-09-02 13:06:13,558 INFO: [1260] Playing video for session ID: hpwcnt4af5nx4eiwxigmpnx5
+2024-09-02 13:06:13,559 INFO: [PREPARE] Session ready for camera 1260
+2024-09-02 13:06:13,560 INFO: [PREPARE] Preparing session for camera 1421
+2024-09-02 13:06:13,619 INFO: [1152] Playing video for session ID: ohkncwc0fbdulb1zuodgyueb
+2024-09-02 13:06:13,619 INFO: [PREPARE] Session ready for camera 1152
+2024-09-02 13:06:13,620 INFO: [PREPARE] Preparing session for camera 1422
+2024-09-02 13:06:13,666 INFO: [1204] Playing video for session ID: ifen51w3dofpproxumtegwhr
+2024-09-02 13:06:13,667 INFO: [PREPARE] Session ready for camera 1204
+2024-09-02 13:06:13,668 INFO: [PREPARE] Preparing session for camera 1426
+2024-09-02 13:06:13,760 INFO: [1172] Obtained session ID: 5ngvqyhdmhegerasfljepxii
+2024-09-02 13:06:13,942 INFO: [1172] Playing video for session ID: 5ngvqyhdmhegerasfljepxii
+2024-09-02 13:06:13,943 INFO: [PREPARE] Session ready for camera 1172
+2024-09-02 13:06:13,944 INFO: [PREPARE] Preparing session for camera 1427
+2024-09-02 13:06:14,071 INFO: [1231] Obtained session ID: h23wzecj5pndmt1arw5css41
+2024-09-02 13:06:14,104 INFO: [1274] Obtained session ID: wh0zcxqudnibgqx2qygxwzjq
+2024-09-02 13:06:14,243 INFO: [1231] Playing video for session ID: h23wzecj5pndmt1arw5css41
+2024-09-02 13:06:14,244 INFO: [PREPARE] Session ready for camera 1231
+2024-09-02 13:06:14,244 INFO: [PREPARE] Preparing session for camera 1428
+2024-09-02 13:06:14,286 INFO: [1274] Playing video for session ID: wh0zcxqudnibgqx2qygxwzjq
+2024-09-02 13:06:14,287 INFO: [PREPARE] Session ready for camera 1274
+2024-09-02 13:06:14,287 INFO: [PREPARE] Preparing session for camera 1429
+2024-09-02 13:06:14,465 INFO: [1273] Obtained session ID: dnywpdwa3ttgplonxne2g2nj
+2024-09-02 13:06:14,507 INFO: [1297] Obtained session ID: 30uklz0nwvb33ei4bh4auuqd
+2024-09-02 13:06:14,615 INFO: [1246] Obtained session ID: uzcetqhkwjyyxdtq4pabwmhd
+2024-09-02 13:06:14,708 INFO: [1273] Playing video for session ID: dnywpdwa3ttgplonxne2g2nj
+2024-09-02 13:06:14,708 INFO: [1297] Playing video for session ID: 30uklz0nwvb33ei4bh4auuqd
+2024-09-02 13:06:14,708 INFO: [PREPARE] Session ready for camera 1273
+2024-09-02 13:06:14,709 INFO: [PREPARE] Session ready for camera 1297
+2024-09-02 13:06:14,709 INFO: [PREPARE] Preparing session for camera 1430
+2024-09-02 13:06:14,709 INFO: [PREPARE] Preparing session for camera 1431
+2024-09-02 13:06:14,807 INFO: [1246] Playing video for session ID: uzcetqhkwjyyxdtq4pabwmhd
+2024-09-02 13:06:14,807 INFO: [PREPARE] Session ready for camera 1246
+2024-09-02 13:06:14,808 INFO: [PREPARE] Preparing session for camera 1432
+2024-09-02 13:06:14,873 INFO: [1318] Obtained session ID: lty2cn1f1vkv0bmurrx4d0fz
+2024-09-02 13:06:14,883 INFO: [1322] Obtained session ID: 3yvfkqd41ld2rq4zs33vhdt1
+2024-09-02 13:06:14,902 INFO: [1184] Obtained session ID: qppgnkucubah1idrs2m1mhtt
+2024-09-02 13:06:14,924 INFO: [1301] Obtained session ID: 4magndsba1i2sfvk5yvkjrhe
+2024-09-02 13:06:14,975 INFO: [1192] Obtained session ID: zvukeroslbsaefzekrtsvsf4
+2024-09-02 13:06:15,004 INFO: [1219] Obtained session ID: ghahqew2udwjywdl1tc5izjo
+2024-09-02 13:06:15,018 INFO: [1318] Playing video for session ID: lty2cn1f1vkv0bmurrx4d0fz
+2024-09-02 13:06:15,019 INFO: [1322] Playing video for session ID: 3yvfkqd41ld2rq4zs33vhdt1
+2024-09-02 13:06:15,019 INFO: [PREPARE] Session ready for camera 1318
+2024-09-02 13:06:15,019 INFO: [PREPARE] Session ready for camera 1322
+2024-09-02 13:06:15,020 INFO: [PREPARE] Preparing session for camera 1433
+2024-09-02 13:06:15,020 INFO: [PREPARE] Preparing session for camera 1434
+2024-09-02 13:06:15,050 INFO: [1184] Playing video for session ID: qppgnkucubah1idrs2m1mhtt
+2024-09-02 13:06:15,051 INFO: [PREPARE] Session ready for camera 1184
+2024-09-02 13:06:15,051 INFO: [PREPARE] Preparing session for camera 1435
+2024-09-02 13:06:15,076 INFO: [1301] Playing video for session ID: 4magndsba1i2sfvk5yvkjrhe
+2024-09-02 13:06:15,076 INFO: [PREPARE] Session ready for camera 1301
+2024-09-02 13:06:15,077 INFO: [PREPARE] Preparing session for camera 1436
+2024-09-02 13:06:15,084 INFO: [1304] Obtained session ID: w5qvgbjzonqanodm0ysopq3b
+2024-09-02 13:06:15,096 INFO: [1283] Obtained session ID: iy5yklms0o5sazbm2mvh1xx5
+2024-09-02 13:06:15,098 INFO: [1192] Playing video for session ID: zvukeroslbsaefzekrtsvsf4
+2024-09-02 13:06:15,099 INFO: [PREPARE] Session ready for camera 1192
+2024-09-02 13:06:15,100 INFO: [PREPARE] Preparing session for camera 1437
+2024-09-02 13:06:15,122 INFO: [1298] Obtained session ID: 52n3xv3evvfqluonpihudlzf
+2024-09-02 13:06:15,178 INFO: [1219] Playing video for session ID: ghahqew2udwjywdl1tc5izjo
+2024-09-02 13:06:15,179 INFO: [PREPARE] Session ready for camera 1219
+2024-09-02 13:06:15,180 INFO: [PREPARE] Preparing session for camera 1438
+2024-09-02 13:06:15,219 INFO: [1283] Playing video for session ID: iy5yklms0o5sazbm2mvh1xx5
+2024-09-02 13:06:15,219 INFO: [PREPARE] Session ready for camera 1283
+2024-09-02 13:06:15,220 INFO: [PREPARE] Preparing session for camera 1439
+2024-09-02 13:06:15,224 INFO: [1304] Playing video for session ID: w5qvgbjzonqanodm0ysopq3b
+2024-09-02 13:06:15,224 INFO: [PREPARE] Session ready for camera 1304
+2024-09-02 13:06:15,225 INFO: [PREPARE] Preparing session for camera 1442
+2024-09-02 13:06:15,286 INFO: [1298] Playing video for session ID: 52n3xv3evvfqluonpihudlzf
+2024-09-02 13:06:15,286 INFO: [PREPARE] Session ready for camera 1298
+2024-09-02 13:06:15,287 INFO: [PREPARE] Preparing session for camera 1443
+2024-09-02 13:06:15,838 INFO: [1183] Obtained session ID: jsy2atyx2cyizyb0brm5xl5y
+2024-09-02 13:06:15,970 INFO: [1183] Playing video for session ID: jsy2atyx2cyizyb0brm5xl5y
+2024-09-02 13:06:15,970 INFO: [PREPARE] Session ready for camera 1183
+2024-09-02 13:06:15,971 INFO: [PREPARE] Preparing session for camera 1444
+2024-09-02 13:06:16,932 INFO: [1230] Obtained session ID: 3xdcg0jspbnbkhvr0lm20zip
+2024-09-02 13:06:17,076 INFO: [1230] Playing video for session ID: 3xdcg0jspbnbkhvr0lm20zip
+2024-09-02 13:06:17,077 INFO: [PREPARE] Session ready for camera 1230
+2024-09-02 13:06:17,078 INFO: [PREPARE] Preparing session for camera 1445
+2024-09-02 13:06:17,271 INFO: [1242] Obtained session ID: ufhwkynzutrzrsrcc52qhhcx
+2024-09-02 13:06:17,311 INFO: [1255] Obtained session ID: i04fw0dtmx3rqf51bygykocg
+2024-09-02 13:06:17,326 INFO: [1244] Obtained session ID: o4wucvqq4z1gob3ajelqxb3g
+2024-09-02 13:06:17,455 INFO: [1244] Playing video for session ID: o4wucvqq4z1gob3ajelqxb3g
+2024-09-02 13:06:17,456 INFO: [1242] Playing video for session ID: ufhwkynzutrzrsrcc52qhhcx
+2024-09-02 13:06:17,456 INFO: [PREPARE] Session ready for camera 1244
+2024-09-02 13:06:17,457 INFO: [1255] Playing video for session ID: i04fw0dtmx3rqf51bygykocg
+2024-09-02 13:06:17,457 INFO: [PREPARE] Session ready for camera 1242
+2024-09-02 13:06:17,459 INFO: [PREPARE] Preparing session for camera 1446
+2024-09-02 13:06:17,459 INFO: [PREPARE] Session ready for camera 1255
+2024-09-02 13:06:17,460 INFO: [PREPARE] Preparing session for camera 1447
+2024-09-02 13:06:17,461 INFO: [PREPARE] Preparing session for camera 1451
+2024-09-02 13:06:17,596 INFO: [1325] Obtained session ID: c4qp3hdj2ih1yha3ei5fnr5z
+2024-09-02 13:06:17,685 INFO: [1319] Obtained session ID: 4q1toqpcpt0jvh3qeehyzynx
+2024-09-02 13:06:17,701 INFO: [1360] Obtained session ID: reqx3vu5212at42xofkn3oce
+2024-09-02 13:06:17,738 INFO: [1264] Obtained session ID: j1kp3fpaalypf3nwzyltwgu0
+2024-09-02 13:06:17,742 INFO: [1325] Playing video for session ID: c4qp3hdj2ih1yha3ei5fnr5z
+2024-09-02 13:06:17,742 INFO: [PREPARE] Session ready for camera 1325
+2024-09-02 13:06:17,743 INFO: [PREPARE] Preparing session for camera 1452
+2024-09-02 13:06:17,746 INFO: [1299] Obtained session ID: amcu15lgzv51tnw0l4wmqrga
+2024-09-02 13:06:17,872 INFO: [1264] Playing video for session ID: j1kp3fpaalypf3nwzyltwgu0
+2024-09-02 13:06:17,873 INFO: [PREPARE] Session ready for camera 1264
+2024-09-02 13:06:17,873 INFO: [PREPARE] Preparing session for camera 1453
+2024-09-02 13:06:17,879 INFO: [1360] Playing video for session ID: reqx3vu5212at42xofkn3oce
+2024-09-02 13:06:17,880 INFO: [PREPARE] Session ready for camera 1360
+2024-09-02 13:06:17,880 INFO: [PREPARE] Preparing session for camera 1456
+2024-09-02 13:06:17,882 INFO: [1319] Playing video for session ID: 4q1toqpcpt0jvh3qeehyzynx
+2024-09-02 13:06:17,882 INFO: [1299] Playing video for session ID: amcu15lgzv51tnw0l4wmqrga
+2024-09-02 13:06:17,883 INFO: [PREPARE] Session ready for camera 1319
+2024-09-02 13:06:17,883 INFO: [PREPARE] Session ready for camera 1299
+2024-09-02 13:06:17,883 INFO: [PREPARE] Preparing session for camera 1458
+2024-09-02 13:06:17,884 INFO: [PREPARE] Preparing session for camera 1460
+2024-09-02 13:06:17,916 INFO: [1221] Obtained session ID: sqdv2kimhzdf4m2stf5gmgan
+2024-09-02 13:06:18,297 INFO: [1221] Playing video for session ID: sqdv2kimhzdf4m2stf5gmgan
+2024-09-02 13:06:18,297 INFO: [PREPARE] Session ready for camera 1221
+2024-09-02 13:06:18,298 INFO: [PREPARE] Preparing session for camera 1461
+2024-09-02 13:06:18,335 INFO: [1339] Obtained session ID: 1zniwauqcmgz4lgsx53hxh2c
+2024-09-02 13:06:18,395 INFO: [1249] Obtained session ID: fincb1xvhc3mfift5ixjl52m
+2024-09-02 13:06:18,493 INFO: [1339] Playing video for session ID: 1zniwauqcmgz4lgsx53hxh2c
+2024-09-02 13:06:18,494 INFO: [PREPARE] Session ready for camera 1339
+2024-09-02 13:06:18,495 INFO: [PREPARE] Preparing session for camera 1463
+2024-09-02 13:06:18,506 INFO: [1200] Obtained session ID: h3edurh0g5vx2emul50ducju
+2024-09-02 13:06:18,527 INFO: [1249] Playing video for session ID: fincb1xvhc3mfift5ixjl52m
+2024-09-02 13:06:18,527 INFO: [PREPARE] Session ready for camera 1249
+2024-09-02 13:06:18,528 INFO: [PREPARE] Preparing session for camera 1464
+2024-09-02 13:06:18,537 INFO: [1345] Obtained session ID: ifaxrckt5httawopdtqyzrfx
+2024-09-02 13:06:18,642 INFO: [1323] Obtained session ID: zf2c4bfszqenfuewyathqo4e
+2024-09-02 13:06:18,645 INFO: [1200] Playing video for session ID: h3edurh0g5vx2emul50ducju
+2024-09-02 13:06:18,646 INFO: [PREPARE] Session ready for camera 1200
+2024-09-02 13:06:18,647 INFO: [PREPARE] Preparing session for camera 1466
+2024-09-02 13:06:18,670 INFO: [1345] Playing video for session ID: ifaxrckt5httawopdtqyzrfx
+2024-09-02 13:06:18,670 INFO: [PREPARE] Session ready for camera 1345
+2024-09-02 13:06:18,671 INFO: [PREPARE] Preparing session for camera 1467
+2024-09-02 13:06:18,689 INFO: [1232] Obtained session ID: hsmppit1ygbqfu1nr4ow50y2
+2024-09-02 13:06:18,761 INFO: [1336] Obtained session ID: u3e5eimgiywakzinnup5rtcc
+2024-09-02 13:06:18,763 INFO: [1323] Playing video for session ID: zf2c4bfszqenfuewyathqo4e
+2024-09-02 13:06:18,765 INFO: [PREPARE] Session ready for camera 1323
+2024-09-02 13:06:18,766 INFO: [PREPARE] Preparing session for camera 1469
+2024-09-02 13:06:18,825 INFO: [1232] Playing video for session ID: hsmppit1ygbqfu1nr4ow50y2
+2024-09-02 13:06:18,825 INFO: [PREPARE] Session ready for camera 1232
+2024-09-02 13:06:18,826 INFO: [PREPARE] Preparing session for camera 1470
+2024-09-02 13:06:18,880 INFO: [1336] Playing video for session ID: u3e5eimgiywakzinnup5rtcc
+2024-09-02 13:06:18,881 INFO: [PREPARE] Session ready for camera 1336
+2024-09-02 13:06:18,882 INFO: [PREPARE] Preparing session for camera 1471
+2024-09-02 13:06:19,017 INFO: [1313] Obtained session ID: mrjksthyxq3ljopywmuoyuol
+2024-09-02 13:06:19,173 INFO: [1313] Playing video for session ID: mrjksthyxq3ljopywmuoyuol
+2024-09-02 13:06:19,173 INFO: [PREPARE] Session ready for camera 1313
+2024-09-02 13:06:19,175 INFO: [PREPARE] Preparing session for camera 1472
+2024-09-02 13:06:19,611 INFO: [1362] Obtained session ID: 11yvbzaezuggud4a2vtpqtda
+2024-09-02 13:06:19,709 INFO: [1330] Obtained session ID: navyfvov0veagnnlic0idxze
+2024-09-02 13:06:19,751 INFO: [1362] Playing video for session ID: 11yvbzaezuggud4a2vtpqtda
+2024-09-02 13:06:19,752 INFO: [PREPARE] Session ready for camera 1362
+2024-09-02 13:06:19,753 INFO: [PREPARE] Preparing session for camera 1474
+2024-09-02 13:06:19,914 INFO: [1330] Playing video for session ID: navyfvov0veagnnlic0idxze
+2024-09-02 13:06:19,915 INFO: [PREPARE] Session ready for camera 1330
+2024-09-02 13:06:19,915 INFO: [PREPARE] Preparing session for camera 1475
+2024-09-02 13:06:20,551 INFO: [1261] Obtained session ID: jxo1vbhde1lpigs4xw5yqnrx
+2024-09-02 13:06:20,572 INFO: [1286] Obtained session ID: lf15wxyhwnzpg53p2yn2ejfk
+2024-09-02 13:06:20,682 INFO: [1261] Playing video for session ID: jxo1vbhde1lpigs4xw5yqnrx
+2024-09-02 13:06:20,682 INFO: [PREPARE] Session ready for camera 1261
+2024-09-02 13:06:20,684 INFO: [PREPARE] Preparing session for camera 1478
+2024-09-02 13:06:20,710 INFO: [1286] Playing video for session ID: lf15wxyhwnzpg53p2yn2ejfk
+2024-09-02 13:06:20,710 INFO: [PREPARE] Session ready for camera 1286
+2024-09-02 13:06:20,711 INFO: [PREPARE] Preparing session for camera 1479
+2024-09-02 13:06:22,387 INFO: [1381] Obtained session ID: c32fysvvz1ffezjstmpga2uz
+2024-09-02 13:06:22,466 INFO: [1380] Obtained session ID: zof0ndjoq35omvbc1v20erxm
+2024-09-02 13:06:22,515 INFO: [1243] Obtained session ID: nbqy2o0lv2caozkxnnpl1rek
+2024-09-02 13:06:22,525 INFO: [1381] Playing video for session ID: c32fysvvz1ffezjstmpga2uz
+2024-09-02 13:06:22,525 INFO: [PREPARE] Session ready for camera 1381
+2024-09-02 13:06:22,526 INFO: [PREPARE] Preparing session for camera 1480
+2024-09-02 13:06:22,655 INFO: [1380] Playing video for session ID: zof0ndjoq35omvbc1v20erxm
+2024-09-02 13:06:22,655 INFO: [1243] Playing video for session ID: nbqy2o0lv2caozkxnnpl1rek
+2024-09-02 13:06:22,655 INFO: [PREPARE] Session ready for camera 1380
+2024-09-02 13:06:22,656 INFO: [PREPARE] Session ready for camera 1243
+2024-09-02 13:06:22,656 INFO: [PREPARE] Preparing session for camera 1482
+2024-09-02 13:06:22,657 INFO: [PREPARE] Preparing session for camera 1483
+2024-09-02 13:06:22,829 INFO: [1305] Obtained session ID: 0ubxigkskjd51wo3bkpx4imh
+2024-09-02 13:06:22,904 INFO: [1344] Obtained session ID: g5xs5kzehdr3qgnlwt53usvo
+2024-09-02 13:06:22,980 INFO: [1305] Playing video for session ID: 0ubxigkskjd51wo3bkpx4imh
+2024-09-02 13:06:22,980 INFO: [PREPARE] Session ready for camera 1305
+2024-09-02 13:06:22,981 INFO: [PREPARE] Preparing session for camera 1484
+2024-09-02 13:06:23,016 INFO: [1379] Obtained session ID: zc2yhs40fgrbruozk4soxisj
+2024-09-02 13:06:23,038 INFO: [1344] Playing video for session ID: g5xs5kzehdr3qgnlwt53usvo
+2024-09-02 13:06:23,038 INFO: [PREPARE] Session ready for camera 1344
+2024-09-02 13:06:23,039 INFO: [PREPARE] Preparing session for camera 1486
+2024-09-02 13:06:23,149 INFO: [1263] Obtained session ID: irvnygrzaqm4wdppjbmdvyj5
+2024-09-02 13:06:23,159 INFO: [1379] Playing video for session ID: zc2yhs40fgrbruozk4soxisj
+2024-09-02 13:06:23,159 INFO: [PREPARE] Session ready for camera 1379
+2024-09-02 13:06:23,160 INFO: [PREPARE] Preparing session for camera 1489
+2024-09-02 13:06:23,287 INFO: [1263] Playing video for session ID: irvnygrzaqm4wdppjbmdvyj5
+2024-09-02 13:06:23,288 INFO: [PREPARE] Session ready for camera 1263
+2024-09-02 13:06:23,288 INFO: [PREPARE] Preparing session for camera 1490
+2024-09-02 13:06:23,432 INFO: [1333] Obtained session ID: 5j3zuspojyflpub0fcfy0tps
+2024-09-02 13:06:23,457 INFO: [1399] Obtained session ID: 2ibydiavfuoegtyijkr4k1mo
+2024-09-02 13:06:23,483 INFO: [1359] Obtained session ID: w4shycdnhbozpwys5cfgvizm
+2024-09-02 13:06:23,554 INFO: [1333] Playing video for session ID: 5j3zuspojyflpub0fcfy0tps
+2024-09-02 13:06:23,555 INFO: [PREPARE] Session ready for camera 1333
+2024-09-02 13:06:23,555 INFO: [PREPARE] Preparing session for camera 1497
+2024-09-02 13:06:23,576 INFO: [1284] Obtained session ID: 3hfbumn1kcuxsfc14i5xw2ta
+2024-09-02 13:06:23,654 INFO: [1389] Obtained session ID: f40aaieynkjooc3zktu20i1v
+2024-09-02 13:06:23,678 INFO: [1399] Playing video for session ID: 2ibydiavfuoegtyijkr4k1mo
+2024-09-02 13:06:23,679 INFO: [PREPARE] Session ready for camera 1399
+2024-09-02 13:06:23,679 INFO: [PREPARE] Preparing session for camera 1498
+2024-09-02 13:06:23,682 INFO: [1359] Playing video for session ID: w4shycdnhbozpwys5cfgvizm
+2024-09-02 13:06:23,682 INFO: [PREPARE] Session ready for camera 1359
+2024-09-02 13:06:23,683 INFO: [PREPARE] Preparing session for camera 1499
+2024-09-02 13:06:23,702 INFO: [1284] Playing video for session ID: 3hfbumn1kcuxsfc14i5xw2ta
+2024-09-02 13:06:23,702 INFO: [PREPARE] Session ready for camera 1284
+2024-09-02 13:06:23,703 INFO: [PREPARE] Preparing session for camera 1502
+2024-09-02 13:06:23,714 INFO: [1349] Obtained session ID: 5e3jt4yuhxfpo4rammtk5hv2
+2024-09-02 13:06:23,778 INFO: [1389] Playing video for session ID: f40aaieynkjooc3zktu20i1v
+2024-09-02 13:06:23,779 INFO: [PREPARE] Session ready for camera 1389
+2024-09-02 13:06:23,779 INFO: [PREPARE] Preparing session for camera 1505
+2024-09-02 13:06:23,782 INFO: [1357] Obtained session ID: 1gvteuncd1fts40tv5zgrare
+2024-09-02 13:06:23,813 INFO: [1341] Obtained session ID: e12nkhb1erplwnh3l0wvx1qb
+2024-09-02 13:06:23,821 INFO: [1358] Obtained session ID: mepjfj503m0evzncxmxrugrk
+2024-09-02 13:06:23,842 INFO: [1349] Playing video for session ID: 5e3jt4yuhxfpo4rammtk5hv2
+2024-09-02 13:06:23,842 INFO: [PREPARE] Session ready for camera 1349
+2024-09-02 13:06:23,843 INFO: [PREPARE] Preparing session for camera 1508
+2024-09-02 13:06:23,929 INFO: [1357] Playing video for session ID: 1gvteuncd1fts40tv5zgrare
+2024-09-02 13:06:23,930 INFO: [PREPARE] Session ready for camera 1357
+2024-09-02 13:06:23,930 INFO: [PREPARE] Preparing session for camera 1509
+2024-09-02 13:06:23,940 INFO: [1338] Obtained session ID: kfnnbmrkeslwi0jodtbur2z4
+2024-09-02 13:06:23,945 INFO: [1341] Playing video for session ID: e12nkhb1erplwnh3l0wvx1qb
+2024-09-02 13:06:23,946 INFO: [PREPARE] Session ready for camera 1341
+2024-09-02 13:06:23,946 INFO: [PREPARE] Preparing session for camera 1510
+2024-09-02 13:06:24,070 INFO: [1338] Playing video for session ID: kfnnbmrkeslwi0jodtbur2z4
+2024-09-02 13:06:24,070 INFO: [PREPARE] Session ready for camera 1338
+2024-09-02 13:06:24,071 INFO: [PREPARE] Preparing session for camera 1511
+2024-09-02 13:06:24,283 INFO: [1358] Playing video for session ID: mepjfj503m0evzncxmxrugrk
+2024-09-02 13:06:24,284 INFO: [PREPARE] Session ready for camera 1358
+2024-09-02 13:06:24,286 INFO: [PREPARE] Preparing session for camera 1512
+2024-09-02 13:06:24,326 INFO: [1384] Obtained session ID: 3eey42rmnik1m1diozfdmffg
+2024-09-02 13:06:24,471 INFO: [1384] Playing video for session ID: 3eey42rmnik1m1diozfdmffg
+2024-09-02 13:06:24,472 INFO: [PREPARE] Session ready for camera 1384
+2024-09-02 13:06:24,473 INFO: [PREPARE] Preparing session for camera 1514
+2024-09-02 13:06:24,963 INFO: [1361] Obtained session ID: 3y2lwens4ks5pm1pgpud2tvn
+2024-09-02 13:06:24,999 INFO: [1369] Obtained session ID: nrt0edcjyy2sflodhrleopbd
+2024-09-02 13:06:25,029 INFO: [1353] Obtained session ID: ji3ddbrp4kdq5fnyqylfuenl
+2024-09-02 13:06:25,086 INFO: [1388] Obtained session ID: lkbq4smd21gzgyhuvffwwtwl
+2024-09-02 13:06:25,101 INFO: [1361] Playing video for session ID: 3y2lwens4ks5pm1pgpud2tvn
+2024-09-02 13:06:25,102 INFO: [PREPARE] Session ready for camera 1361
+2024-09-02 13:06:25,103 INFO: [PREPARE] Preparing session for camera 1515
+2024-09-02 13:06:25,116 INFO: [1421] Obtained session ID: ubfnvl1rot1hhksivbzxivv3
+2024-09-02 13:06:25,122 INFO: [1369] Playing video for session ID: nrt0edcjyy2sflodhrleopbd
+2024-09-02 13:06:25,123 INFO: [PREPARE] Session ready for camera 1369
+2024-09-02 13:06:25,123 INFO: [PREPARE] Preparing session for camera 1518
+2024-09-02 13:06:25,131 INFO: [1427] Obtained session ID: i4juap23jatqvchssobmnso1
+2024-09-02 13:06:25,143 INFO: [1383] Obtained session ID: ulstqdxn3njfgg3dsfvaqq4u
+2024-09-02 13:06:25,159 INFO: [1428] Obtained session ID: bhx1azokckpnlnicpzpp2jup
+2024-09-02 13:06:25,161 INFO: [1353] Playing video for session ID: ji3ddbrp4kdq5fnyqylfuenl
+2024-09-02 13:06:25,161 INFO: [PREPARE] Session ready for camera 1353
+2024-09-02 13:06:25,162 INFO: [PREPARE] Preparing session for camera 1522
+2024-09-02 13:06:25,216 INFO: [1388] Playing video for session ID: lkbq4smd21gzgyhuvffwwtwl
+2024-09-02 13:06:25,216 INFO: [PREPARE] Session ready for camera 1388
+2024-09-02 13:06:25,217 INFO: [PREPARE] Preparing session for camera 1523
+2024-09-02 13:06:25,228 INFO: [1431] Obtained session ID: m0kbosfi0zsoggnw2wzbfgwo
+2024-09-02 13:06:25,236 INFO: [1421] Playing video for session ID: ubfnvl1rot1hhksivbzxivv3
+2024-09-02 13:06:25,236 INFO: [PREPARE] Session ready for camera 1421
+2024-09-02 13:06:25,237 INFO: [PREPARE] Preparing session for camera 1525
+2024-09-02 13:06:25,248 INFO: [1385] Obtained session ID: abloat4htlivvgb50z4pbjkr
+2024-09-02 13:06:25,270 INFO: [1383] Playing video for session ID: ulstqdxn3njfgg3dsfvaqq4u
+2024-09-02 13:06:25,270 INFO: [1427] Playing video for session ID: i4juap23jatqvchssobmnso1
+2024-09-02 13:06:25,271 INFO: [PREPARE] Session ready for camera 1383
+2024-09-02 13:06:25,271 INFO: [PREPARE] Session ready for camera 1427
+2024-09-02 13:06:25,271 INFO: [PREPARE] Preparing session for camera 1526
+2024-09-02 13:06:25,272 INFO: [PREPARE] Preparing session for camera 1527
+2024-09-02 13:06:25,294 INFO: [1428] Playing video for session ID: bhx1azokckpnlnicpzpp2jup
+2024-09-02 13:06:25,294 INFO: [PREPARE] Session ready for camera 1428
+2024-09-02 13:06:25,295 INFO: [PREPARE] Preparing session for camera 1528
+2024-09-02 13:06:25,357 INFO: [1431] Playing video for session ID: m0kbosfi0zsoggnw2wzbfgwo
+2024-09-02 13:06:25,357 INFO: [PREPARE] Session ready for camera 1431
+2024-09-02 13:06:25,358 INFO: [PREPARE] Preparing session for camera 1529
+2024-09-02 13:06:25,386 INFO: [1385] Playing video for session ID: abloat4htlivvgb50z4pbjkr
+2024-09-02 13:06:25,387 INFO: [PREPARE] Session ready for camera 1385
+2024-09-02 13:06:25,387 INFO: [PREPARE] Preparing session for camera 1530
+2024-09-02 13:06:25,595 INFO: [1429] Obtained session ID: ap1gfnhiu221vt5klt5nl43l
+2024-09-02 13:06:25,724 INFO: [1429] Playing video for session ID: ap1gfnhiu221vt5klt5nl43l
+2024-09-02 13:06:25,725 INFO: [PREPARE] Session ready for camera 1429
+2024-09-02 13:06:25,725 INFO: [PREPARE] Preparing session for camera 1531
+2024-09-02 13:06:26,217 INFO: [1332] Obtained session ID: rf3z2pyxmqgutv2mpj4xmpgr
+2024-09-02 13:06:26,269 INFO: [1387] Obtained session ID: bypfq22nn24lfdmfv1rswkjy
+2024-09-02 13:06:26,350 INFO: [1332] Playing video for session ID: rf3z2pyxmqgutv2mpj4xmpgr
+2024-09-02 13:06:26,350 INFO: [PREPARE] Session ready for camera 1332
+2024-09-02 13:06:26,351 INFO: [PREPARE] Preparing session for camera 1533
+2024-09-02 13:06:26,396 INFO: [1387] Playing video for session ID: bypfq22nn24lfdmfv1rswkjy
+2024-09-02 13:06:26,396 INFO: [PREPARE] Session ready for camera 1387
+2024-09-02 13:06:26,396 INFO: [PREPARE] Preparing session for camera 1534
+2024-09-02 13:06:26,698 INFO: [1368] Obtained session ID: ngb33i3exyqxc3gvoirqy0il
+2024-09-02 13:06:26,826 INFO: [1368] Playing video for session ID: ngb33i3exyqxc3gvoirqy0il
+2024-09-02 13:06:26,827 INFO: [PREPARE] Session ready for camera 1368
+2024-09-02 13:06:26,827 INFO: [PREPARE] Preparing session for camera 1535
+2024-09-02 13:06:28,354 INFO: [1326] Obtained session ID: ge1lrtl4lyxo1yi3xktuhgg0
+2024-09-02 13:06:28,395 INFO: [1356] Obtained session ID: y4r2pdluwrvycdpx1juqgx50
+2024-09-02 13:06:28,500 INFO: [1326] Playing video for session ID: ge1lrtl4lyxo1yi3xktuhgg0
+2024-09-02 13:06:28,502 INFO: [PREPARE] Session ready for camera 1326
+2024-09-02 13:06:28,502 INFO: [PREPARE] Preparing session for camera 1536
+2024-09-02 13:06:28,515 INFO: [1356] Playing video for session ID: y4r2pdluwrvycdpx1juqgx50
+2024-09-02 13:06:28,516 INFO: [PREPARE] Session ready for camera 1356
+2024-09-02 13:06:28,517 INFO: [PREPARE] Preparing session for camera 1537
+2024-09-02 13:06:28,814 INFO: [1401] Obtained session ID: 3hxptoq42kf4fpbnnv0m2nha
+2024-09-02 13:06:28,934 INFO: [1401] Playing video for session ID: 3hxptoq42kf4fpbnnv0m2nha
+2024-09-02 13:06:28,934 INFO: [PREPARE] Session ready for camera 1401
+2024-09-02 13:06:28,936 INFO: [PREPARE] Preparing session for camera 1539
+2024-09-02 13:06:29,149 INFO: [1320] Obtained session ID: kejzafi4x2zpo4fh32fry1oq
+2024-09-02 13:06:29,280 INFO: [1320] Playing video for session ID: kejzafi4x2zpo4fh32fry1oq
+2024-09-02 13:06:29,281 INFO: [PREPARE] Session ready for camera 1320
+2024-09-02 13:06:29,281 INFO: [PREPARE] Preparing session for camera 1541
+2024-09-02 13:06:29,612 INFO: [1434] Obtained session ID: ra4da2ripfr4x4q1ohwy4hjj
+2024-09-02 13:06:29,736 INFO: [1434] Playing video for session ID: ra4da2ripfr4x4q1ohwy4hjj
+2024-09-02 13:06:29,737 INFO: [PREPARE] Session ready for camera 1434
+2024-09-02 13:06:29,738 INFO: [PREPARE] Preparing session for camera 1543
+2024-09-02 13:06:30,046 INFO: [1382] Obtained session ID: 4nqxkipw4u4mx4xklvfrzifl
+2024-09-02 13:06:30,176 INFO: [1382] Playing video for session ID: 4nqxkipw4u4mx4xklvfrzifl
+2024-09-02 13:06:30,177 INFO: [PREPARE] Session ready for camera 1382
+2024-09-02 13:06:30,178 INFO: [PREPARE] Preparing session for camera 1544
+2024-09-02 13:06:30,468 INFO: [1422] Obtained session ID: mgpwhc3t5xp2qlumfjpyvcan
+2024-09-02 13:06:30,598 INFO: [1422] Playing video for session ID: mgpwhc3t5xp2qlumfjpyvcan
+2024-09-02 13:06:30,599 INFO: [PREPARE] Session ready for camera 1422
+2024-09-02 13:06:30,600 INFO: [PREPARE] Preparing session for camera 1545
+2024-09-02 13:06:30,923 INFO: [1426] Obtained session ID: mcdwmeo23rsbtsj0desqn114
+2024-09-02 13:06:31,060 INFO: [1426] Playing video for session ID: mcdwmeo23rsbtsj0desqn114
+2024-09-02 13:06:31,061 INFO: [PREPARE] Session ready for camera 1426
+2024-09-02 13:06:31,062 INFO: [PREPARE] Preparing session for camera 1546
+2024-09-02 13:06:31,500 INFO: [1395] Obtained session ID: dobyuzpmxuvg2nwn4ktb1j1a
+2024-09-02 13:06:31,651 INFO: [1395] Playing video for session ID: dobyuzpmxuvg2nwn4ktb1j1a
+2024-09-02 13:06:31,652 INFO: [PREPARE] Session ready for camera 1395
+2024-09-02 13:06:31,654 INFO: [PREPARE] Preparing session for camera 1547
+2024-09-02 13:06:31,923 INFO: [1439] Obtained session ID: pe5sol0bf4znyjf0q4pniqhj
+2024-09-02 13:06:32,063 INFO: [1439] Playing video for session ID: pe5sol0bf4znyjf0q4pniqhj
+2024-09-02 13:06:32,064 INFO: [PREPARE] Session ready for camera 1439
+2024-09-02 13:06:32,065 INFO: [PREPARE] Preparing session for camera 1548
+2024-09-02 13:06:32,835 INFO: [1386] Obtained session ID: 3aj1zt04gsyns101sikyaj53
+2024-09-02 13:06:32,994 INFO: [1386] Playing video for session ID: 3aj1zt04gsyns101sikyaj53
+2024-09-02 13:06:32,995 INFO: [PREPARE] Session ready for camera 1386
+2024-09-02 13:06:32,996 INFO: [PREPARE] Preparing session for camera 1550
+2024-09-02 13:06:35,860 INFO: [1470] Obtained session ID: mrrtnepkzxnmv0r1n14nzpzm
+2024-09-02 13:06:36,012 INFO: [1470] Playing video for session ID: mrrtnepkzxnmv0r1n14nzpzm
+2024-09-02 13:06:36,013 INFO: [PREPARE] Session ready for camera 1470
+2024-09-02 13:06:36,013 INFO: [PREPARE] Preparing session for camera 1552
+2024-09-02 13:06:36,476 INFO: [1408] Obtained session ID: fvn1bqbdex42m3qyvyyioofr
+2024-09-02 13:06:36,610 INFO: [1408] Playing video for session ID: fvn1bqbdex42m3qyvyyioofr
+2024-09-02 13:06:36,611 INFO: [PREPARE] Session ready for camera 1408
+2024-09-02 13:06:36,613 INFO: [PREPARE] Preparing session for camera 1553
+2024-09-02 13:06:37,524 INFO: [1436] Obtained session ID: ftougdwrdoonrfuomnupmh2c
+2024-09-02 13:06:37,653 INFO: [1436] Playing video for session ID: ftougdwrdoonrfuomnupmh2c
+2024-09-02 13:06:37,655 INFO: [PREPARE] Session ready for camera 1436
+2024-09-02 13:06:37,657 INFO: [PREPARE] Preparing session for camera 1554
+2024-09-02 13:06:37,907 INFO: [1437] Obtained session ID: ko3p5yx4ssdjsgyd5rhxcpq0
+2024-09-02 13:06:37,967 INFO: [1458] Obtained session ID: 4b3cizrrcbtihekaiqlzm3tp
+2024-09-02 13:06:38,038 INFO: [1437] Playing video for session ID: ko3p5yx4ssdjsgyd5rhxcpq0
+2024-09-02 13:06:38,038 INFO: [PREPARE] Session ready for camera 1437
+2024-09-02 13:06:38,040 INFO: [PREPARE] Preparing session for camera 1555
+2024-09-02 13:06:38,103 INFO: [1458] Playing video for session ID: 4b3cizrrcbtihekaiqlzm3tp
+2024-09-02 13:06:38,104 INFO: [PREPARE] Session ready for camera 1458
+2024-09-02 13:06:38,106 INFO: [PREPARE] Preparing session for camera 1556
+2024-09-02 13:06:38,138 INFO: [1432] Obtained session ID: kexbzm3gibqtgyu1gifzsdf1
+2024-09-02 13:06:38,291 INFO: [1432] Playing video for session ID: kexbzm3gibqtgyu1gifzsdf1
+2024-09-02 13:06:38,292 INFO: [PREPARE] Session ready for camera 1432
+2024-09-02 13:06:38,294 INFO: [PREPARE] Preparing session for camera 1558
+2024-09-02 13:06:38,579 INFO: [1403] Obtained session ID: fznmnfvug2see4n3lfdbqn5s
+2024-09-02 13:06:38,711 INFO: [1403] Playing video for session ID: fznmnfvug2see4n3lfdbqn5s
+2024-09-02 13:06:38,712 INFO: [PREPARE] Session ready for camera 1403
+2024-09-02 13:06:38,713 INFO: [PREPARE] Preparing session for camera 1559
+2024-09-02 13:06:38,794 INFO: [1445] Obtained session ID: mudtt5f1r1brjgssum4aqxgs
+2024-09-02 13:06:38,927 INFO: [1445] Playing video for session ID: mudtt5f1r1brjgssum4aqxgs
+2024-09-02 13:06:38,928 INFO: [PREPARE] Session ready for camera 1445
+2024-09-02 13:06:38,929 INFO: [PREPARE] Preparing session for camera 1563
+2024-09-02 13:06:39,026 INFO: [1442] Obtained session ID: 4vik4vbcwonnmzw2hcwgmrx1
+2024-09-02 13:06:39,096 INFO: [1405] Obtained session ID: 2qixqy1fy4zprglbgyejjmuk
+2024-09-02 13:06:39,161 INFO: [1442] Playing video for session ID: 4vik4vbcwonnmzw2hcwgmrx1
+2024-09-02 13:06:39,162 INFO: [PREPARE] Session ready for camera 1442
+2024-09-02 13:06:39,164 INFO: [PREPARE] Preparing session for camera 1564
+2024-09-02 13:06:39,239 INFO: [1405] Playing video for session ID: 2qixqy1fy4zprglbgyejjmuk
+2024-09-02 13:06:39,239 INFO: [PREPARE] Session ready for camera 1405
+2024-09-02 13:06:39,240 INFO: [PREPARE] Preparing session for camera 1566
+2024-09-02 13:06:39,271 INFO: [1471] Obtained session ID: zerqzfn1kdo0m12xppnhskmi
+2024-09-02 13:06:39,409 INFO: [1471] Playing video for session ID: zerqzfn1kdo0m12xppnhskmi
+2024-09-02 13:06:39,410 INFO: [PREPARE] Session ready for camera 1471
+2024-09-02 13:06:39,412 INFO: [PREPARE] Preparing session for camera 1568
+2024-09-02 13:06:40,070 INFO: [1433] Obtained session ID: 0aiu3harybvg5zelmcy05m4e
+2024-09-02 13:06:40,190 INFO: [1433] Playing video for session ID: 0aiu3harybvg5zelmcy05m4e
+2024-09-02 13:06:40,191 INFO: [PREPARE] Session ready for camera 1433
+2024-09-02 13:06:40,193 INFO: [PREPARE] Preparing session for camera 1569
+2024-09-02 13:06:40,938 INFO: [1435] Obtained session ID: 0rfrxmrg0azk5qpak5zsnim3
+2024-09-02 13:06:40,960 INFO: [1438] Obtained session ID: xgker4iy4whpztw51k0fx2zz
+2024-09-02 13:06:40,991 INFO: [1474] Obtained session ID: 0gaqfbqktvnomvdr4lnamfag
+2024-09-02 13:06:40,995 INFO: [1443] Obtained session ID: v44aupdqhngbd0zsv2lc11tk
+2024-09-02 13:06:41,068 INFO: [1435] Playing video for session ID: 0rfrxmrg0azk5qpak5zsnim3
+2024-09-02 13:06:41,069 INFO: [PREPARE] Session ready for camera 1435
+2024-09-02 13:06:41,070 INFO: [PREPARE] Preparing session for camera 1574
+2024-09-02 13:06:41,080 INFO: [1438] Playing video for session ID: xgker4iy4whpztw51k0fx2zz
+2024-09-02 13:06:41,081 INFO: [PREPARE] Session ready for camera 1438
+2024-09-02 13:06:41,082 INFO: [PREPARE] Preparing session for camera 1581
+2024-09-02 13:06:41,135 INFO: [1474] Playing video for session ID: 0gaqfbqktvnomvdr4lnamfag
+2024-09-02 13:06:41,136 INFO: [1443] Playing video for session ID: v44aupdqhngbd0zsv2lc11tk
+2024-09-02 13:06:41,136 INFO: [PREPARE] Session ready for camera 1474
+2024-09-02 13:06:41,137 INFO: [PREPARE] Session ready for camera 1443
+2024-09-02 13:06:41,138 INFO: [PREPARE] Preparing session for camera 1582
+2024-09-02 13:06:41,139 INFO: [PREPARE] Preparing session for camera 1584
+2024-09-02 13:06:41,756 INFO: [1456] Obtained session ID: 2tf3motu3e3rfvycntmzfji5
+2024-09-02 13:06:41,787 INFO: [1447] Obtained session ID: zndcwq04c3b0pr30ep24kv0d
+2024-09-02 13:06:41,872 INFO: [1460] Obtained session ID: k4di5nskv1vsnspzhh2zcymo
+2024-09-02 13:06:41,890 INFO: [1456] Playing video for session ID: 2tf3motu3e3rfvycntmzfji5
+2024-09-02 13:06:41,890 INFO: [PREPARE] Session ready for camera 1456
+2024-09-02 13:06:41,891 INFO: [PREPARE] Preparing session for camera 1585
+2024-09-02 13:06:41,912 INFO: [1472] Obtained session ID: dfa0klups52bu2nirhszsu2d
+2024-09-02 13:06:41,919 INFO: [1447] Playing video for session ID: zndcwq04c3b0pr30ep24kv0d
+2024-09-02 13:06:41,920 INFO: [PREPARE] Session ready for camera 1447
+2024-09-02 13:06:41,921 INFO: [PREPARE] Preparing session for camera 1587
+2024-09-02 13:06:42,011 INFO: [1460] Playing video for session ID: k4di5nskv1vsnspzhh2zcymo
+2024-09-02 13:06:42,012 INFO: [PREPARE] Session ready for camera 1460
+2024-09-02 13:06:42,013 INFO: [PREPARE] Preparing session for camera 1588
+2024-09-02 13:06:42,049 INFO: [1472] Playing video for session ID: dfa0klups52bu2nirhszsu2d
+2024-09-02 13:06:42,050 INFO: [PREPARE] Session ready for camera 1472
+2024-09-02 13:06:42,051 INFO: [PREPARE] Preparing session for camera 1590
+2024-09-02 13:06:42,134 INFO: [1430] Obtained session ID: 2ez5rsrgye51qmzxcpfmn2ez
+2024-09-02 13:06:42,290 INFO: [1430] Playing video for session ID: 2ez5rsrgye51qmzxcpfmn2ez
+2024-09-02 13:06:42,290 INFO: [PREPARE] Session ready for camera 1430
+2024-09-02 13:06:42,291 INFO: [PREPARE] Preparing session for camera 1591
+2024-09-02 13:06:42,732 INFO: [1461] Obtained session ID: jgmdzgf0kezo0r0qksamhai3
+2024-09-02 13:06:42,769 INFO: [1406] Obtained session ID: ujdb23legmshdxw1dl41k4md
+2024-09-02 13:06:42,870 INFO: [1461] Playing video for session ID: jgmdzgf0kezo0r0qksamhai3
+2024-09-02 13:06:42,871 INFO: [PREPARE] Session ready for camera 1461
+2024-09-02 13:06:42,872 INFO: [PREPARE] Preparing session for camera 1592
+2024-09-02 13:06:42,896 INFO: [1406] Playing video for session ID: ujdb23legmshdxw1dl41k4md
+2024-09-02 13:06:42,896 INFO: [PREPARE] Session ready for camera 1406
+2024-09-02 13:06:42,898 INFO: [PREPARE] Preparing session for camera 1593
+2024-09-02 13:06:43,056 INFO: [1479] Obtained session ID: q52vj1nls2mz0peonfbkheso
+2024-09-02 13:06:43,191 INFO: [1479] Playing video for session ID: q52vj1nls2mz0peonfbkheso
+2024-09-02 13:06:43,191 INFO: [PREPARE] Session ready for camera 1479
+2024-09-02 13:06:43,193 INFO: [PREPARE] Preparing session for camera 1594
+2024-09-02 13:06:43,808 INFO: [1466] Obtained session ID: zt4piflyi035fazu3j0u1bg0
+2024-09-02 13:06:43,811 INFO: [1464] Obtained session ID: 2eanjdhuhluad5stgiu0j2zz
+2024-09-02 13:06:43,826 INFO: [1480] Obtained session ID: a2kt3tur5adbfafk0ikhounj
+2024-09-02 13:06:43,887 INFO: [1453] Obtained session ID: 55ufahzwqqaonmp44hm21bp4
+2024-09-02 13:06:43,896 INFO: [1407] Obtained session ID: hbbbn334bo42lezx0xbma1md
+2024-09-02 13:06:43,945 INFO: [1466] Playing video for session ID: zt4piflyi035fazu3j0u1bg0
+2024-09-02 13:06:43,947 INFO: [1464] Playing video for session ID: 2eanjdhuhluad5stgiu0j2zz
+2024-09-02 13:06:43,947 INFO: [PREPARE] Session ready for camera 1466
+2024-09-02 13:06:43,948 INFO: [PREPARE] Session ready for camera 1464
+2024-09-02 13:06:43,949 INFO: [PREPARE] Preparing session for camera 1595
+2024-09-02 13:06:43,949 INFO: [PREPARE] Preparing session for camera 1597
+2024-09-02 13:06:43,955 INFO: [1444] Obtained session ID: csq0fieyalu42kk3vxkd4stm
+2024-09-02 13:06:43,970 INFO: [1480] Playing video for session ID: a2kt3tur5adbfafk0ikhounj
+2024-09-02 13:06:43,971 INFO: [PREPARE] Session ready for camera 1480
+2024-09-02 13:06:43,971 INFO: [PREPARE] Preparing session for camera 1598
+2024-09-02 13:06:44,014 INFO: [1407] Playing video for session ID: hbbbn334bo42lezx0xbma1md
+2024-09-02 13:06:44,015 INFO: [1453] Playing video for session ID: 55ufahzwqqaonmp44hm21bp4
+2024-09-02 13:06:44,015 INFO: [PREPARE] Session ready for camera 1407
+2024-09-02 13:06:44,016 INFO: [PREPARE] Session ready for camera 1453
+2024-09-02 13:06:44,017 INFO: [PREPARE] Preparing session for camera 1600
+2024-09-02 13:06:44,018 INFO: [PREPARE] Preparing session for camera 1601
+2024-09-02 13:06:44,084 INFO: [1444] Playing video for session ID: csq0fieyalu42kk3vxkd4stm
+2024-09-02 13:06:44,085 INFO: [PREPARE] Session ready for camera 1444
+2024-09-02 13:06:44,087 INFO: [PREPARE] Preparing session for camera 1602
+2024-09-02 13:06:44,148 INFO: [1452] Obtained session ID: uwvbqqyq1higoo312ljc4onm
+2024-09-02 13:06:44,305 INFO: [1452] Playing video for session ID: uwvbqqyq1higoo312ljc4onm
+2024-09-02 13:06:44,305 INFO: [PREPARE] Session ready for camera 1452
+2024-09-02 13:06:44,307 INFO: [PREPARE] Preparing session for camera 1603
+2024-09-02 13:06:45,158 INFO: [1469] Obtained session ID: 41wgtydfvpdsjefzyiczn2fz
+2024-09-02 13:06:45,272 INFO: [1451] Obtained session ID: uf1iez2xizwcp31s0lmnpqu1
+2024-09-02 13:06:45,287 INFO: [1469] Playing video for session ID: 41wgtydfvpdsjefzyiczn2fz
+2024-09-02 13:06:45,287 INFO: [PREPARE] Session ready for camera 1469
+2024-09-02 13:06:45,289 INFO: [PREPARE] Preparing session for camera 1604
+2024-09-02 13:06:45,413 INFO: [1451] Playing video for session ID: uf1iez2xizwcp31s0lmnpqu1
+2024-09-02 13:06:45,413 INFO: [PREPARE] Session ready for camera 1451
+2024-09-02 13:06:45,415 INFO: [PREPARE] Preparing session for camera 1605
+2024-09-02 13:06:46,224 INFO: [1463] Obtained session ID: tjzl0b5lcv5ba2lt1sj0tfu4
+2024-09-02 13:06:46,359 INFO: [1463] Playing video for session ID: tjzl0b5lcv5ba2lt1sj0tfu4
+2024-09-02 13:06:46,360 INFO: [PREPARE] Session ready for camera 1463
+2024-09-02 13:06:46,361 INFO: [PREPARE] Preparing session for camera 1606
+2024-09-02 13:06:46,855 INFO: [1475] Obtained session ID: pfojrikobvdssdmtbpcjvny2
+2024-09-02 13:06:46,990 INFO: [1475] Playing video for session ID: pfojrikobvdssdmtbpcjvny2
+2024-09-02 13:06:46,991 INFO: [PREPARE] Session ready for camera 1475
+2024-09-02 13:06:46,992 INFO: [PREPARE] Preparing session for camera 1607
+2024-09-02 13:06:46,995 INFO: [1478] Obtained session ID: ufkzazhbej1rwtjviwcpintb
+2024-09-02 13:06:47,124 INFO: [1478] Playing video for session ID: ufkzazhbej1rwtjviwcpintb
+2024-09-02 13:06:47,124 INFO: [PREPARE] Session ready for camera 1478
+2024-09-02 13:06:47,126 INFO: [PREPARE] Preparing session for camera 1613
+2024-09-02 13:06:47,517 INFO: [1490] Obtained session ID: t4titm43n3lr1ingcucp5n24
+2024-09-02 13:06:47,653 INFO: [1490] Playing video for session ID: t4titm43n3lr1ingcucp5n24
+2024-09-02 13:06:47,654 INFO: [PREPARE] Session ready for camera 1490
+2024-09-02 13:06:47,655 INFO: [PREPARE] Preparing session for camera 1616
+2024-09-02 13:06:48,541 INFO: [1467] Obtained session ID: 4ors1b10pfnts53qlwql10ki
+2024-09-02 13:06:48,676 INFO: [1467] Playing video for session ID: 4ors1b10pfnts53qlwql10ki
+2024-09-02 13:06:48,677 INFO: [PREPARE] Session ready for camera 1467
+2024-09-02 13:06:48,678 INFO: [PREPARE] Preparing session for camera 1619
+2024-09-02 13:06:50,436 INFO: [1446] Obtained session ID: a5yuinq1313x2x2uxuaebwn3
+2024-09-02 13:06:50,584 INFO: [1446] Playing video for session ID: a5yuinq1313x2x2uxuaebwn3
+2024-09-02 13:06:50,586 INFO: [PREPARE] Session ready for camera 1446
+2024-09-02 13:06:50,587 INFO: [PREPARE] Preparing session for camera 1622
+2024-09-02 13:06:50,794 INFO: [1482] Obtained session ID: qgab0cuqi5ubtg0hg1lsp2ik
+2024-09-02 13:06:50,920 INFO: [1482] Playing video for session ID: qgab0cuqi5ubtg0hg1lsp2ik
+2024-09-02 13:06:50,920 INFO: [PREPARE] Session ready for camera 1482
+2024-09-02 13:06:50,921 INFO: [PREPARE] Preparing session for camera 1624
+2024-09-02 13:06:50,991 INFO: [1483] Obtained session ID: 2mpvqhn0hjr2sv23lrkazqhs
+2024-09-02 13:06:51,121 INFO: [1483] Playing video for session ID: 2mpvqhn0hjr2sv23lrkazqhs
+2024-09-02 13:06:51,122 INFO: [PREPARE] Session ready for camera 1483
+2024-09-02 13:06:51,123 INFO: [PREPARE] Preparing session for camera 1626
+2024-09-02 13:06:51,785 INFO: [1512] Obtained session ID: f3i1yhwag4odsycbqxwpmt1h
+2024-09-02 13:06:51,921 INFO: [1512] Playing video for session ID: f3i1yhwag4odsycbqxwpmt1h
+2024-09-02 13:06:51,922 INFO: [PREPARE] Session ready for camera 1512
+2024-09-02 13:06:51,924 INFO: [PREPARE] Preparing session for camera 1627
+2024-09-02 13:06:52,072 INFO: [1497] Obtained session ID: atoqdlqocnbnvghng4w2ht3q
+2024-09-02 13:06:52,213 INFO: [1497] Playing video for session ID: atoqdlqocnbnvghng4w2ht3q
+2024-09-02 13:06:52,214 INFO: [PREPARE] Session ready for camera 1497
+2024-09-02 13:06:52,215 INFO: [PREPARE] Preparing session for camera 1628
+2024-09-02 13:06:55,106 INFO: [1498] Obtained session ID: v5i2ohne4gtxvuugdnkflczh
+2024-09-02 13:06:55,237 INFO: [1498] Playing video for session ID: v5i2ohne4gtxvuugdnkflczh
+2024-09-02 13:06:55,237 INFO: [PREPARE] Session ready for camera 1498
+2024-09-02 13:06:55,238 INFO: [PREPARE] Preparing session for camera 1633
+2024-09-02 13:06:55,276 INFO: [1484] Obtained session ID: 2jq1wvcjmy0kxtd23dcsg5uq
+2024-09-02 13:06:55,412 INFO: [1484] Playing video for session ID: 2jq1wvcjmy0kxtd23dcsg5uq
+2024-09-02 13:06:55,413 INFO: [PREPARE] Session ready for camera 1484
+2024-09-02 13:06:55,414 INFO: [PREPARE] Preparing session for camera 1634
+2024-09-02 13:06:55,486 INFO: [1518] Obtained session ID: dnyn5t4ifl3jjzclluqbp3vm
+2024-09-02 13:06:55,627 INFO: [1518] Playing video for session ID: dnyn5t4ifl3jjzclluqbp3vm
+2024-09-02 13:06:55,628 INFO: [PREPARE] Session ready for camera 1518
+2024-09-02 13:06:55,630 INFO: [PREPARE] Preparing session for camera 1635
+2024-09-02 13:06:55,738 INFO: [1526] Obtained session ID: qlc3psrtztuwpbxpk4fp51ed
+2024-09-02 13:06:55,740 INFO: [1486] Obtained session ID: qix32ikmfpby1ncwgmceaooy
+2024-09-02 13:06:55,880 INFO: [1526] Playing video for session ID: qlc3psrtztuwpbxpk4fp51ed
+2024-09-02 13:06:55,881 INFO: [1486] Playing video for session ID: qix32ikmfpby1ncwgmceaooy
+2024-09-02 13:06:55,881 INFO: [PREPARE] Session ready for camera 1526
+2024-09-02 13:06:55,883 INFO: [PREPARE] Session ready for camera 1486
+2024-09-02 13:06:55,884 INFO: [PREPARE] Preparing session for camera 1637
+2024-09-02 13:06:55,885 INFO: [PREPARE] Preparing session for camera 1638
+2024-09-02 13:06:56,218 INFO: [1508] Obtained session ID: z2e3rjl4fltruichixlznxd4
+2024-09-02 13:06:56,358 INFO: [1508] Playing video for session ID: z2e3rjl4fltruichixlznxd4
+2024-09-02 13:06:56,359 INFO: [PREPARE] Session ready for camera 1508
+2024-09-02 13:06:56,360 INFO: [PREPARE] Preparing session for camera 1641
+2024-09-02 13:06:56,930 INFO: [1489] Obtained session ID: flgxgagg02lqpizy3fmj5rij
+2024-09-02 13:06:57,059 INFO: [1510] Obtained session ID: mmrhp42nokoluph1ggkzkyro
+2024-09-02 13:06:57,067 INFO: [1489] Playing video for session ID: flgxgagg02lqpizy3fmj5rij
+2024-09-02 13:06:57,068 INFO: [PREPARE] Session ready for camera 1489
+2024-09-02 13:06:57,069 INFO: [PREPARE] Preparing session for camera 1642
+2024-09-02 13:06:57,191 INFO: [1510] Playing video for session ID: mmrhp42nokoluph1ggkzkyro
+2024-09-02 13:06:57,192 INFO: [PREPARE] Session ready for camera 1510
+2024-09-02 13:06:57,193 INFO: [PREPARE] Preparing session for camera 1643
+2024-09-02 13:07:00,369 INFO: [1502] Obtained session ID: hlnxipr2qaw3gt2zr5maafnd
+2024-09-02 13:07:01,211 INFO: [1509] Obtained session ID: 1ca2hk4tg02uoze5prpj4aam
+2024-09-02 13:07:01,260 INFO: [1502] Playing video for session ID: hlnxipr2qaw3gt2zr5maafnd
+2024-09-02 13:07:01,261 INFO: [PREPARE] Session ready for camera 1502
+2024-09-02 13:07:01,262 INFO: [PREPARE] Preparing session for camera 1646
+2024-09-02 13:07:01,329 INFO: [1509] Playing video for session ID: 1ca2hk4tg02uoze5prpj4aam
+2024-09-02 13:07:01,329 INFO: [PREPARE] Session ready for camera 1509
+2024-09-02 13:07:01,330 INFO: [PREPARE] Preparing session for camera 1648
+2024-09-02 13:07:01,756 INFO: [1531] Obtained session ID: 5uoh0rfbg3fpuspxtfem5a1e
+2024-09-02 13:07:01,916 INFO: [1531] Playing video for session ID: 5uoh0rfbg3fpuspxtfem5a1e
+2024-09-02 13:07:01,917 INFO: [PREPARE] Session ready for camera 1531
+2024-09-02 13:07:01,919 INFO: [PREPARE] Preparing session for camera 1649
+2024-09-02 13:07:01,952 INFO: [1511] Obtained session ID: j32rwdm1zweo14namiuvyels
+2024-09-02 13:07:02,005 INFO: [1529] Obtained session ID: noxztjagoh32fl2pqjutj2mj
+2024-09-02 13:07:02,070 INFO: [1533] Obtained session ID: spdlijlvojqelfulko3b1qr5
+2024-09-02 13:07:02,076 INFO: [1505] Obtained session ID: prm0ty14n4g32dqhxc3la03s
+2024-09-02 13:07:02,098 INFO: [1511] Playing video for session ID: j32rwdm1zweo14namiuvyels
+2024-09-02 13:07:02,099 INFO: [PREPARE] Session ready for camera 1511
+2024-09-02 13:07:02,100 INFO: [PREPARE] Preparing session for camera 1650
+2024-09-02 13:07:02,162 INFO: [1529] Playing video for session ID: noxztjagoh32fl2pqjutj2mj
+2024-09-02 13:07:02,163 INFO: [PREPARE] Session ready for camera 1529
+2024-09-02 13:07:02,163 INFO: [PREPARE] Preparing session for camera 1653
+2024-09-02 13:07:02,203 INFO: [1533] Playing video for session ID: spdlijlvojqelfulko3b1qr5
+2024-09-02 13:07:02,205 INFO: [PREPARE] Session ready for camera 1533
+2024-09-02 13:07:02,206 INFO: [PREPARE] Preparing session for camera 1654
+2024-09-02 13:07:02,211 INFO: [1505] Playing video for session ID: prm0ty14n4g32dqhxc3la03s
+2024-09-02 13:07:02,213 INFO: [PREPARE] Session ready for camera 1505
+2024-09-02 13:07:02,213 INFO: [PREPARE] Preparing session for camera 1655
+2024-09-02 13:07:02,909 INFO: [1515] Obtained session ID: hg5artay4jbsauxv0bdqcmhy
+2024-09-02 13:07:03,054 INFO: [1515] Playing video for session ID: hg5artay4jbsauxv0bdqcmhy
+2024-09-02 13:07:03,055 INFO: [PREPARE] Session ready for camera 1515
+2024-09-02 13:07:03,056 INFO: [PREPARE] Preparing session for camera 1656
+2024-09-02 13:07:03,655 INFO: [1534] Obtained session ID: fpshhwow44xafsmlekftflj1
+2024-09-02 13:07:03,799 INFO: [1534] Playing video for session ID: fpshhwow44xafsmlekftflj1
+2024-09-02 13:07:03,800 INFO: [PREPARE] Session ready for camera 1534
+2024-09-02 13:07:03,801 INFO: [PREPARE] Preparing session for camera 1658
+2024-09-02 13:07:03,969 INFO: [1514] Obtained session ID: 1pnriw1hctsrp01tpuxzjygd
+2024-09-02 13:07:04,108 INFO: [1514] Playing video for session ID: 1pnriw1hctsrp01tpuxzjygd
+2024-09-02 13:07:04,109 INFO: [PREPARE] Session ready for camera 1514
+2024-09-02 13:07:04,110 INFO: [PREPARE] Preparing session for camera 1659
+2024-09-02 13:07:04,513 INFO: [1548] Obtained session ID: uyybogmedfw3ckkxtd2q0cgg
+2024-09-02 13:07:04,553 INFO: [1527] Obtained session ID: nvbolleew2bv0xisewhizunj
+2024-09-02 13:07:04,649 INFO: [1548] Playing video for session ID: uyybogmedfw3ckkxtd2q0cgg
+2024-09-02 13:07:04,649 INFO: [PREPARE] Session ready for camera 1548
+2024-09-02 13:07:04,651 INFO: [PREPARE] Preparing session for camera 1662
+2024-09-02 13:07:04,656 INFO: [1522] Obtained session ID: fg3ycqfrw5mg53adoz0m0ci4
+2024-09-02 13:07:04,682 INFO: [1527] Playing video for session ID: nvbolleew2bv0xisewhizunj
+2024-09-02 13:07:04,683 INFO: [PREPARE] Session ready for camera 1527
+2024-09-02 13:07:04,684 INFO: [PREPARE] Preparing session for camera 1668
+2024-09-02 13:07:04,788 INFO: [1522] Playing video for session ID: fg3ycqfrw5mg53adoz0m0ci4
+2024-09-02 13:07:04,789 INFO: [PREPARE] Session ready for camera 1522
+2024-09-02 13:07:04,791 INFO: [PREPARE] Preparing session for camera 1670
+2024-09-02 13:07:05,019 INFO: [1569] Obtained session ID: aqzcgc20y4oxjh2bc1tug5sp
+2024-09-02 13:07:05,042 INFO: [1544] Obtained session ID: y2gbagssju1dxsixj3vbvq35
+2024-09-02 13:07:05,138 INFO: [1547] Obtained session ID: iua5xv41msc4nppc0o2rjwm5
+2024-09-02 13:07:05,149 INFO: [1569] Playing video for session ID: aqzcgc20y4oxjh2bc1tug5sp
+2024-09-02 13:07:05,149 INFO: [PREPARE] Session ready for camera 1569
+2024-09-02 13:07:05,150 INFO: [PREPARE] Preparing session for camera 1671
+2024-09-02 13:07:05,153 INFO: [1541] Obtained session ID: wrvbrlicmejnzgqngidomyin
+2024-09-02 13:07:05,156 INFO: [1552] Obtained session ID: gcfopfrvq2odn5a2dnuuy33x
+2024-09-02 13:07:05,178 INFO: [1544] Playing video for session ID: y2gbagssju1dxsixj3vbvq35
+2024-09-02 13:07:05,178 INFO: [PREPARE] Session ready for camera 1544
+2024-09-02 13:07:05,180 INFO: [PREPARE] Preparing session for camera 1672
+2024-09-02 13:07:05,258 INFO: [1528] Obtained session ID: ezgtk5kdzt1nsb5t3qaaysfl
+2024-09-02 13:07:05,278 INFO: [1547] Playing video for session ID: iua5xv41msc4nppc0o2rjwm5
+2024-09-02 13:07:05,279 INFO: [PREPARE] Session ready for camera 1547
+2024-09-02 13:07:05,281 INFO: [PREPARE] Preparing session for camera 1677
+2024-09-02 13:07:05,287 INFO: [1552] Playing video for session ID: gcfopfrvq2odn5a2dnuuy33x
+2024-09-02 13:07:05,287 INFO: [1541] Playing video for session ID: wrvbrlicmejnzgqngidomyin
+2024-09-02 13:07:05,287 INFO: [PREPARE] Session ready for camera 1552
+2024-09-02 13:07:05,288 INFO: [PREPARE] Session ready for camera 1541
+2024-09-02 13:07:05,289 INFO: [PREPARE] Preparing session for camera 1678
+2024-09-02 13:07:05,289 INFO: [PREPARE] Preparing session for camera 1679
+2024-09-02 13:07:05,311 INFO: [1525] Obtained session ID: mdpnavejv2d55lxuewxx5kcs
+2024-09-02 13:07:05,366 INFO: [1530] Obtained session ID: vmyxtrxfp003icfiwbtzj1r2
+2024-09-02 13:07:05,380 INFO: [1545] Obtained session ID: sha5zsdi5dajpdxdgzsizllf
+2024-09-02 13:07:05,394 INFO: [1528] Playing video for session ID: ezgtk5kdzt1nsb5t3qaaysfl
+2024-09-02 13:07:05,394 INFO: [PREPARE] Session ready for camera 1528
+2024-09-02 13:07:05,396 INFO: [PREPARE] Preparing session for camera 1681
+2024-09-02 13:07:05,445 INFO: [1525] Playing video for session ID: mdpnavejv2d55lxuewxx5kcs
+2024-09-02 13:07:05,446 INFO: [PREPARE] Session ready for camera 1525
+2024-09-02 13:07:05,447 INFO: [PREPARE] Preparing session for camera 1682
+2024-09-02 13:07:05,504 INFO: [1530] Playing video for session ID: vmyxtrxfp003icfiwbtzj1r2
+2024-09-02 13:07:05,505 INFO: [PREPARE] Session ready for camera 1530
+2024-09-02 13:07:05,507 INFO: [PREPARE] Preparing session for camera 1683
+2024-09-02 13:07:05,519 INFO: [1545] Playing video for session ID: sha5zsdi5dajpdxdgzsizllf
+2024-09-02 13:07:05,520 INFO: [PREPARE] Session ready for camera 1545
+2024-09-02 13:07:05,521 INFO: [PREPARE] Preparing session for camera 1684
+2024-09-02 13:07:05,833 INFO: [1536] Obtained session ID: a30esf14fef4oosggixfkicl
+2024-09-02 13:07:05,979 INFO: [1536] Playing video for session ID: a30esf14fef4oosggixfkicl
+2024-09-02 13:07:05,979 INFO: [PREPARE] Session ready for camera 1536
+2024-09-02 13:07:05,980 INFO: [PREPARE] Preparing session for camera 1685
+2024-09-02 13:07:06,599 INFO: [1499] Obtained session ID: ox0l32s03sl1xd4gwqde2w3d
+2024-09-02 13:07:06,720 INFO: [1499] Playing video for session ID: ox0l32s03sl1xd4gwqde2w3d
+2024-09-02 13:07:06,721 INFO: [PREPARE] Session ready for camera 1499
+2024-09-02 13:07:06,722 INFO: [PREPARE] Preparing session for camera 1686
+2024-09-02 13:07:07,899 INFO: [1537] Obtained session ID: aavg44qqzdiq4fawfgyqkb0d
+2024-09-02 13:07:07,918 INFO: [1546] Obtained session ID: wirurs4p0fykxpdwvsujqrbe
+2024-09-02 13:07:08,040 INFO: [1543] Obtained session ID: chrtl0mk5ats5gtnccjkyo5b
+2024-09-02 13:07:08,049 INFO: [1537] Playing video for session ID: aavg44qqzdiq4fawfgyqkb0d
+2024-09-02 13:07:08,049 INFO: [1546] Playing video for session ID: wirurs4p0fykxpdwvsujqrbe
+2024-09-02 13:07:08,050 INFO: [PREPARE] Session ready for camera 1537
+2024-09-02 13:07:08,050 INFO: [PREPARE] Session ready for camera 1546
+2024-09-02 13:07:08,051 INFO: [PREPARE] Preparing session for camera 1689
+2024-09-02 13:07:08,051 INFO: [PREPARE] Preparing session for camera 1693
+2024-09-02 13:07:08,179 INFO: [1543] Playing video for session ID: chrtl0mk5ats5gtnccjkyo5b
+2024-09-02 13:07:08,180 INFO: [PREPARE] Session ready for camera 1543
+2024-09-02 13:07:08,181 INFO: [PREPARE] Preparing session for camera 1695
+2024-09-02 13:07:08,273 INFO: [1539] Obtained session ID: xjkeamt1ghs2t2feg2n5zeuw
+2024-09-02 13:07:08,310 INFO: [1550] Obtained session ID: jogb1cipdw5csmoquzyy0dtx
+2024-09-02 13:07:08,406 INFO: [1539] Playing video for session ID: xjkeamt1ghs2t2feg2n5zeuw
+2024-09-02 13:07:08,407 INFO: [PREPARE] Session ready for camera 1539
+2024-09-02 13:07:08,408 INFO: [PREPARE] Preparing session for camera 1696
+2024-09-02 13:07:08,445 INFO: [1550] Playing video for session ID: jogb1cipdw5csmoquzyy0dtx
+2024-09-02 13:07:08,445 INFO: [PREPARE] Session ready for camera 1550
+2024-09-02 13:07:08,447 INFO: [PREPARE] Preparing session for camera 1705
+2024-09-02 13:07:08,662 INFO: [1523] Obtained session ID: j2alreintkc2p2r5tczihrho
+2024-09-02 13:07:08,677 INFO: [1535] Obtained session ID: ki0clms5mn20n0gkn03y3p5l
+2024-09-02 13:07:08,718 INFO: [1556] Obtained session ID: wbrp0zu3j4pylkqjjisvor5k
+2024-09-02 13:07:08,799 INFO: [1523] Playing video for session ID: j2alreintkc2p2r5tczihrho
+2024-09-02 13:07:08,800 INFO: [PREPARE] Session ready for camera 1523
+2024-09-02 13:07:08,800 INFO: [PREPARE] Preparing session for camera 1707
+2024-09-02 13:07:08,815 INFO: [1535] Playing video for session ID: ki0clms5mn20n0gkn03y3p5l
+2024-09-02 13:07:08,816 INFO: [PREPARE] Session ready for camera 1535
+2024-09-02 13:07:08,816 INFO: [PREPARE] Preparing session for camera 1708
+2024-09-02 13:07:08,844 INFO: [1556] Playing video for session ID: wbrp0zu3j4pylkqjjisvor5k
+2024-09-02 13:07:08,845 INFO: [PREPARE] Session ready for camera 1556
+2024-09-02 13:07:08,845 INFO: [PREPARE] Preparing session for camera 1709
+2024-09-02 13:07:09,375 INFO: [1563] Obtained session ID: gmv1toznihtbbizp5fbmo5ab
+2024-09-02 13:07:09,501 INFO: [1563] Playing video for session ID: gmv1toznihtbbizp5fbmo5ab
+2024-09-02 13:07:09,501 INFO: [PREPARE] Session ready for camera 1563
+2024-09-02 13:07:09,501 INFO: [PREPARE] Preparing session for camera 1710
+2024-09-02 13:07:09,534 INFO: [1558] Obtained session ID: u3i0vnjo1oykxx2sh3guweik
+2024-09-02 13:07:09,559 INFO: [1555] Obtained session ID: ekleyp0iztx5xtwpkd1oh2lm
+2024-09-02 13:07:09,676 INFO: [1558] Playing video for session ID: u3i0vnjo1oykxx2sh3guweik
+2024-09-02 13:07:09,677 INFO: [PREPARE] Session ready for camera 1558
+2024-09-02 13:07:09,677 INFO: [1555] Playing video for session ID: ekleyp0iztx5xtwpkd1oh2lm
+2024-09-02 13:07:09,678 INFO: [PREPARE] Session ready for camera 1555
+2024-09-02 13:07:09,678 INFO: [PREPARE] Preparing session for camera 1711
+2024-09-02 13:07:09,678 INFO: [PREPARE] Preparing session for camera 1712
+2024-09-02 13:07:12,625 INFO: [1587] Obtained session ID: 3zt1rnliquu1josw11u1tzen
+2024-09-02 13:07:12,759 INFO: [1587] Playing video for session ID: 3zt1rnliquu1josw11u1tzen
+2024-09-02 13:07:12,761 INFO: [PREPARE] Session ready for camera 1587
+2024-09-02 13:07:12,762 INFO: [PREPARE] Preparing session for camera 1715
+2024-09-02 13:07:12,978 INFO: [1566] Obtained session ID: ge5k2s2qduabgwnakft5ffwu
+2024-09-02 13:07:13,048 INFO: [1581] Obtained session ID: zo0xrjbwi20j3sf4zash32it
+2024-09-02 13:07:13,116 INFO: [1566] Playing video for session ID: ge5k2s2qduabgwnakft5ffwu
+2024-09-02 13:07:13,116 INFO: [PREPARE] Session ready for camera 1566
+2024-09-02 13:07:13,118 INFO: [PREPARE] Preparing session for camera 1716
+2024-09-02 13:07:13,178 INFO: [1581] Playing video for session ID: zo0xrjbwi20j3sf4zash32it
+2024-09-02 13:07:13,179 INFO: [PREPARE] Session ready for camera 1581
+2024-09-02 13:07:13,180 INFO: [PREPARE] Preparing session for camera 1717
+2024-09-02 13:07:13,617 INFO: [1553] Obtained session ID: 4vpkgcx54c3ijqt340oc5krp
+2024-09-02 13:07:14,160 INFO: [1553] Playing video for session ID: 4vpkgcx54c3ijqt340oc5krp
+2024-09-02 13:07:14,160 INFO: [PREPARE] Session ready for camera 1553
+2024-09-02 13:07:14,161 INFO: [PREPARE] Preparing session for camera 1718
+2024-09-02 13:07:14,246 INFO: [1568] Obtained session ID: smbc13zgapcopkyi0hj154qu
+2024-09-02 13:07:14,248 INFO: [1559] Obtained session ID: flgwoc2r3wvkiaup4sxumi3v
+2024-09-02 13:07:14,432 INFO: [1591] Obtained session ID: 3ws3b1f2grardnf0y3xevbzi
+2024-09-02 13:07:14,449 INFO: [1568] Playing video for session ID: smbc13zgapcopkyi0hj154qu
+2024-09-02 13:07:14,450 INFO: [PREPARE] Session ready for camera 1568
+2024-09-02 13:07:14,451 INFO: [PREPARE] Preparing session for camera 1719
+2024-09-02 13:07:14,464 INFO: [1559] Playing video for session ID: flgwoc2r3wvkiaup4sxumi3v
+2024-09-02 13:07:14,465 INFO: [PREPARE] Session ready for camera 1559
+2024-09-02 13:07:14,466 INFO: [PREPARE] Preparing session for camera 1723
+2024-09-02 13:07:14,536 INFO: [1597] Obtained session ID: nwik0i2qgflektrc4xs5nr4q
+2024-09-02 13:07:14,589 INFO: [1591] Playing video for session ID: 3ws3b1f2grardnf0y3xevbzi
+2024-09-02 13:07:14,590 INFO: [PREPARE] Session ready for camera 1591
+2024-09-02 13:07:14,591 INFO: [PREPARE] Preparing session for camera 1724
+2024-09-02 13:07:14,665 INFO: [1597] Playing video for session ID: nwik0i2qgflektrc4xs5nr4q
+2024-09-02 13:07:14,666 INFO: [PREPARE] Session ready for camera 1597
+2024-09-02 13:07:14,667 INFO: [PREPARE] Preparing session for camera 1725
+2024-09-02 13:07:15,095 INFO: [1592] Obtained session ID: xew3vguq01u2ag0r1dpiiguv
+2024-09-02 13:07:15,121 INFO: [1590] Obtained session ID: 1nuhnegzfk22hcw3mte5itln
+2024-09-02 13:07:15,135 INFO: [1564] Obtained session ID: eir1lvhipf0akhurdh0xri1l
+2024-09-02 13:07:15,177 INFO: [1554] Obtained session ID: ih0zueggopribmqlfs5nwpb5
+2024-09-02 13:07:15,221 INFO: [1592] Playing video for session ID: xew3vguq01u2ag0r1dpiiguv
+2024-09-02 13:07:15,222 INFO: [PREPARE] Session ready for camera 1592
+2024-09-02 13:07:15,223 INFO: [PREPARE] Preparing session for camera 1726
+2024-09-02 13:07:15,281 INFO: [1564] Playing video for session ID: eir1lvhipf0akhurdh0xri1l
+2024-09-02 13:07:15,281 INFO: [PREPARE] Session ready for camera 1564
+2024-09-02 13:07:15,282 INFO: [PREPARE] Preparing session for camera 1727
+2024-09-02 13:07:15,296 INFO: [1584] Obtained session ID: gdxqzjuz24mi0kfdkvi1cwn1
+2024-09-02 13:07:15,302 INFO: [1554] Playing video for session ID: ih0zueggopribmqlfs5nwpb5
+2024-09-02 13:07:15,303 INFO: [PREPARE] Session ready for camera 1554
+2024-09-02 13:07:15,303 INFO: [1590] Playing video for session ID: 1nuhnegzfk22hcw3mte5itln
+2024-09-02 13:07:15,304 INFO: [PREPARE] Session ready for camera 1590
+2024-09-02 13:07:15,304 INFO: [PREPARE] Preparing session for camera 1729
+2024-09-02 13:07:15,305 INFO: [PREPARE] Preparing session for camera 1730
+2024-09-02 13:07:15,427 INFO: [1584] Playing video for session ID: gdxqzjuz24mi0kfdkvi1cwn1
+2024-09-02 13:07:15,427 INFO: [PREPARE] Session ready for camera 1584
+2024-09-02 13:07:15,429 INFO: [PREPARE] Preparing session for camera 1731
+2024-09-02 13:07:15,496 INFO: [1600] Obtained session ID: 4qlmzrkqysv0xj41m143v51q
+2024-09-02 13:07:15,504 INFO: [1588] Obtained session ID: flurtjg1nb334rau25mxkcai
+2024-09-02 13:07:15,544 INFO: [1585] Obtained session ID: rynp3e2obidk1r5h2qqhseqd
+2024-09-02 13:07:15,577 INFO: [1598] Obtained session ID: b0eyk2ptpx0b1kvcwpbppx54
+2024-09-02 13:07:15,625 INFO: [1626] Obtained session ID: etf1zqyw5f3tmdwtrqwxq0kg
+2024-09-02 13:07:15,627 INFO: [1588] Playing video for session ID: flurtjg1nb334rau25mxkcai
+2024-09-02 13:07:15,627 INFO: [PREPARE] Session ready for camera 1588
+2024-09-02 13:07:15,628 INFO: [PREPARE] Preparing session for camera 1732
+2024-09-02 13:07:15,640 INFO: [1582] Obtained session ID: jnguwftxurqpujsknyi3s31o
+2024-09-02 13:07:15,640 INFO: [1600] Playing video for session ID: 4qlmzrkqysv0xj41m143v51q
+2024-09-02 13:07:15,641 INFO: [PREPARE] Session ready for camera 1600
+2024-09-02 13:07:15,642 INFO: [PREPARE] Preparing session for camera 1733
+2024-09-02 13:07:15,676 INFO: [1585] Playing video for session ID: rynp3e2obidk1r5h2qqhseqd
+2024-09-02 13:07:15,677 INFO: [PREPARE] Session ready for camera 1585
+2024-09-02 13:07:15,677 INFO: [PREPARE] Preparing session for camera 1734
+2024-09-02 13:07:15,706 INFO: [1598] Playing video for session ID: b0eyk2ptpx0b1kvcwpbppx54
+2024-09-02 13:07:15,707 INFO: [PREPARE] Session ready for camera 1598
+2024-09-02 13:07:15,708 INFO: [PREPARE] Preparing session for camera 1735
+2024-09-02 13:07:15,710 INFO: [1594] Obtained session ID: hlq1slf1xko3ceudlww2cl1c
+2024-09-02 13:07:15,767 INFO: [1582] Playing video for session ID: jnguwftxurqpujsknyi3s31o
+2024-09-02 13:07:15,767 INFO: [1626] Playing video for session ID: etf1zqyw5f3tmdwtrqwxq0kg
+2024-09-02 13:07:15,768 INFO: [PREPARE] Session ready for camera 1582
+2024-09-02 13:07:15,768 INFO: [PREPARE] Session ready for camera 1626
+2024-09-02 13:07:15,769 INFO: [PREPARE] Preparing session for camera 1736
+2024-09-02 13:07:15,770 INFO: [PREPARE] Preparing session for camera 1737
+2024-09-02 13:07:15,844 INFO: [1594] Playing video for session ID: hlq1slf1xko3ceudlww2cl1c
+2024-09-02 13:07:15,844 INFO: [PREPARE] Session ready for camera 1594
+2024-09-02 13:07:15,845 INFO: [PREPARE] Preparing session for camera 1741
+2024-09-02 13:07:17,017 INFO: [1595] Obtained session ID: pf2cr1r1p2oafkbx4ck2ftek
+2024-09-02 13:07:17,022 INFO: [1593] Obtained session ID: aoeylbvlzxxfapww52b25jzv
+2024-09-02 13:07:17,055 INFO: [1638] Obtained session ID: t4z4lt5a2atcoxhvzpgikufd
+2024-09-02 13:07:17,074 INFO: [1616] Obtained session ID: o5cc5cqqdvapujw5h4crm3qv
+2024-09-02 13:07:17,162 INFO: [1619] Obtained session ID: gj4ug5lv155lbj2nuqef1cpd
+2024-09-02 13:07:17,187 INFO: [1574] Obtained session ID: g5q5uwnaivwjbd4hy2q2l4dw
+2024-09-02 13:07:17,197 INFO: [1593] Playing video for session ID: aoeylbvlzxxfapww52b25jzv
+2024-09-02 13:07:17,198 INFO: [1595] Playing video for session ID: pf2cr1r1p2oafkbx4ck2ftek
+2024-09-02 13:07:17,198 INFO: [PREPARE] Session ready for camera 1593
+2024-09-02 13:07:17,199 INFO: [PREPARE] Session ready for camera 1595
+2024-09-02 13:07:17,199 INFO: [PREPARE] Preparing session for camera 1748
+2024-09-02 13:07:17,200 INFO: [PREPARE] Preparing session for camera 1749
+2024-09-02 13:07:17,211 INFO: [1638] Playing video for session ID: t4z4lt5a2atcoxhvzpgikufd
+2024-09-02 13:07:17,211 INFO: [PREPARE] Session ready for camera 1638
+2024-09-02 13:07:17,212 INFO: [PREPARE] Preparing session for camera 1750
+2024-09-02 13:07:17,216 INFO: [1616] Playing video for session ID: o5cc5cqqdvapujw5h4crm3qv
+2024-09-02 13:07:17,216 INFO: [PREPARE] Session ready for camera 1616
+2024-09-02 13:07:17,217 INFO: [PREPARE] Preparing session for camera 1751
+2024-09-02 13:07:17,289 INFO: [1619] Playing video for session ID: gj4ug5lv155lbj2nuqef1cpd
+2024-09-02 13:07:17,290 INFO: [PREPARE] Session ready for camera 1619
+2024-09-02 13:07:17,290 INFO: [1607] Obtained session ID: zddjm4xugm2zzwilal2gcvul
+2024-09-02 13:07:17,291 INFO: [PREPARE] Preparing session for camera 1752
+2024-09-02 13:07:17,325 INFO: [1574] Playing video for session ID: g5q5uwnaivwjbd4hy2q2l4dw
+2024-09-02 13:07:17,326 INFO: [PREPARE] Session ready for camera 1574
+2024-09-02 13:07:17,327 INFO: [PREPARE] Preparing session for camera 1753
+2024-09-02 13:07:17,351 INFO: [1602] Obtained session ID: zsluggxkykibkwdyftkxu0rl
+2024-09-02 13:07:17,810 INFO: [1602] Playing video for session ID: zsluggxkykibkwdyftkxu0rl
+2024-09-02 13:07:17,811 INFO: [PREPARE] Session ready for camera 1602
+2024-09-02 13:07:17,811 INFO: [PREPARE] Preparing session for camera 1754
+2024-09-02 13:07:17,822 INFO: [1607] Playing video for session ID: zddjm4xugm2zzwilal2gcvul
+2024-09-02 13:07:17,823 INFO: [PREPARE] Session ready for camera 1607
+2024-09-02 13:07:17,824 INFO: [PREPARE] Preparing session for camera 1757
+2024-09-02 13:07:17,937 INFO: [1601] Obtained session ID: hfyrrwcc2c0kiziofuvx4yem
+2024-09-02 13:07:18,080 INFO: [1601] Playing video for session ID: hfyrrwcc2c0kiziofuvx4yem
+2024-09-02 13:07:18,081 INFO: [PREPARE] Session ready for camera 1601
+2024-09-02 13:07:18,083 INFO: [PREPARE] Preparing session for camera 1759
+2024-09-02 13:07:18,133 INFO: [1628] Obtained session ID: r3i3rgmme113of2avyn4ohn0
+2024-09-02 13:07:18,271 INFO: [1628] Playing video for session ID: r3i3rgmme113of2avyn4ohn0
+2024-09-02 13:07:18,273 INFO: [PREPARE] Session ready for camera 1628
+2024-09-02 13:07:18,274 INFO: [PREPARE] Preparing session for camera 1763
+2024-09-02 13:07:18,632 INFO: [1633] Obtained session ID: 1kqmeyrcvgtuu1nkqwj5ndq0
+2024-09-02 13:07:18,659 INFO: [1605] Obtained session ID: jacmvyl42w1tkim2jygieybt
+2024-09-02 13:07:18,756 INFO: [1633] Playing video for session ID: 1kqmeyrcvgtuu1nkqwj5ndq0
+2024-09-02 13:07:18,757 INFO: [PREPARE] Session ready for camera 1633
+2024-09-02 13:07:18,757 INFO: [1641] Obtained session ID: dfy2i5dchg4w3sh3cyejjrbx
+2024-09-02 13:07:18,758 INFO: [PREPARE] Preparing session for camera 1764
+2024-09-02 13:07:18,774 INFO: [1635] Obtained session ID: apu3n2mhdd3ugdkb231jlvsr
+2024-09-02 13:07:18,796 INFO: [1605] Playing video for session ID: jacmvyl42w1tkim2jygieybt
+2024-09-02 13:07:18,797 INFO: [PREPARE] Session ready for camera 1605
+2024-09-02 13:07:18,797 INFO: [PREPARE] Preparing session for camera 1766
+2024-09-02 13:07:18,886 INFO: [1641] Playing video for session ID: dfy2i5dchg4w3sh3cyejjrbx
+2024-09-02 13:07:18,886 INFO: [PREPARE] Session ready for camera 1641
+2024-09-02 13:07:18,887 INFO: [PREPARE] Preparing session for camera 1767
+2024-09-02 13:07:18,905 INFO: [1635] Playing video for session ID: apu3n2mhdd3ugdkb231jlvsr
+2024-09-02 13:07:18,906 INFO: [PREPARE] Session ready for camera 1635
+2024-09-02 13:07:18,907 INFO: [PREPARE] Preparing session for camera 1779
+2024-09-02 13:07:18,930 INFO: [1634] Obtained session ID: jwd030qmzko0i3avdoetyk2c
+2024-09-02 13:07:18,938 INFO: [1603] Obtained session ID: nkyijy4rb1jezpnwedcyhsoy
+2024-09-02 13:07:19,138 INFO: [1634] Playing video for session ID: jwd030qmzko0i3avdoetyk2c
+2024-09-02 13:07:19,140 INFO: [1603] Playing video for session ID: nkyijy4rb1jezpnwedcyhsoy
+2024-09-02 13:07:19,141 INFO: [PREPARE] Session ready for camera 1634
+2024-09-02 13:07:19,141 INFO: [PREPARE] Session ready for camera 1603
+2024-09-02 13:07:19,143 INFO: [PREPARE] Preparing session for camera 1780
+2024-09-02 13:07:19,144 INFO: [PREPARE] Preparing session for camera 1781
+2024-09-02 13:07:19,416 INFO: [1646] Obtained session ID: n315w0aqtakexwsfjximktyz
+2024-09-02 13:07:19,447 INFO: [1604] Obtained session ID: 2kcorr3sxwnmng2dbtzbd25l
+2024-09-02 13:07:19,471 INFO: [1622] Obtained session ID: qhmhr4ncskh4554v1jjhgcjp
+2024-09-02 13:07:19,553 INFO: [1646] Playing video for session ID: n315w0aqtakexwsfjximktyz
+2024-09-02 13:07:19,554 INFO: [PREPARE] Session ready for camera 1646
+2024-09-02 13:07:19,555 INFO: [1627] Obtained session ID: hc4qthjnaqryofqof1woueh5
+2024-09-02 13:07:19,555 INFO: [PREPARE] Preparing session for camera 1782
+2024-09-02 13:07:19,584 INFO: [1604] Playing video for session ID: 2kcorr3sxwnmng2dbtzbd25l
+2024-09-02 13:07:19,584 INFO: [PREPARE] Session ready for camera 1604
+2024-09-02 13:07:19,585 INFO: [PREPARE] Preparing session for camera 1784
+2024-09-02 13:07:19,604 INFO: [1622] Playing video for session ID: qhmhr4ncskh4554v1jjhgcjp
+2024-09-02 13:07:19,605 INFO: [PREPARE] Session ready for camera 1622
+2024-09-02 13:07:19,606 INFO: [PREPARE] Preparing session for camera 1790
+2024-09-02 13:07:19,692 INFO: [1627] Playing video for session ID: hc4qthjnaqryofqof1woueh5
+2024-09-02 13:07:19,693 INFO: [PREPARE] Session ready for camera 1627
+2024-09-02 13:07:19,694 INFO: [PREPARE] Preparing session for camera 1791
+2024-09-02 13:07:19,746 INFO: [1613] Obtained session ID: o1w01y5wvo22rivpy43wwpzs
+2024-09-02 13:07:19,767 INFO: [1670] Obtained session ID: db0bbhbz0f35ntglabaowi0u
+2024-09-02 13:07:19,882 INFO: [1613] Playing video for session ID: o1w01y5wvo22rivpy43wwpzs
+2024-09-02 13:07:19,882 INFO: [PREPARE] Session ready for camera 1613
+2024-09-02 13:07:19,883 INFO: [PREPARE] Preparing session for camera 1793
+2024-09-02 13:07:19,898 INFO: [1670] Playing video for session ID: db0bbhbz0f35ntglabaowi0u
+2024-09-02 13:07:19,899 INFO: [PREPARE] Session ready for camera 1670
+2024-09-02 13:07:20,386 INFO: [1637] Obtained session ID: klqjvg0w4mrbfvqrjh2irzgb
+2024-09-02 13:07:20,442 INFO: [1705] Obtained session ID: 2lqxqupdf5tyznkdvkxysax1
+2024-09-02 13:07:20,507 INFO: [1643] Obtained session ID: dlrrrq0v2nqpyqahnyunx0ng
+2024-09-02 13:07:20,515 INFO: [1637] Playing video for session ID: klqjvg0w4mrbfvqrjh2irzgb
+2024-09-02 13:07:20,516 INFO: [PREPARE] Session ready for camera 1637
+2024-09-02 13:07:20,579 INFO: [1705] Playing video for session ID: 2lqxqupdf5tyznkdvkxysax1
+2024-09-02 13:07:20,579 INFO: [PREPARE] Session ready for camera 1705
+2024-09-02 13:07:20,641 INFO: [1643] Playing video for session ID: dlrrrq0v2nqpyqahnyunx0ng
+2024-09-02 13:07:20,642 INFO: [PREPARE] Session ready for camera 1643
+2024-09-02 13:07:20,666 INFO: [1654] Obtained session ID: upha20nyxsnlcizlfyrz4idt
+2024-09-02 13:07:20,807 INFO: [1654] Playing video for session ID: upha20nyxsnlcizlfyrz4idt
+2024-09-02 13:07:20,807 INFO: [PREPARE] Session ready for camera 1654
+2024-09-02 13:07:21,460 INFO: [1624] Obtained session ID: do45apblhxzywfftbze5dnbm
+2024-09-02 13:07:21,613 INFO: [1624] Playing video for session ID: do45apblhxzywfftbze5dnbm
+2024-09-02 13:07:21,614 INFO: [PREPARE] Session ready for camera 1624
+2024-09-02 13:07:21,737 INFO: [1658] Obtained session ID: 4eh25yuqxahhexbd401qw5zr
+2024-09-02 13:07:21,859 INFO: [1689] Obtained session ID: txkvlrzpuhcyi4xh4233pejk
+2024-09-02 13:07:21,919 INFO: [1606] Obtained session ID: es3jbvsqctnedac5z4xkfjpk
+2024-09-02 13:07:21,940 INFO: [1658] Playing video for session ID: 4eh25yuqxahhexbd401qw5zr
+2024-09-02 13:07:21,941 INFO: [PREPARE] Session ready for camera 1658
+2024-09-02 13:07:21,973 INFO: [1648] Obtained session ID: 1m10ufcdydkjmuebgvvcv14h
+2024-09-02 13:07:22,002 INFO: [1689] Playing video for session ID: txkvlrzpuhcyi4xh4233pejk
+2024-09-02 13:07:22,003 INFO: [PREPARE] Session ready for camera 1689
+2024-09-02 13:07:22,033 INFO: [1678] Obtained session ID: m5nq0qexlhge5mwqls1a001g
+2024-09-02 13:07:22,053 INFO: [1653] Obtained session ID: 0eyz3skkpgf45rfiitgbijtn
+2024-09-02 13:07:22,055 INFO: [1662] Obtained session ID: 4qnvpjt1t4cvmcdzisp3vg2e
+2024-09-02 13:07:22,103 INFO: [1671] Obtained session ID: bfhclkq4sziya3gmpvvhqe3r
+2024-09-02 13:07:22,124 INFO: [1683] Obtained session ID: vqfrh4qjmuf1ubqampfhq0p0
+2024-09-02 13:07:22,137 INFO: [1648] Playing video for session ID: 1m10ufcdydkjmuebgvvcv14h
+2024-09-02 13:07:22,138 INFO: [PREPARE] Session ready for camera 1648
+2024-09-02 13:07:22,149 INFO: [1606] Playing video for session ID: es3jbvsqctnedac5z4xkfjpk
+2024-09-02 13:07:22,150 INFO: [PREPARE] Session ready for camera 1606
+2024-09-02 13:07:22,179 INFO: [1653] Playing video for session ID: 0eyz3skkpgf45rfiitgbijtn
+2024-09-02 13:07:22,179 INFO: [PREPARE] Session ready for camera 1653
+2024-09-02 13:07:22,184 INFO: [1677] Obtained session ID: gornsmjhdqsgdflutoxbzuzh
+2024-09-02 13:07:22,197 INFO: [1662] Playing video for session ID: 4qnvpjt1t4cvmcdzisp3vg2e
+2024-09-02 13:07:22,197 INFO: [PREPARE] Session ready for camera 1662
+2024-09-02 13:07:22,201 INFO: [1678] Playing video for session ID: m5nq0qexlhge5mwqls1a001g
+2024-09-02 13:07:22,202 INFO: [PREPARE] Session ready for camera 1678
+2024-09-02 13:07:22,204 INFO: [1686] Obtained session ID: mzkpjfdkikdbwlz0cuhkysv0
+2024-09-02 13:07:22,236 INFO: [1671] Playing video for session ID: bfhclkq4sziya3gmpvvhqe3r
+2024-09-02 13:07:22,237 INFO: [PREPARE] Session ready for camera 1671
+2024-09-02 13:07:22,272 INFO: [1683] Playing video for session ID: vqfrh4qjmuf1ubqampfhq0p0
+2024-09-02 13:07:22,273 INFO: [PREPARE] Session ready for camera 1683
+2024-09-02 13:07:22,365 INFO: [1686] Playing video for session ID: mzkpjfdkikdbwlz0cuhkysv0
+2024-09-02 13:07:22,366 INFO: [PREPARE] Session ready for camera 1686
+2024-09-02 13:07:22,386 INFO: [1679] Obtained session ID: cgz3fkzpwzoaldoh13ourpwh
+2024-09-02 13:07:22,405 INFO: [1668] Obtained session ID: 5jcdozcdl3rosqlhykel3px3
+2024-09-02 13:07:22,448 INFO: [1677] Playing video for session ID: gornsmjhdqsgdflutoxbzuzh
+2024-09-02 13:07:22,450 INFO: [PREPARE] Session ready for camera 1677
+2024-09-02 13:07:22,473 INFO: [1685] Obtained session ID: rdauanr5evcfkaeyxrxnom0t
+2024-09-02 13:07:22,527 INFO: [1679] Playing video for session ID: cgz3fkzpwzoaldoh13ourpwh
+2024-09-02 13:07:22,528 INFO: [PREPARE] Session ready for camera 1679
+2024-09-02 13:07:22,541 INFO: [1668] Playing video for session ID: 5jcdozcdl3rosqlhykel3px3
+2024-09-02 13:07:22,541 INFO: [PREPARE] Session ready for camera 1668
+2024-09-02 13:07:22,598 INFO: [1685] Playing video for session ID: rdauanr5evcfkaeyxrxnom0t
+2024-09-02 13:07:22,600 INFO: [PREPARE] Session ready for camera 1685
+2024-09-02 13:07:22,635 INFO: [1696] Obtained session ID: gfkevakqmlft41dkajehc0ey
+2024-09-02 13:07:22,654 INFO: [1650] Obtained session ID: lmet0s41phqohxri0c3cnyde
+2024-09-02 13:07:22,762 INFO: [1696] Playing video for session ID: gfkevakqmlft41dkajehc0ey
+2024-09-02 13:07:22,763 INFO: [PREPARE] Session ready for camera 1696
+2024-09-02 13:07:22,781 INFO: [1655] Obtained session ID: 33xkfc1akwygdg5qoklgeq0r
+2024-09-02 13:07:22,798 INFO: [1710] Obtained session ID: sla5px3eefbem5nbmm3ssaix
+2024-09-02 13:07:22,798 INFO: [1650] Playing video for session ID: lmet0s41phqohxri0c3cnyde
+2024-09-02 13:07:22,800 INFO: [PREPARE] Session ready for camera 1650
+2024-09-02 13:07:22,920 INFO: [1655] Playing video for session ID: 33xkfc1akwygdg5qoklgeq0r
+2024-09-02 13:07:22,921 INFO: [PREPARE] Session ready for camera 1655
+2024-09-02 13:07:22,931 INFO: [1710] Playing video for session ID: sla5px3eefbem5nbmm3ssaix
+2024-09-02 13:07:22,932 INFO: [PREPARE] Session ready for camera 1710
+2024-09-02 13:07:23,064 INFO: [1672] Obtained session ID: tx25l4g3ogw41pl1wn24svx2
+2024-09-02 13:07:23,110 INFO: [1649] Obtained session ID: qv1jvp5u5fon34mpsqt4oot5
+2024-09-02 13:07:23,202 INFO: [1672] Playing video for session ID: tx25l4g3ogw41pl1wn24svx2
+2024-09-02 13:07:23,203 INFO: [PREPARE] Session ready for camera 1672
+2024-09-02 13:07:23,240 INFO: [1649] Playing video for session ID: qv1jvp5u5fon34mpsqt4oot5
+2024-09-02 13:07:23,241 INFO: [PREPARE] Session ready for camera 1649
+2024-09-02 13:07:23,374 INFO: [1715] Obtained session ID: wfsovvianeswlfgdtenqipu4
+2024-09-02 13:07:23,376 INFO: [1684] Obtained session ID: qn25sp4j52s3rgvyiq42toer
+2024-09-02 13:07:23,449 INFO: [1712] Obtained session ID: vjz2dcezotnm4plmmpuvgiwn
+2024-09-02 13:07:23,524 INFO: [1684] Playing video for session ID: qn25sp4j52s3rgvyiq42toer
+2024-09-02 13:07:23,525 INFO: [1715] Playing video for session ID: wfsovvianeswlfgdtenqipu4
+2024-09-02 13:07:23,525 INFO: [PREPARE] Session ready for camera 1684
+2024-09-02 13:07:23,525 INFO: [PREPARE] Session ready for camera 1715
+2024-09-02 13:07:23,526 INFO: [1709] Obtained session ID: ym1xxtmxup2jomdo3jq4s5ap
+2024-09-02 13:07:23,556 INFO: [1659] Obtained session ID: fdwgnjwd32nm0w2e2apxteb1
+2024-09-02 13:07:23,577 INFO: [1712] Playing video for session ID: vjz2dcezotnm4plmmpuvgiwn
+2024-09-02 13:07:23,578 INFO: [PREPARE] Session ready for camera 1712
+2024-09-02 13:07:24,029 INFO: [1659] Playing video for session ID: fdwgnjwd32nm0w2e2apxteb1
+2024-09-02 13:07:24,029 INFO: [1709] Playing video for session ID: ym1xxtmxup2jomdo3jq4s5ap
+2024-09-02 13:07:24,030 INFO: [PREPARE] Session ready for camera 1659
+2024-09-02 13:07:24,030 INFO: [PREPARE] Session ready for camera 1709
+2024-09-02 13:07:24,073 INFO: [1682] Obtained session ID: gy3vfzxootxccx3als2pzjpr
+2024-09-02 13:07:24,203 INFO: [1682] Playing video for session ID: gy3vfzxootxccx3als2pzjpr
+2024-09-02 13:07:24,204 INFO: [PREPARE] Session ready for camera 1682
+2024-09-02 13:07:24,488 INFO: [1656] Obtained session ID: yc0ap4pdrfw3c3wdyds55lxf
+2024-09-02 13:07:24,575 INFO: [1716] Obtained session ID: dqft2hmdiyec2sdxkrzaimc0
+2024-09-02 13:07:24,621 INFO: [1656] Playing video for session ID: yc0ap4pdrfw3c3wdyds55lxf
+2024-09-02 13:07:24,621 INFO: [PREPARE] Session ready for camera 1656
+2024-09-02 13:07:24,754 INFO: [1716] Playing video for session ID: dqft2hmdiyec2sdxkrzaimc0
+2024-09-02 13:07:24,755 INFO: [PREPARE] Session ready for camera 1716
+2024-09-02 13:07:24,774 INFO: [1725] Obtained session ID: 4azepvghrs1al4raodovkido
+2024-09-02 13:07:24,913 INFO: [1725] Playing video for session ID: 4azepvghrs1al4raodovkido
+2024-09-02 13:07:24,913 INFO: [PREPARE] Session ready for camera 1725
+2024-09-02 13:07:25,022 INFO: [1733] Obtained session ID: oigoos3lb0zngmsbqcqjetf5
+2024-09-02 13:07:25,037 INFO: [1723] Obtained session ID: zvsmenmlohtycpd4ajckcssi
+2024-09-02 13:07:25,164 INFO: [1642] Obtained session ID: h4mctjnimv3gqiqfazeqmm0y
+2024-09-02 13:07:25,182 INFO: [1723] Playing video for session ID: zvsmenmlohtycpd4ajckcssi
+2024-09-02 13:07:25,182 INFO: [1733] Playing video for session ID: oigoos3lb0zngmsbqcqjetf5
+2024-09-02 13:07:25,183 INFO: [PREPARE] Session ready for camera 1723
+2024-09-02 13:07:25,183 INFO: [PREPARE] Session ready for camera 1733
+2024-09-02 13:07:25,319 INFO: [1642] Playing video for session ID: h4mctjnimv3gqiqfazeqmm0y
+2024-09-02 13:07:25,320 INFO: [PREPARE] Session ready for camera 1642
+2024-09-02 13:07:25,779 INFO: [1681] Obtained session ID: 1fslamofjv1wo2ixot4ls5h0
+2024-09-02 13:07:25,783 INFO: [1711] Obtained session ID: wadv3q0vj1hv0astaqloueg0
+2024-09-02 13:07:25,897 INFO: [1729] Obtained session ID: egyjl4qrl5cvrjiovmftohtv
+2024-09-02 13:07:25,897 INFO: [1724] Obtained session ID: noqtgvysivzcvasyyxxhnjye
+2024-09-02 13:07:25,937 INFO: [1711] Playing video for session ID: wadv3q0vj1hv0astaqloueg0
+2024-09-02 13:07:25,937 INFO: [1681] Playing video for session ID: 1fslamofjv1wo2ixot4ls5h0
+2024-09-02 13:07:25,937 INFO: [PREPARE] Session ready for camera 1711
+2024-09-02 13:07:25,938 INFO: [PREPARE] Session ready for camera 1681
+2024-09-02 13:07:25,967 INFO: [1695] Obtained session ID: 5xfcbqgdagvas0llmv0pjyxq
+2024-09-02 13:07:26,046 INFO: [1729] Playing video for session ID: egyjl4qrl5cvrjiovmftohtv
+2024-09-02 13:07:26,047 INFO: [PREPARE] Session ready for camera 1729
+2024-09-02 13:07:26,171 INFO: [1724] Playing video for session ID: noqtgvysivzcvasyyxxhnjye
+2024-09-02 13:07:26,172 INFO: [1695] Playing video for session ID: 5xfcbqgdagvas0llmv0pjyxq
+2024-09-02 13:07:26,172 INFO: [PREPARE] Session ready for camera 1724
+2024-09-02 13:07:26,173 INFO: [PREPARE] Session ready for camera 1695
+2024-09-02 13:07:26,781 INFO: [1708] Obtained session ID: jhxe5w12r4b5w1bwifns4ixm
+2024-09-02 13:07:26,865 INFO: [1757] Obtained session ID: woqag05m1egha5tn3m3kytbz
+2024-09-02 13:07:26,928 INFO: [1708] Playing video for session ID: jhxe5w12r4b5w1bwifns4ixm
+2024-09-02 13:07:26,928 INFO: [PREPARE] Session ready for camera 1708
+2024-09-02 13:07:26,984 INFO: [1757] Playing video for session ID: woqag05m1egha5tn3m3kytbz
+2024-09-02 13:07:26,985 INFO: [PREPARE] Session ready for camera 1757
+2024-09-02 13:07:27,133 INFO: [1717] Obtained session ID: xur354u2txb1e1ybruhhvll4
+2024-09-02 13:07:27,241 INFO: [1731] Obtained session ID: z4zfmpcvd2d1lrwaribt2o34
+2024-09-02 13:07:27,252 INFO: [1749] Obtained session ID: 0ckwnypmwjszwellzjbadnda
+2024-09-02 13:07:27,280 INFO: [1717] Playing video for session ID: xur354u2txb1e1ybruhhvll4
+2024-09-02 13:07:27,280 INFO: [PREPARE] Session ready for camera 1717
+2024-09-02 13:07:27,366 INFO: [1731] Playing video for session ID: z4zfmpcvd2d1lrwaribt2o34
+2024-09-02 13:07:27,367 INFO: [PREPARE] Session ready for camera 1731
+2024-09-02 13:07:27,383 INFO: [1749] Playing video for session ID: 0ckwnypmwjszwellzjbadnda
+2024-09-02 13:07:27,384 INFO: [PREPARE] Session ready for camera 1749
+2024-09-02 13:07:27,447 INFO: [1766] Obtained session ID: mzprhinvxdjqqc4csszrdv2d
+2024-09-02 13:07:27,588 INFO: [1766] Playing video for session ID: mzprhinvxdjqqc4csszrdv2d
+2024-09-02 13:07:27,590 INFO: [PREPARE] Session ready for camera 1766
+2024-09-02 13:07:27,642 INFO: [1734] Obtained session ID: wpkxodwbfjpbadehmlkbqpt0
+2024-09-02 13:07:27,673 INFO: [1730] Obtained session ID: upl3xmw23iy1j4i0ca1syrk1
+2024-09-02 13:07:27,783 INFO: [1734] Playing video for session ID: wpkxodwbfjpbadehmlkbqpt0
+2024-09-02 13:07:27,784 INFO: [PREPARE] Session ready for camera 1734
+2024-09-02 13:07:27,804 INFO: [1730] Playing video for session ID: upl3xmw23iy1j4i0ca1syrk1
+2024-09-02 13:07:27,804 INFO: [PREPARE] Session ready for camera 1730
+2024-09-02 13:07:27,814 INFO: [1718] Obtained session ID: ib0edoprohahaaloh3fzqzox
+2024-09-02 13:07:27,906 INFO: [1754] Obtained session ID: 0zm31d3nqux1s5unsyyg0ivj
+2024-09-02 13:07:27,942 INFO: [1718] Playing video for session ID: ib0edoprohahaaloh3fzqzox
+2024-09-02 13:07:27,942 INFO: [PREPARE] Session ready for camera 1718
+2024-09-02 13:07:27,973 INFO: [1727] Obtained session ID: 4jpklqfhyauudpedcrrd1ymr
+2024-09-02 13:07:28,019 INFO: [1732] Obtained session ID: p1eocg05o4i4aauvblg3crm0
+2024-09-02 13:07:28,034 INFO: [1748] Obtained session ID: 0jqnp3p52q5po4lhsvk2nhh5
+2024-09-02 13:07:28,051 INFO: [1754] Playing video for session ID: 0zm31d3nqux1s5unsyyg0ivj
+2024-09-02 13:07:28,051 INFO: [PREPARE] Session ready for camera 1754
+2024-09-02 13:07:28,108 INFO: [1707] Obtained session ID: dkj1xyglfdth4sii4dpqeoj3
+2024-09-02 13:07:28,110 INFO: [1727] Playing video for session ID: 4jpklqfhyauudpedcrrd1ymr
+2024-09-02 13:07:28,110 INFO: [PREPARE] Session ready for camera 1727
+2024-09-02 13:07:28,169 INFO: [1748] Playing video for session ID: 0jqnp3p52q5po4lhsvk2nhh5
+2024-09-02 13:07:28,170 INFO: [PREPARE] Session ready for camera 1748
+2024-09-02 13:07:28,174 INFO: [1732] Playing video for session ID: p1eocg05o4i4aauvblg3crm0
+2024-09-02 13:07:28,174 INFO: [PREPARE] Session ready for camera 1732
+2024-09-02 13:07:28,233 INFO: [1707] Playing video for session ID: dkj1xyglfdth4sii4dpqeoj3
+2024-09-02 13:07:28,233 INFO: [PREPARE] Session ready for camera 1707
+2024-09-02 13:07:28,237 INFO: [1751] Obtained session ID: svc45sn1enprcezhsqeukbjc
+2024-09-02 13:07:28,313 INFO: [1693] Obtained session ID: mgisspzzbpqi3j4osd03o1rk
+2024-09-02 13:07:28,316 INFO: [1735] Obtained session ID: 2pro5ohzdte2nvbmqeoeebg0
+2024-09-02 13:07:28,335 INFO: [1752] Obtained session ID: xe2xdguecyvvwmoeclpikxrk
+2024-09-02 13:07:28,346 INFO: [1719] Obtained session ID: vjxurjyiyt2er4a5o5gxov50
+2024-09-02 13:07:28,362 INFO: [1784] Obtained session ID: tfag0rcjsrbsgqj5mjmumsgn
+2024-09-02 13:07:28,372 INFO: [1781] Obtained session ID: fmogyfgx2ydjnt42l5eqlp0c
+2024-09-02 13:07:28,377 INFO: [1751] Playing video for session ID: svc45sn1enprcezhsqeukbjc
+2024-09-02 13:07:28,377 INFO: [PREPARE] Session ready for camera 1751
+2024-09-02 13:07:28,419 INFO: [1780] Obtained session ID: sepamex1hwwobar1bbagoinf
+2024-09-02 13:07:28,462 INFO: [1693] Playing video for session ID: mgisspzzbpqi3j4osd03o1rk
+2024-09-02 13:07:28,462 INFO: [1735] Playing video for session ID: 2pro5ohzdte2nvbmqeoeebg0
+2024-09-02 13:07:28,462 INFO: [PREPARE] Session ready for camera 1693
+2024-09-02 13:07:28,463 INFO: [PREPARE] Session ready for camera 1735
+2024-09-02 13:07:28,465 INFO: [1752] Playing video for session ID: xe2xdguecyvvwmoeclpikxrk
+2024-09-02 13:07:28,465 INFO: [PREPARE] Session ready for camera 1752
+2024-09-02 13:07:28,477 INFO: [1719] Playing video for session ID: vjxurjyiyt2er4a5o5gxov50
+2024-09-02 13:07:28,477 INFO: [PREPARE] Session ready for camera 1719
+2024-09-02 13:07:28,502 INFO: [1784] Playing video for session ID: tfag0rcjsrbsgqj5mjmumsgn
+2024-09-02 13:07:28,502 INFO: [PREPARE] Session ready for camera 1784
+2024-09-02 13:07:28,507 INFO: [1781] Playing video for session ID: fmogyfgx2ydjnt42l5eqlp0c
+2024-09-02 13:07:28,508 INFO: [PREPARE] Session ready for camera 1781
+2024-09-02 13:07:28,573 INFO: [1780] Playing video for session ID: sepamex1hwwobar1bbagoinf
+2024-09-02 13:07:28,574 INFO: [PREPARE] Session ready for camera 1780
+2024-09-02 13:07:28,613 INFO: [1726] Obtained session ID: hkfnhyvpe5w1sdmdfmulgqku
+2024-09-02 13:07:28,741 INFO: [1726] Playing video for session ID: hkfnhyvpe5w1sdmdfmulgqku
+2024-09-02 13:07:28,742 INFO: [PREPARE] Session ready for camera 1726
+2024-09-02 13:07:28,785 INFO: [1759] Obtained session ID: kkx5vrj4znc3mawheb20ujf4
+2024-09-02 13:07:28,803 INFO: [1782] Obtained session ID: 1xsk4qemixibeoovhgxrkwqy
+2024-09-02 13:07:28,829 INFO: [1736] Obtained session ID: fvq2adrm032rlhpevfkexgw5
+2024-09-02 13:07:28,847 INFO: [1793] Obtained session ID: 1uxeyzcnw2ftyjuljsqperl5
+2024-09-02 13:07:28,891 INFO: [1791] Obtained session ID: rcfq0t2o1hodr5okfisadfcq
+2024-09-02 13:07:28,919 INFO: [1759] Playing video for session ID: kkx5vrj4znc3mawheb20ujf4
+2024-09-02 13:07:28,920 INFO: [PREPARE] Session ready for camera 1759
+2024-09-02 13:07:28,937 INFO: [1737] Obtained session ID: 3dm50djpnuuekoomrukejld3
+2024-09-02 13:07:28,941 INFO: [1782] Playing video for session ID: 1xsk4qemixibeoovhgxrkwqy
+2024-09-02 13:07:28,941 INFO: [PREPARE] Session ready for camera 1782
+2024-09-02 13:07:28,949 INFO: [1763] Obtained session ID: vd05eupxrbbzhlrubpxhwsw5
+2024-09-02 13:07:28,958 INFO: [1750] Obtained session ID: uszrs54hzwpihslo5k01rjkp
+2024-09-02 13:07:28,974 INFO: [1736] Playing video for session ID: fvq2adrm032rlhpevfkexgw5
+2024-09-02 13:07:28,975 INFO: [PREPARE] Session ready for camera 1736
+2024-09-02 13:07:29,003 INFO: [1793] Playing video for session ID: 1uxeyzcnw2ftyjuljsqperl5
+2024-09-02 13:07:29,003 INFO: [PREPARE] Session ready for camera 1793
+2024-09-02 13:07:29,035 INFO: [1791] Playing video for session ID: rcfq0t2o1hodr5okfisadfcq
+2024-09-02 13:07:29,035 INFO: [PREPARE] Session ready for camera 1791
+2024-09-02 13:07:29,037 INFO: [1741] Obtained session ID: nji0wopqizfodn3ppdqou0jg
+2024-09-02 13:07:29,060 INFO: [1779] Obtained session ID: wdqslzfzbvascmoq3hvddftc
+2024-09-02 13:07:29,062 INFO: [1790] Obtained session ID: cf2z13kustft3n4bqsmg40pu
+2024-09-02 13:07:29,075 INFO: [1737] Playing video for session ID: 3dm50djpnuuekoomrukejld3
+2024-09-02 13:07:29,075 INFO: [PREPARE] Session ready for camera 1737
+2024-09-02 13:07:29,088 INFO: [1763] Playing video for session ID: vd05eupxrbbzhlrubpxhwsw5
+2024-09-02 13:07:29,088 INFO: [PREPARE] Session ready for camera 1763
+2024-09-02 13:07:29,104 INFO: [1750] Playing video for session ID: uszrs54hzwpihslo5k01rjkp
+2024-09-02 13:07:29,105 INFO: [PREPARE] Session ready for camera 1750
+2024-09-02 13:07:29,141 INFO: [1767] Obtained session ID: f2jp1nxd1ynwahlv3aqmx0pa
+2024-09-02 13:07:29,181 INFO: [1741] Playing video for session ID: nji0wopqizfodn3ppdqou0jg
+2024-09-02 13:07:29,181 INFO: [PREPARE] Session ready for camera 1741
+2024-09-02 13:07:29,198 INFO: [1790] Playing video for session ID: cf2z13kustft3n4bqsmg40pu
+2024-09-02 13:07:29,199 INFO: [PREPARE] Session ready for camera 1790
+2024-09-02 13:07:29,200 INFO: [1779] Playing video for session ID: wdqslzfzbvascmoq3hvddftc
+2024-09-02 13:07:29,200 INFO: [PREPARE] Session ready for camera 1779
+2024-09-02 13:07:29,202 INFO: [1753] Obtained session ID: kesipdnkrvqfwmcqdztemb0o
+2024-09-02 13:07:29,218 INFO: [1764] Obtained session ID: rbg2jp21k3pknyfm0xd0u4qs
+2024-09-02 13:07:29,283 INFO: [1767] Playing video for session ID: f2jp1nxd1ynwahlv3aqmx0pa
+2024-09-02 13:07:29,284 INFO: [PREPARE] Session ready for camera 1767
+2024-09-02 13:07:29,327 INFO: [1753] Playing video for session ID: kesipdnkrvqfwmcqdztemb0o
+2024-09-02 13:07:29,327 INFO: [PREPARE] Session ready for camera 1753
+2024-09-02 13:07:29,342 INFO: [1764] Playing video for session ID: rbg2jp21k3pknyfm0xd0u4qs
+2024-09-02 13:07:29,343 INFO: [PREPARE] Session ready for camera 1764
+2024-09-02 13:07:29,346 INFO: [INFO] Total number of scraped CCTVs: 594
+2024-09-02 13:07:29,346 INFO: [INFO] Successfully processed 594 CCTVs out of 594.
+2024-09-02 13:07:29,348 INFO: [INFO] JSON data has been written to ./cctvSessionTemp/cctv_sessions_2024-09-02_13-07-29.json
+2024-09-02 13:07:29,348 INFO: [INFO] All session IDs have been successfully prepared and saved.
+
+
