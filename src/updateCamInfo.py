@@ -512,7 +512,8 @@ if __name__ == "__main__":
             sys.exit(1)
 
     log_setup()
-    startUpdate(param)
+    CCTV_LIST = ['7', '11', '39', '77', '83', '572']
+    # startUpdate(param)
     prepare_session_workers()
 
     # Alternatively, if you want to keep prepare_session_workers in a separate thread,

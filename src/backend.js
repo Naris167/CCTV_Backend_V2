@@ -1,11 +1,11 @@
-const express = require('express');
-const cron = require('node-cron');
-const { spawn } = require('child_process');
-const fs = require('fs');
-const path = require('path');
-const { format } = require('date-fns'); // Library for date formatting
+// Import necessary modules
+import { spawn } from 'child_process';
+import fs from 'fs';
+import path from 'path';
+import { format } from 'date-fns'; // Library for date formatting
+import { schedule } from 'node-cron';
 
-const app = express();
+// Define the server port
 const PORT = 8001;
 
 // Dictionary to store session IDs for each CCTV ID
@@ -13,40 +13,32 @@ let cctvSessions = {};
 
 // Function to set up logging to both console and a file
 function setupLogger() {
-    // Define the directory and log file path
-    const logDirectory = path.join(__dirname, 'logs');
-    const timestamp = format(new Date(), 'yyyy-MM-dd_HH-mm-ss');
-    const logFile = path.join(logDirectory, `backend_${timestamp}.log`);
+  const logDirectory = './logs';
+  const timestamp = format(new Date(), 'yyyy-MM-dd_HH-mm-ss');
+  const logFile = path.join(logDirectory, `backend_${timestamp}.log`);
 
-    // Check if the directory exists, if not, create it
-    if (!fs.existsSync(logDirectory)) {
-        fs.mkdirSync(logDirectory, { recursive: true });
-    }
+  if (!fs.existsSync(logDirectory)) {
+    fs.mkdirSync(logDirectory, { recursive: true });
+  }
 
-    // Create a write stream (append mode) for logging
-    const logStream = fs.createWriteStream(logFile, { flags: 'a' });
+  const logStream = fs.createWriteStream(logFile, { flags: 'a' });
+  const originalLog = console.log;
+  const originalError = console.error;
 
-    // Save original console methods
-    const originalLog = console.log;
-    const originalError = console.error;
+  console.log = function (...args) {
+    originalLog.apply(console, args);
+    logStream.write(getFormattedLog(args) + '\n');
+  };
 
-    // Override console.log
-    console.log = function (...args) {
-        originalLog.apply(console, args); // Output to console
-        logStream.write(getFormattedLog(args) + '\n'); // Write to log file
-    };
+  console.error = function (...args) {
+    originalError.apply(console, args);
+    logStream.write(getFormattedLog(args) + '\n');
+  };
 
-    // Override console.error
-    console.error = function (...args) {
-        originalError.apply(console, args); // Output to console
-        logStream.write(getFormattedLog(args) + '\n'); // Write to log file
-    };
-
-    // Helper function to format log messages with a timestamp
-    function getFormattedLog(args) {
-        const timestamp = format(new Date(), 'yyyy-MM-dd HH:mm:ss');
-        return `${timestamp} ${args.map(arg => (typeof arg === 'string' ? arg : JSON.stringify(arg))).join(' ')}`;
-    }
+  function getFormattedLog(args) {
+    const timestamp = format(new Date(), 'yyyy-MM-dd HH:mm:ss');
+    return `${timestamp} ${args.map(arg => (typeof arg === 'string' ? arg : JSON.stringify(arg))).join(' ')}`;
+  }
 }
 
 // Initialize logging setup
@@ -55,23 +47,23 @@ setupLogger();
 // Function to start the Python script and get CCTV IDs
 function startUpdate() {
   return new Promise((resolve, reject) => {
-    console.log(`Calling Python script...`);
-    const pythonProcess = spawn('python', ['./src/updateCamInfo.py', '170']); // Run Python script with argument
+    console.log(`\n############### Starting Python Script ###############\n\n`);
+    const pythonProcess = spawn('python', ['./src/updateCamInfo.py', '170']);
 
     pythonProcess.stdout.on('data', (data) => {
-      console.log('Python script output:', data.toString()); // Output log messages to stdout
+      console.log('Python script output:', data.toString());
     });
 
     pythonProcess.stderr.on('data', (data) => {
-      console.error('[PY]', data.toString()); // Handles actual errors
+      console.error('[PY]', data.toString());
     });
 
     pythonProcess.on('close', (code) => {
-      console.log(`\n\nPython script exited with code ${code}`);
-      console.log(`\n############### End of Python script ###############\n\n`);
+      console.log(`Python script exited with code ${code}`);
+      console.log(`\n\n############### End of Python Script ###############\n\n`);
 
       if (code === 0) {
-        resolve(); // Resolve once the Python script has completed
+        resolve();
       } else {
         reject(`Python process exited with code ${code}`);
       }
@@ -120,36 +112,47 @@ async function initializeSessions() {
   console.log('Initializing CCTV sessions...');
 
   try {
-    await startUpdate(); // Wait for Python script to complete
-    loadCctvSessions(); // Load the latest CCTV sessions from the JSON file
+    //await startUpdate();
+    loadCctvSessions();
     console.log('All sessions initialized.');
   } catch (error) {
     console.error('Failed to initialize sessions:', error);
   }
 }
 
-// Endpoint to return the session ID for a given CCTV ID
-app.get('/session_id', (req, res) => {
-  const cameraID = req.query.cctv_id;
-  console.log(`User requested CCTV: ${cameraID}`);
-  const sessionID = cctvSessions[cameraID];
-  if (sessionID) {
-    res.json({ cctv_id: cameraID, session_id: sessionID });
-  } else {
-    console.log(`Session ID not found for the given CCTV ID`);
-    res.status(404).json({ error: 'Session ID not found for the given CCTV ID' });
-  }
+// Start the server using Bun's `Bun.serve`
+Bun.serve({
+  port: PORT,
+  fetch(req) {
+    const url = new URL(req.url);
+    if (url.pathname === '/session_id') {
+      const cameraID = url.searchParams.get('cctv_id');
+      console.log(`User requested CCTV: ${cameraID}`);
+      const sessionID = cctvSessions[cameraID];
+      if (sessionID) {
+        return new Response(JSON.stringify({ cctv_id: cameraID, session_id: sessionID }), {
+          headers: { 'Content-Type': 'application/json' },
+        });
+      } else {
+        console.log(`Session ID not found for the given CCTV ID`);
+        return new Response(JSON.stringify({ error: 'Session ID not found for the given CCTV ID' }), { status: 404 });
+      }
+    }
+    return new Response('Not found', { status: 404 });
+  },
+  error(err) {
+    console.error(err);
+  },
 });
 
-// Start the server
-app.listen(PORT, async () => {
-  console.log(`Server running on http://127.0.0.1:${PORT}`);
-  await initializeSessions(); // Initial session initialization
+// Log server start and initialize sessions
+console.log(`Server running on http://127.0.0.1:${PORT}`);
+initializeSessions().then(() => {
   console.log('Session initialization completed.');
 });
 
 // Schedule the initializeSessions function to run every 15 minutes
-cron.schedule('*/15 * * * *', async () => {
+schedule('*/15 * * * *', async () => {
   console.log('Running scheduled session initialization...');
   await initializeSessions();
 });
