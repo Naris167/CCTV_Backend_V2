@@ -1,0 +1,32 @@
+2024-09-05 09:00:01,540 INFO: [MAIN] Logging setup completed!
+2024-09-05 09:00:01,541 INFO: [INFO] Initializing all session IDs.
+2024-09-05 09:00:01,541 INFO: [PREPARE] Preparing session for camera 7
+2024-09-05 09:00:01,542 INFO: [PREPARE] Preparing session for camera 11
+2024-09-05 09:00:01,542 INFO: [PREPARE] Preparing session for camera 39
+2024-09-05 09:00:01,544 INFO: [PREPARE] Preparing session for camera 77
+2024-09-05 09:00:01,545 INFO: [PREPARE] Preparing session for camera 83
+2024-09-05 09:00:01,545 INFO: [PREPARE] Preparing session for camera 572
+2024-09-05 09:00:07,430 INFO: [7] Obtained session ID: 43x5ps0uview3f5kzta4vxb3
+2024-09-05 09:00:07,587 INFO: [7] Playing video for session ID: 43x5ps0uview3f5kzta4vxb3
+2024-09-05 09:00:07,587 INFO: [PREPARE] Session ready for camera 7
+2024-09-05 09:00:07,602 INFO: [11] Obtained session ID: n3nexgqbyfvplhsnaflerbj0
+2024-09-05 09:00:07,759 INFO: [11] Playing video for session ID: n3nexgqbyfvplhsnaflerbj0
+2024-09-05 09:00:07,759 INFO: [PREPARE] Session ready for camera 11
+2024-09-05 09:00:07,952 INFO: [572] Obtained session ID: ttku24vyekpwydajc5tni05h
+2024-09-05 09:00:08,035 INFO: [39] Obtained session ID: oavnoooko2zxw3zelvzflhqp
+2024-09-05 09:00:08,102 INFO: [572] Playing video for session ID: ttku24vyekpwydajc5tni05h
+2024-09-05 09:00:08,102 INFO: [PREPARE] Session ready for camera 572
+2024-09-05 09:00:08,191 INFO: [39] Playing video for session ID: oavnoooko2zxw3zelvzflhqp
+2024-09-05 09:00:08,192 INFO: [PREPARE] Session ready for camera 39
+2024-09-05 09:00:08,246 INFO: [83] Obtained session ID: ljlppa1kjta1zxrfl0r1b3rr
+2024-09-05 09:00:08,389 INFO: [77] Obtained session ID: xiynnrtyoleljts4zmytb3ze
+2024-09-05 09:00:08,392 INFO: [83] Playing video for session ID: ljlppa1kjta1zxrfl0r1b3rr
+2024-09-05 09:00:08,393 INFO: [PREPARE] Session ready for camera 83
+2024-09-05 09:00:08,531 INFO: [77] Playing video for session ID: xiynnrtyoleljts4zmytb3ze
+2024-09-05 09:00:08,531 INFO: [PREPARE] Session ready for camera 77
+2024-09-05 09:00:08,532 INFO: [INFO] Total number of scraped CCTVs: 6
+2024-09-05 09:00:08,532 INFO: [INFO] Successfully processed 6 CCTVs out of 6.
+2024-09-05 09:00:08,532 INFO: [INFO] JSON data has been written to ./cctvSessionTemp/cctv_sessions_2024-09-05_09-00-08.json
+2024-09-05 09:00:08,532 INFO: [INFO] All session IDs have been successfully prepared and saved.
+
+

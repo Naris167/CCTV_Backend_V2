@@ -1,4 +1,6 @@
-// Import necessary modules
+// bun run ./src/backend.js
+
+
 import { spawn } from 'child_process';
 import fs from 'fs';
 import path from 'path';
@@ -12,27 +14,35 @@ const PORT = 8001;
 let cctvSessions = {};
 
 // Function to set up logging to both console and a file
-function setupLogger() {
+function setupLogger({ logToConsole = true, logToFile = true } = {}) {
   const logDirectory = './logs';
   const timestamp = format(new Date(), 'yyyy-MM-dd_HH-mm-ss');
   const logFile = path.join(logDirectory, `backend_${timestamp}.log`);
 
-  if (!fs.existsSync(logDirectory)) {
+  if (logToFile && !fs.existsSync(logDirectory)) {
     fs.mkdirSync(logDirectory, { recursive: true });
   }
 
-  const logStream = fs.createWriteStream(logFile, { flags: 'a' });
+  const logStream = logToFile ? fs.createWriteStream(logFile, { flags: 'a' }) : null;
   const originalLog = console.log;
   const originalError = console.error;
 
   console.log = function (...args) {
-    originalLog.apply(console, args);
-    logStream.write(getFormattedLog(args) + '\n');
+    if (logToConsole) {
+      originalLog.apply(console, args);
+    }
+    if (logToFile && logStream) {
+      logStream.write(getFormattedLog(args) + '\n');
+    }
   };
 
   console.error = function (...args) {
-    originalError.apply(console, args);
-    logStream.write(getFormattedLog(args) + '\n');
+    if (logToConsole) {
+      originalError.apply(console, args);
+    }
+    if (logToFile && logStream) {
+      logStream.write(getFormattedLog(args) + '\n');
+    }
   };
 
   function getFormattedLog(args) {
@@ -112,7 +122,7 @@ async function initializeSessions() {
   console.log('Initializing CCTV sessions...');
 
   try {
-    //await startUpdate();
+    await startUpdate();
     loadCctvSessions();
     console.log('All sessions initialized.');
   } catch (error) {

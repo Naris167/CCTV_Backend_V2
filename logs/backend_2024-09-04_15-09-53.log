@@ -1,0 +1,948 @@
+2024-09-04 15:09:53 Server running on http://127.0.0.1:8001
+2024-09-04 15:09:53 Initializing CCTV sessions...
+2024-09-04 15:09:53 
+############### Starting Python Script ###############
+
+
+2024-09-04 15:09:55 [PY] 2024-09-04 15:09:55,772 INFO: [MAIN] Logging setup completed!
+2024-09-04 15:09:55,772 INFO: [INFO] Initializing all session IDs.
+
+2024-09-04 15:09:55 [PY] 2024-09-04 15:09:55,772 INFO: [PREPARE] Preparing session for camera 7
+
+2024-09-04 15:09:55 [PY] 2024-09-04 15:09:55,773 INFO: [PREPARE] Preparing session for camera 11
+
+2024-09-04 15:09:55 [PY] 2024-09-04 15:09:55,773 INFO: [PREPARE] Preparing session for camera 39
+
+2024-09-04 15:09:55 [PY] 2024-09-04 15:09:55,774 INFO: [PREPARE] Preparing session for camera 77
+
+2024-09-04 15:09:55 [PY] 2024-09-04 15:09:55,775 INFO: [PREPARE] Preparing session for camera 83
+
+2024-09-04 15:09:55 [PY] 2024-09-04 15:09:55,776 INFO: [PREPARE] Preparing session for camera 572
+
+2024-09-04 15:10:02 [PY] 2024-09-04 15:10:02,427 INFO: [77] Obtained session ID: xlezr4utrqbuo32rm41vkvjp
+
+2024-09-04 15:10:03 [PY] 2024-09-04 15:10:03,425 INFO: [77] Playing video for session ID: xlezr4utrqbuo32rm41vkvjp
+
+2024-09-04 15:10:03 [PY] 2024-09-04 15:10:03,426 INFO: [PREPARE] Session ready for camera 77
+
+2024-09-04 15:10:03 [PY] 2024-09-04 15:10:03,904 INFO: [7] Obtained session ID: y41mib1ynj52wvqpdu3xf4d1
+
+2024-09-04 15:10:04 [PY] 2024-09-04 15:10:04,150 INFO: [572] Obtained session ID: c34csf1don4kik3crtsjg52a
+
+2024-09-04 15:10:04 [PY] 2024-09-04 15:10:04,286 INFO: [7] Playing video for session ID: y41mib1ynj52wvqpdu3xf4d1
+
+2024-09-04 15:10:04 [PY] 2024-09-04 15:10:04,287 INFO: [PREPARE] Session ready for camera 7
+
+2024-09-04 15:10:04 [PY] 2024-09-04 15:10:04,339 INFO: [572] Playing video for session ID: c34csf1don4kik3crtsjg52a
+
+2024-09-04 15:10:04 [PY] 2024-09-04 15:10:04,339 INFO: [PREPARE] Session ready for camera 572
+
+2024-09-04 15:10:04 [PY] 2024-09-04 15:10:04,656 INFO: [11] Obtained session ID: prwpzjtorurxgqk3oo5y0l4t
+
+2024-09-04 15:10:04 [PY] 2024-09-04 15:10:04,713 INFO: [11] Playing video for session ID: prwpzjtorurxgqk3oo5y0l4t
+
+2024-09-04 15:10:04 [PY] 2024-09-04 15:10:04,714 INFO: [PREPARE] Session ready for camera 11
+
+2024-09-04 15:10:04 [PY] 2024-09-04 15:10:04,782 INFO: [39] Obtained session ID: 3hav5sptazajdtw0wgyk5ypc
+
+2024-09-04 15:10:04 [PY] 2024-09-04 15:10:04,872 INFO: [39] Playing video for session ID: 3hav5sptazajdtw0wgyk5ypc
+
+2024-09-04 15:10:04 [PY] 2024-09-04 15:10:04,872 INFO: [PREPARE] Session ready for camera 39
+
+2024-09-04 15:10:05 [PY] 2024-09-04 15:10:05,324 INFO: [83] Obtained session ID: 1dx33sjcmx0nye1jz3jtghhw
+
+2024-09-04 15:10:05 [PY] 2024-09-04 15:10:05,376 INFO: [83] Playing video for session ID: 1dx33sjcmx0nye1jz3jtghhw
+
+2024-09-04 15:10:05 [PY] 2024-09-04 15:10:05,376 INFO: [PREPARE] Session ready for camera 83
+2024-09-04 15:10:05,377 INFO: [INFO] Total number of scraped CCTVs: 6
+2024-09-04 15:10:05,377 INFO: [INFO] Successfully processed 6 CCTVs out of 6.
+
+2024-09-04 15:10:05 [PY] 2024-09-04 15:10:05,378 INFO: [INFO] JSON data has been written to ./cctvSessionTemp/cctv_sessions_2024-09-04_15-10-05.json
+2024-09-04 15:10:05,378 INFO: [INFO] All session IDs have been successfully prepared and saved.
+
+
+
+2024-09-04 15:10:05 Python script exited with code 0
+2024-09-04 15:10:05 
+
+############### End of Python Script ###############
+
+
+2024-09-04 15:10:05 Latest JSON file: cctv_sessions_2024-09-04_15-10-05.json
+2024-09-04 15:10:05 Loaded CCTV sessions: {"7":"y41mib1ynj52wvqpdu3xf4d1","11":"prwpzjtorurxgqk3oo5y0l4t","39":"3hav5sptazajdtw0wgyk5ypc","77":"xlezr4utrqbuo32rm41vkvjp","83":"1dx33sjcmx0nye1jz3jtghhw","572":"c34csf1don4kik3crtsjg52a"}
+2024-09-04 15:10:05 All sessions initialized.
+2024-09-04 15:10:05 Session initialization completed.
+2024-09-04 15:12:21 User requested CCTV: 7
+2024-09-04 15:12:50 User requested CCTV: 7
+2024-09-04 15:14:09 User requested CCTV: 7
+2024-09-04 15:15:00 Running scheduled session initialization...
+2024-09-04 15:15:00 Initializing CCTV sessions...
+2024-09-04 15:15:00 
+############### Starting Python Script ###############
+
+
+2024-09-04 15:15:01 [PY] 2024-09-04 15:15:01,022 INFO: [MAIN] Logging setup completed!
+
+2024-09-04 15:15:01 [PY] 2024-09-04 15:15:01,022 INFO: [INFO] Initializing all session IDs.
+
+2024-09-04 15:15:01 [PY] 2024-09-04 15:15:01,023 INFO: [PREPARE] Preparing session for camera 7
+
+2024-09-04 15:15:01 [PY] 2024-09-04 15:15:01,024 INFO: [PREPARE] Preparing session for camera 11
+
+2024-09-04 15:15:01 [PY] 2024-09-04 15:15:01,024 INFO: [PREPARE] Preparing session for camera 39
+2024-09-04 15:15:01,025 INFO: [PREPARE] Preparing session for camera 77
+
+2024-09-04 15:15:01 [PY] 2024-09-04 15:15:01,025 INFO: [PREPARE] Preparing session for camera 83
+
+2024-09-04 15:15:01 [PY] 2024-09-04 15:15:01,027 INFO: [PREPARE] Preparing session for camera 572
+
+2024-09-04 15:15:07 [PY] 2024-09-04 15:15:07,517 INFO: [39] Obtained session ID: 2ixy4una2scs3iud5q4dz0ct
+
+2024-09-04 15:15:07 [PY] 2024-09-04 15:15:07,566 INFO: [39] Playing video for session ID: 2ixy4una2scs3iud5q4dz0ct
+
+2024-09-04 15:15:07 [PY] 2024-09-04 15:15:07,567 INFO: [PREPARE] Session ready for camera 39
+
+2024-09-04 15:15:07 [PY] 2024-09-04 15:15:07,730 INFO: [77] Obtained session ID: 01ozaz3uxmgilnfsrkti3lj2
+
+2024-09-04 15:15:07 [PY] 2024-09-04 15:15:07,780 INFO: [77] Playing video for session ID: 01ozaz3uxmgilnfsrkti3lj2
+2024-09-04 15:15:07,780 INFO: [PREPARE] Session ready for camera 77
+
+2024-09-04 15:15:08 [PY] 2024-09-04 15:15:08,103 INFO: [7] Obtained session ID: ngmgbhqpsivybto2ndiisycc
+
+2024-09-04 15:15:08 [PY] 2024-09-04 15:15:08,174 INFO: [572] Obtained session ID: m3hgq4espc3cv0ktiiikyn4w
+
+2024-09-04 15:15:08 [PY] 2024-09-04 15:15:08,185 INFO: [7] Playing video for session ID: ngmgbhqpsivybto2ndiisycc
+
+2024-09-04 15:15:08 [PY] 2024-09-04 15:15:08,185 INFO: [PREPARE] Session ready for camera 7
+
+2024-09-04 15:15:08 [PY] 2024-09-04 15:15:08,225 INFO: [572] Playing video for session ID: m3hgq4espc3cv0ktiiikyn4w
+
+2024-09-04 15:15:08 [PY] 2024-09-04 15:15:08,225 INFO: [PREPARE] Session ready for camera 572
+
+2024-09-04 15:15:08 [PY] 2024-09-04 15:15:08,433 INFO: [83] Obtained session ID: toryxbyv1c1yug4rzcscy4xf
+
+2024-09-04 15:15:08 [PY] 2024-09-04 15:15:08,506 INFO: [83] Playing video for session ID: toryxbyv1c1yug4rzcscy4xf
+
+2024-09-04 15:15:08 [PY] 2024-09-04 15:15:08,506 INFO: [PREPARE] Session ready for camera 83
+
+2024-09-04 15:15:08 [PY] 2024-09-04 15:15:08,594 INFO: [11] Obtained session ID: iapr33ta2yk4jnbrhi2oyjza
+
+2024-09-04 15:15:08 [PY] 2024-09-04 15:15:08,659 INFO: [11] Playing video for session ID: iapr33ta2yk4jnbrhi2oyjza
+
+2024-09-04 15:15:08 [PY] 2024-09-04 15:15:08,659 INFO: [PREPARE] Session ready for camera 11
+2024-09-04 15:15:08,659 INFO: [INFO] Total number of scraped CCTVs: 6
+2024-09-04 15:15:08,659 INFO: [INFO] Successfully processed 6 CCTVs out of 6.
+
+2024-09-04 15:15:08 [PY] 2024-09-04 15:15:08,660 INFO: [INFO] JSON data has been written to ./cctvSessionTemp/cctv_sessions_2024-09-04_15-15-08.json
+2024-09-04 15:15:08,660 INFO: [INFO] All session IDs have been successfully prepared and saved.
+
+
+
+2024-09-04 15:15:08 Python script exited with code 0
+2024-09-04 15:15:08 
+
+############### End of Python Script ###############
+
+
+2024-09-04 15:15:08 Latest JSON file: cctv_sessions_2024-09-04_15-15-08.json
+2024-09-04 15:15:08 Loaded CCTV sessions: {"7":"ngmgbhqpsivybto2ndiisycc","11":"iapr33ta2yk4jnbrhi2oyjza","39":"2ixy4una2scs3iud5q4dz0ct","77":"01ozaz3uxmgilnfsrkti3lj2","83":"toryxbyv1c1yug4rzcscy4xf","572":"m3hgq4espc3cv0ktiiikyn4w"}
+2024-09-04 15:15:08 All sessions initialized.
+2024-09-04 15:18:42 User requested CCTV: 7
+2024-09-04 15:19:54 User requested CCTV: 7
+2024-09-04 15:20:00 User requested CCTV: 7
+2024-09-04 15:30:00 Running scheduled session initialization...
+2024-09-04 15:30:00 Initializing CCTV sessions...
+2024-09-04 15:30:00 
+############### Starting Python Script ###############
+
+
+2024-09-04 15:30:01 [PY] 2024-09-04 15:30:01,342 INFO: [MAIN] Logging setup completed!
+2024-09-04 15:30:01,342 INFO: [INFO] Initializing all session IDs.
+
+2024-09-04 15:30:01 [PY] 2024-09-04 15:30:01,343 INFO: [PREPARE] Preparing session for camera 7
+
+2024-09-04 15:30:01 [PY] 2024-09-04 15:30:01,344 INFO: [PREPARE] Preparing session for camera 11
+
+2024-09-04 15:30:01 [PY] 2024-09-04 15:30:01,345 INFO: [PREPARE] Preparing session for camera 39
+
+2024-09-04 15:30:01 [PY] 2024-09-04 15:30:01,345 INFO: [PREPARE] Preparing session for camera 77
+
+2024-09-04 15:30:01 [PY] 2024-09-04 15:30:01,346 INFO: [PREPARE] Preparing session for camera 83
+
+2024-09-04 15:30:01 [PY] 2024-09-04 15:30:01,347 INFO: [PREPARE] Preparing session for camera 572
+
+2024-09-04 15:30:07 [PY] 2024-09-04 15:30:07,501 INFO: [11] Obtained session ID: 3sgjvjkyvbcfvzsgqwubv1uo
+
+2024-09-04 15:30:07 [PY] 2024-09-04 15:30:07,567 INFO: [11] Playing video for session ID: 3sgjvjkyvbcfvzsgqwubv1uo
+
+2024-09-04 15:30:07 [PY] 2024-09-04 15:30:07,567 INFO: [PREPARE] Session ready for camera 11
+
+2024-09-04 15:30:08 [PY] 2024-09-04 15:30:08,655 INFO: [572] Obtained session ID: 4101ood1owpn021jf1u5plge
+
+2024-09-04 15:30:08 [PY] 2024-09-04 15:30:08,987 INFO: [39] Obtained session ID: nvu50ctamqqags5fzbbrhu1d
+
+2024-09-04 15:30:09 [PY] 2024-09-04 15:30:09,132 INFO: [7] Obtained session ID: byqgdlon0z0jpsnzzzq5acl5
+
+2024-09-04 15:30:09 [PY] 2024-09-04 15:30:09,132 INFO: [83] Obtained session ID: y1is3g5aficvoaoucab5u1t2
+
+2024-09-04 15:30:09 [PY] 2024-09-04 15:30:09,133 INFO: [572] Playing video for session ID: 4101ood1owpn021jf1u5plge
+
+2024-09-04 15:30:09 [PY] 2024-09-04 15:30:09,134 INFO: [PREPARE] Session ready for camera 572
+
+2024-09-04 15:30:09 [PY] 2024-09-04 15:30:09,183 INFO: [83] Playing video for session ID: y1is3g5aficvoaoucab5u1t2
+
+2024-09-04 15:30:09 [PY] 2024-09-04 15:30:09,184 INFO: [PREPARE] Session ready for camera 83
+
+2024-09-04 15:30:09 [PY] 2024-09-04 15:30:09,200 INFO: [39] Playing video for session ID: nvu50ctamqqags5fzbbrhu1d
+
+2024-09-04 15:30:09 [PY] 2024-09-04 15:30:09,201 INFO: [7] Playing video for session ID: byqgdlon0z0jpsnzzzq5acl5
+
+2024-09-04 15:30:09 [PY] 2024-09-04 15:30:09,202 INFO: [PREPARE] Session ready for camera 39
+2024-09-04 15:30:09,202 INFO: [PREPARE] Session ready for camera 7
+
+2024-09-04 15:30:09 [PY] 2024-09-04 15:30:09,221 INFO: [77] Obtained session ID: okjeiu5jlp5vac52e1zt0cpp
+
+2024-09-04 15:30:09 [PY] 2024-09-04 15:30:09,293 INFO: [77] Playing video for session ID: okjeiu5jlp5vac52e1zt0cpp
+
+2024-09-04 15:30:09 [PY] 2024-09-04 15:30:09,294 INFO: [PREPARE] Session ready for camera 77
+2024-09-04 15:30:09,294 INFO: [INFO] Total number of scraped CCTVs: 6
+2024-09-04 15:30:09,294 INFO: [INFO] Successfully processed 6 CCTVs out of 6.
+2024-09-04 15:30:09,296 INFO: [INFO] JSON data has been written to ./cctvSessionTemp/cctv_sessions_2024-09-04_15-30-09.json
+2024-09-04 15:30:09,296 INFO: [INFO] All session IDs have been successfully prepared and saved.
+
+
+
+2024-09-04 15:30:09 Python script exited with code 0
+2024-09-04 15:30:09 
+
+############### End of Python Script ###############
+
+
+2024-09-04 15:30:09 Latest JSON file: cctv_sessions_2024-09-04_15-30-09.json
+2024-09-04 15:30:09 Loaded CCTV sessions: {"7":"byqgdlon0z0jpsnzzzq5acl5","11":"3sgjvjkyvbcfvzsgqwubv1uo","39":"nvu50ctamqqags5fzbbrhu1d","77":"okjeiu5jlp5vac52e1zt0cpp","83":"y1is3g5aficvoaoucab5u1t2","572":"4101ood1owpn021jf1u5plge"}
+2024-09-04 15:30:09 All sessions initialized.
+2024-09-04 15:35:51 User requested CCTV: 7
+2024-09-04 15:36:45 User requested CCTV: 11
+2024-09-04 15:36:55 User requested CCTV: 7
+2024-09-04 15:37:08 User requested CCTV: 39
+2024-09-04 15:37:39 User requested CCTV: 77
+2024-09-04 15:38:30 User requested CCTV: 7
+2024-09-04 15:40:02 User requested CCTV: 77
+2024-09-04 15:43:11 User requested CCTV: 7
+2024-09-04 15:44:07 User requested CCTV: 7
+2024-09-04 15:44:31 User requested CCTV: 11
+2024-09-04 15:45:00 Running scheduled session initialization...
+2024-09-04 15:45:00 Initializing CCTV sessions...
+2024-09-04 15:45:00 
+############### Starting Python Script ###############
+
+
+2024-09-04 15:45:01 [PY] 2024-09-04 15:45:01,474 INFO: [MAIN] Logging setup completed!
+2024-09-04 15:45:01,474 INFO: [INFO] Initializing all session IDs.
+
+2024-09-04 15:45:01 [PY] 2024-09-04 15:45:01,474 INFO: [PREPARE] Preparing session for camera 7
+2024-09-04 15:45:01,475 INFO: [PREPARE] Preparing session for camera 11
+2024-09-04 15:45:01,475 INFO: [PREPARE] Preparing session for camera 39
+2024-09-04 15:45:01,475 INFO: [PREPARE] Preparing session for camera 77
+
+2024-09-04 15:45:01 [PY] 2024-09-04 15:45:01,476 INFO: [PREPARE] Preparing session for camera 83
+
+2024-09-04 15:45:01 [PY] 2024-09-04 15:45:01,478 INFO: [PREPARE] Preparing session for camera 572
+
+2024-09-04 15:45:07 [PY] 2024-09-04 15:45:07,050 INFO: [7] Obtained session ID: 1bnjpdgohptrjw5xc1gicklh
+
+2024-09-04 15:45:07 [PY] 2024-09-04 15:45:07,092 INFO: [7] Playing video for session ID: 1bnjpdgohptrjw5xc1gicklh
+
+2024-09-04 15:45:07 [PY] 2024-09-04 15:45:07,092 INFO: [PREPARE] Session ready for camera 7
+
+2024-09-04 15:45:07 [PY] 2024-09-04 15:45:07,593 INFO: [572] Obtained session ID: hirieaohfb0hld02zhnzqd2b
+
+2024-09-04 15:45:07 [PY] 2024-09-04 15:45:07,621 INFO: [572] Playing video for session ID: hirieaohfb0hld02zhnzqd2b
+
+2024-09-04 15:45:07 [PY] 2024-09-04 15:45:07,622 INFO: [PREPARE] Session ready for camera 572
+
+2024-09-04 15:45:07 [PY] 2024-09-04 15:45:07,647 INFO: [83] Obtained session ID: 0xubgf2i4dkdnfb4eauef1s3
+
+2024-09-04 15:45:07 [PY] 2024-09-04 15:45:07,675 INFO: [83] Playing video for session ID: 0xubgf2i4dkdnfb4eauef1s3
+
+2024-09-04 15:45:07 [PY] 2024-09-04 15:45:07,675 INFO: [PREPARE] Session ready for camera 83
+
+2024-09-04 15:45:07 [PY] 2024-09-04 15:45:07,857 INFO: [11] Obtained session ID: inddupc1grypew2gdwx1k1bo
+
+2024-09-04 15:45:07 [PY] 2024-09-04 15:45:07,904 INFO: [11] Playing video for session ID: inddupc1grypew2gdwx1k1bo
+
+2024-09-04 15:45:07 [PY] 2024-09-04 15:45:07,904 INFO: [PREPARE] Session ready for camera 11
+
+2024-09-04 15:45:07 [PY] 2024-09-04 15:45:07,910 INFO: [39] Obtained session ID: 4hyb4a51ovvwjyzzlql5pjym
+
+2024-09-04 15:45:07 [PY] 2024-09-04 15:45:07,960 INFO: [39] Playing video for session ID: 4hyb4a51ovvwjyzzlql5pjym
+
+2024-09-04 15:45:07 [PY] 2024-09-04 15:45:07,960 INFO: [PREPARE] Session ready for camera 39
+
+2024-09-04 15:45:08 [PY] 2024-09-04 15:45:08,006 INFO: [77] Obtained session ID: qwomfylo0pqtxxwonbox5par
+
+2024-09-04 15:45:08 [PY] 2024-09-04 15:45:08,111 INFO: [77] Playing video for session ID: qwomfylo0pqtxxwonbox5par
+
+2024-09-04 15:45:08 [PY] 2024-09-04 15:45:08,112 INFO: [PREPARE] Session ready for camera 77
+2024-09-04 15:45:08,113 INFO: [INFO] Total number of scraped CCTVs: 6
+2024-09-04 15:45:08,113 INFO: [INFO] Successfully processed 6 CCTVs out of 6.
+
+2024-09-04 15:45:08 [PY] 2024-09-04 15:45:08,115 INFO: [INFO] JSON data has been written to ./cctvSessionTemp/cctv_sessions_2024-09-04_15-45-08.json
+
+2024-09-04 15:45:08 [PY] 2024-09-04 15:45:08,115 INFO: [INFO] All session IDs have been successfully prepared and saved.
+
+
+
+2024-09-04 15:45:08 Python script exited with code 0
+2024-09-04 15:45:08 
+
+############### End of Python Script ###############
+
+
+2024-09-04 15:45:08 Latest JSON file: cctv_sessions_2024-09-04_15-45-08.json
+2024-09-04 15:45:08 Loaded CCTV sessions: {"7":"1bnjpdgohptrjw5xc1gicklh","11":"inddupc1grypew2gdwx1k1bo","39":"4hyb4a51ovvwjyzzlql5pjym","77":"qwomfylo0pqtxxwonbox5par","83":"0xubgf2i4dkdnfb4eauef1s3","572":"hirieaohfb0hld02zhnzqd2b"}
+2024-09-04 15:45:08 All sessions initialized.
+2024-09-04 15:45:53 User requested CCTV: 7
+2024-09-04 19:45:00 Running scheduled session initialization...
+2024-09-04 19:45:00 Initializing CCTV sessions...
+2024-09-04 19:45:00 
+############### Starting Python Script ###############
+
+
+2024-09-04 19:45:02 [PY] 2024-09-04 19:45:02,257 INFO: [MAIN] Logging setup completed!
+2024-09-04 19:45:02,257 INFO: [INFO] Initializing all session IDs.
+
+2024-09-04 19:45:02 [PY] 2024-09-04 19:45:02,257 INFO: [PREPARE] Preparing session for camera 7
+2024-09-04 19:45:02,258 INFO: [PREPARE] Preparing session for camera 11
+2024-09-04 19:45:02,258 INFO: [PREPARE] Preparing session for camera 39
+2024-09-04 19:45:02,259 INFO: [PREPARE] Preparing session for camera 77
+
+2024-09-04 19:45:02 [PY] 2024-09-04 19:45:02,260 INFO: [PREPARE] Preparing session for camera 83
+2024-09-04 19:45:02,262 INFO: [PREPARE] Preparing session for camera 572
+
+2024-09-04 19:45:09 [PY] 2024-09-04 19:45:09,239 INFO: [77] Obtained session ID: xd0rhtwo2e34avd1oivjjxsw
+
+2024-09-04 19:45:09 [PY] 2024-09-04 19:45:09,295 INFO: [11] Obtained session ID: idnjmwilgtq0fedg4rjifudb
+
+2024-09-04 19:45:09 [PY] 2024-09-04 19:45:09,320 INFO: [7] Obtained session ID: u2c3fhqqjmtt1cq1bprzpvr1
+
+2024-09-04 19:45:09 [PY] 2024-09-04 19:45:09,337 INFO: [39] Obtained session ID: l443lizozwbqrosalicn24x1
+
+2024-09-04 19:45:09 [PY] 2024-09-04 19:45:09,412 INFO: [572] Obtained session ID: secrqymj0v1m2jufuwvmixvy
+
+2024-09-04 19:45:09 [PY] 2024-09-04 19:45:09,469 INFO: [11] Playing video for session ID: idnjmwilgtq0fedg4rjifudb
+
+2024-09-04 19:45:09 [PY] 2024-09-04 19:45:09,470 INFO: [PREPARE] Session ready for camera 11
+
+2024-09-04 19:45:09 [PY] 2024-09-04 19:45:09,473 INFO: [77] Playing video for session ID: xd0rhtwo2e34avd1oivjjxsw
+
+2024-09-04 19:45:09 [PY] 2024-09-04 19:45:09,473 INFO: [83] Obtained session ID: z40lwwb55pyyse232deqvtni
+
+2024-09-04 19:45:09 [PY] 2024-09-04 19:45:09,474 INFO: [PREPARE] Session ready for camera 77
+
+2024-09-04 19:45:09 [PY] 2024-09-04 19:45:09,475 INFO: [39] Playing video for session ID: l443lizozwbqrosalicn24x1
+2024-09-04 19:45:09,475 INFO: [7] Playing video for session ID: u2c3fhqqjmtt1cq1bprzpvr1
+
+2024-09-04 19:45:09 [PY] 2024-09-04 19:45:09,477 INFO: [PREPARE] Session ready for camera 39
+
+2024-09-04 19:45:09 [PY] 2024-09-04 19:45:09,477 INFO: [PREPARE] Session ready for camera 7
+
+2024-09-04 19:45:09 [PY] 2024-09-04 19:45:09,540 INFO: [572] Playing video for session ID: secrqymj0v1m2jufuwvmixvy
+
+2024-09-04 19:45:09 [PY] 2024-09-04 19:45:09,542 INFO: [PREPARE] Session ready for camera 572
+
+2024-09-04 19:45:09 [PY] 2024-09-04 19:45:09,667 INFO: [83] Playing video for session ID: z40lwwb55pyyse232deqvtni
+
+2024-09-04 19:45:09 [PY] 2024-09-04 19:45:09,668 INFO: [PREPARE] Session ready for camera 83
+2024-09-04 19:45:09,668 INFO: [INFO] Total number of scraped CCTVs: 6
+2024-09-04 19:45:09,668 INFO: [INFO] Successfully processed 6 CCTVs out of 6.
+
+2024-09-04 19:45:09 [PY] 2024-09-04 19:45:09,670 INFO: [INFO] JSON data has been written to ./cctvSessionTemp/cctv_sessions_2024-09-04_19-45-09.json
+
+2024-09-04 19:45:09 [PY] 2024-09-04 19:45:09,671 INFO: [INFO] All session IDs have been successfully prepared and saved.
+
+
+
+2024-09-04 19:45:09 Python script exited with code 0
+2024-09-04 19:45:09 
+
+############### End of Python Script ###############
+
+
+2024-09-04 19:45:09 Latest JSON file: cctv_sessions_2024-09-04_19-45-09.json
+2024-09-04 19:45:09 Loaded CCTV sessions: {"7":"u2c3fhqqjmtt1cq1bprzpvr1","11":"idnjmwilgtq0fedg4rjifudb","39":"l443lizozwbqrosalicn24x1","77":"xd0rhtwo2e34avd1oivjjxsw","83":"z40lwwb55pyyse232deqvtni","572":"secrqymj0v1m2jufuwvmixvy"}
+2024-09-04 19:45:09 All sessions initialized.
+2024-09-04 20:00:00 Running scheduled session initialization...
+2024-09-04 20:00:00 Initializing CCTV sessions...
+2024-09-04 20:00:00 
+############### Starting Python Script ###############
+
+
+2024-09-04 20:00:01 [PY] 2024-09-04 20:00:01,349 INFO: [MAIN] Logging setup completed!
+
+2024-09-04 20:00:01 [PY] 2024-09-04 20:00:01,349 INFO: [INFO] Initializing all session IDs.
+
+2024-09-04 20:00:01 [PY] 2024-09-04 20:00:01,350 INFO: [PREPARE] Preparing session for camera 7
+
+2024-09-04 20:00:01 [PY] 2024-09-04 20:00:01,352 INFO: [PREPARE] Preparing session for camera 11
+
+2024-09-04 20:00:01 [PY] 2024-09-04 20:00:01,353 INFO: [PREPARE] Preparing session for camera 39
+
+2024-09-04 20:00:01 [PY] 2024-09-04 20:00:01,354 INFO: [PREPARE] Preparing session for camera 77
+
+2024-09-04 20:00:01 [PY] 2024-09-04 20:00:01,355 INFO: [PREPARE] Preparing session for camera 83
+
+2024-09-04 20:00:01 [PY] 2024-09-04 20:00:01,356 INFO: [PREPARE] Preparing session for camera 572
+
+2024-09-04 20:00:08 [PY] 2024-09-04 20:00:08,235 INFO: [11] Obtained session ID: qidagfncnaihrgueiupzekpy
+
+2024-09-04 20:00:08 [PY] 2024-09-04 20:00:08,344 INFO: [11] Playing video for session ID: qidagfncnaihrgueiupzekpy
+
+2024-09-04 20:00:08 [PY] 2024-09-04 20:00:08,345 INFO: [PREPARE] Session ready for camera 11
+
+2024-09-04 20:00:08 [PY] 2024-09-04 20:00:08,711 INFO: [83] Obtained session ID: ea2z1klexbndckfzvehpsd41
+
+2024-09-04 20:00:08 [PY] 2024-09-04 20:00:08,905 INFO: [83] Playing video for session ID: ea2z1klexbndckfzvehpsd41
+
+2024-09-04 20:00:08 [PY] 2024-09-04 20:00:08,906 INFO: [PREPARE] Session ready for camera 83
+
+2024-09-04 20:00:09 [PY] 2024-09-04 20:00:09,052 INFO: [7] Obtained session ID: tk2ncv14yovlw2gk4rrseper
+
+2024-09-04 20:00:09 [PY] 2024-09-04 20:00:09,052 INFO: [77] Obtained session ID: rnq3vd0ez3fpgjy43nvlsem4
+
+2024-09-04 20:00:09 [PY] 2024-09-04 20:00:09,204 INFO: [77] Playing video for session ID: rnq3vd0ez3fpgjy43nvlsem4
+
+2024-09-04 20:00:09 [PY] 2024-09-04 20:00:09,205 INFO: [PREPARE] Session ready for camera 77
+2024-09-04 20:00:09,206 INFO: [7] Playing video for session ID: tk2ncv14yovlw2gk4rrseper
+2024-09-04 20:00:09,206 INFO: [PREPARE] Session ready for camera 7
+
+2024-09-04 20:00:09 [PY] 2024-09-04 20:00:09,574 INFO: [39] Obtained session ID: jfl2nucrkw3hgnk0iwto5zny
+
+2024-09-04 20:00:09 [PY] 2024-09-04 20:00:09,593 INFO: [572] Obtained session ID: 42qqb1dpi5ll2dew43dv4hez
+
+2024-09-04 20:00:09 [PY] 2024-09-04 20:00:09,716 INFO: [39] Playing video for session ID: jfl2nucrkw3hgnk0iwto5zny
+
+2024-09-04 20:00:09 [PY] 2024-09-04 20:00:09,717 INFO: [PREPARE] Session ready for camera 39
+
+2024-09-04 20:00:09 [PY] 2024-09-04 20:00:09,754 INFO: [572] Playing video for session ID: 42qqb1dpi5ll2dew43dv4hez
+
+2024-09-04 20:00:09 [PY] 2024-09-04 20:00:09,755 INFO: [PREPARE] Session ready for camera 572
+2024-09-04 20:00:09,755 INFO: [INFO] Total number of scraped CCTVs: 6
+2024-09-04 20:00:09,755 INFO: [INFO] Successfully processed 6 CCTVs out of 6.
+
+2024-09-04 20:00:09 [PY] 2024-09-04 20:00:09,756 INFO: [INFO] JSON data has been written to ./cctvSessionTemp/cctv_sessions_2024-09-04_20-00-09.json
+2024-09-04 20:00:09,756 INFO: [INFO] All session IDs have been successfully prepared and saved.
+
+
+
+2024-09-04 20:00:09 Python script exited with code 0
+2024-09-04 20:00:09 
+
+############### End of Python Script ###############
+
+
+2024-09-04 20:00:09 Latest JSON file: cctv_sessions_2024-09-04_20-00-09.json
+2024-09-04 20:00:09 Loaded CCTV sessions: {"7":"tk2ncv14yovlw2gk4rrseper","11":"qidagfncnaihrgueiupzekpy","39":"jfl2nucrkw3hgnk0iwto5zny","77":"rnq3vd0ez3fpgjy43nvlsem4","83":"ea2z1klexbndckfzvehpsd41","572":"42qqb1dpi5ll2dew43dv4hez"}
+2024-09-04 20:00:09 All sessions initialized.
+2024-09-04 20:15:00 Running scheduled session initialization...
+2024-09-04 20:15:00 Initializing CCTV sessions...
+2024-09-04 20:15:00 
+############### Starting Python Script ###############
+
+
+2024-09-04 20:15:01 [PY] 2024-09-04 20:15:01,703 INFO: [MAIN] Logging setup completed!
+20
+2024-09-04 20:15:01 [PY] 24-09-04 20:15:01,703 INFO: [INFO] Initializing all session IDs.
+2024-09-04 20:15:01,703 INFO: [PREPARE] Preparing session for camera 7
+
+2024-09-04 20:15:01 [PY] 2024-09-04 20:15:01,705 INFO: [PREPARE] Preparing session for camera 11
+
+2024-09-04 20:15:01 [PY] 2024-09-04 20:15:01,705 INFO: [PREPARE] Preparing session for camera 39
+
+2024-09-04 20:15:01 [PY] 2024-09-04 20:15:01,706 INFO: [PREPARE] Preparing session for camera 77
+
+2024-09-04 20:15:01 [PY] 2024-09-04 20:15:01,706 INFO: [PREPARE] Preparing session for camera 83
+
+2024-09-04 20:15:01 [PY] 2024-09-04 20:15:01,707 INFO: [PREPARE] Preparing session for camera 572
+
+2024-09-04 20:15:08 [PY] 2024-09-04 20:15:08,803 INFO: [572] Obtained session ID: zxt5zglumrhs1furmgn1bhcd
+
+2024-09-04 20:15:09 [PY] 2024-09-04 20:15:09,002 INFO: [39] Obtained session ID: jdncmhpf12hn5idm1byp0bkm
+
+2024-09-04 20:15:09 [PY] 2024-09-04 20:15:09,017 INFO: [572] Playing video for session ID: zxt5zglumrhs1furmgn1bhcd
+
+2024-09-04 20:15:09 [PY] 2024-09-04 20:15:09,017 INFO: [PREPARE] Session ready for camera 572
+
+2024-09-04 20:15:09 [PY] 2024-09-04 20:15:09,188 INFO: [39] Playing video for session ID: jdncmhpf12hn5idm1byp0bkm
+
+2024-09-04 20:15:09 [PY] 2024-09-04 20:15:09,188 INFO: [PREPARE] Session ready for camera 39
+
+2024-09-04 20:15:09 [PY] 2024-09-04 20:15:09,188 INFO: [11] Obtained session ID: g3rosia4ltwvnmfqnbhjmnzt
+
+2024-09-04 20:15:09 [PY] 2024-09-04 20:15:09,326 INFO: [83] Obtained session ID: ysf4zpm2ertb1r353myjmye2
+
+2024-09-04 20:15:09 [PY] 2024-09-04 20:15:09,386 INFO: [11] Playing video for session ID: g3rosia4ltwvnmfqnbhjmnzt
+
+2024-09-04 20:15:09 [PY] 2024-09-04 20:15:09,386 INFO: [PREPARE] Session ready for camera 11
+
+2024-09-04 20:15:09 [PY] 2024-09-04 20:15:09,392 INFO: [77] Obtained session ID: oh3ms13cxu4rsgvznh5amhyx
+
+2024-09-04 20:15:09 [PY] 2024-09-04 20:15:09,497 INFO: [83] Playing video for session ID: ysf4zpm2ertb1r353myjmye2
+
+2024-09-04 20:15:09 [PY] 2024-09-04 20:15:09,497 INFO: [PREPARE] Session ready for camera 83
+
+2024-09-04 20:15:09 [PY] 2024-09-04 20:15:09,504 INFO: [7] Obtained session ID: tynt5cau3dfkzbfkmvczp3pu
+
+2024-09-04 20:15:09 [PY] 2024-09-04 20:15:09,532 INFO: [77] Playing video for session ID: oh3ms13cxu4rsgvznh5amhyx
+
+2024-09-04 20:15:09 [PY] 2024-09-04 20:15:09,532 INFO: [PREPARE] Session ready for camera 77
+
+2024-09-04 20:15:09 [PY] 2024-09-04 20:15:09,685 INFO: [7] Playing video for session ID: tynt5cau3dfkzbfkmvczp3pu
+
+2024-09-04 20:15:09 [PY] 2024-09-04 20:15:09,685 INFO: [PREPARE] Session ready for camera 7
+2024-09-04 20:15:09,686 INFO: [INFO] Total number of scraped CCTVs: 6
+2024-09-04 20:15:09,686 INFO: [INFO] Successfully processed 6 CCTVs out of 6.
+
+2024-09-04 20:15:09 [PY] 2024-09-04 20:15:09,688 INFO: [INFO] JSON data has been written to ./cctvSessionTemp/cctv_sessions_2024-09-04_20-15-09.json
+
+2024-09-04 20:15:09 [PY] 2024-09-04 20:15:09,688 INFO: [INFO] All session IDs have been successfully prepared and saved.
+
+
+
+2024-09-04 20:15:09 Python script exited with code 0
+2024-09-04 20:15:09 
+
+############### End of Python Script ###############
+
+
+2024-09-04 20:15:09 Latest JSON file: cctv_sessions_2024-09-04_20-15-09.json
+2024-09-04 20:15:09 Loaded CCTV sessions: {"7":"tynt5cau3dfkzbfkmvczp3pu","11":"g3rosia4ltwvnmfqnbhjmnzt","39":"jdncmhpf12hn5idm1byp0bkm","77":"oh3ms13cxu4rsgvznh5amhyx","83":"ysf4zpm2ertb1r353myjmye2","572":"zxt5zglumrhs1furmgn1bhcd"}
+2024-09-04 20:15:09 All sessions initialized.
+2024-09-04 20:30:00 Running scheduled session initialization...
+2024-09-04 20:30:00 Initializing CCTV sessions...
+2024-09-04 20:30:00 
+############### Starting Python Script ###############
+
+
+2024-09-04 20:30:00 [PY] 2024-09-04 20:30:00,837 INFO: [MAIN] Logging setup completed!
+2024-09-04 20:30:00,837 INFO: [INFO] Initializing all session IDs.
+
+2024-09-04 20:30:00 [PY] 2024-09-04 20:30:00,838 INFO: [PREPARE] Preparing session for camera 7
+
+2024-09-04 20:30:00 [PY] 2024-09-04 20:30:00,838 INFO: [PREPARE] Preparing session for camera 11
+
+2024-09-04 20:30:00 [PY] 2024-09-04 20:30:00,839 INFO: [PREPARE] Preparing session for camera 39
+
+2024-09-04 20:30:00 [PY] 2024-09-04 20:30:00,840 INFO: [PREPARE] Preparing session for camera 77
+2024-09-04 20:30:00,840 INFO: [PREPARE] Preparing session for camera 83
+
+2024-09-04 20:30:00 [PY] 2024-09-04 20:30:00,842 INFO: [PREPARE] Preparing session for camera 572
+
+2024-09-04 20:30:07 [PY] 2024-09-04 20:30:07,808 INFO: [77] Obtained session ID: ri325ygifnezvd4lcvudrh3j
+
+2024-09-04 20:30:07 [PY] 2024-09-04 20:30:07,809 INFO: [83] Obtained session ID: odz41rtxkkge4tvfxpz0ovrj
+
+2024-09-04 20:30:07 [PY] 2024-09-04 20:30:07,867 INFO: [39] Obtained session ID: h3wxf0vuhul3hbxwm4du4jlb
+
+2024-09-04 20:30:08 [PY] 2024-09-04 20:30:08,032 INFO: [83] Playing video for session ID: odz41rtxkkge4tvfxpz0ovrj
+
+2024-09-04 20:30:08 [PY] 2024-09-04 20:30:08,033 INFO: [39] Playing video for session ID: h3wxf0vuhul3hbxwm4du4jlb
+
+2024-09-04 20:30:08 [PY] 2024-09-04 20:30:08,033 INFO: [PREPARE] Session ready for camera 39
+
+2024-09-04 20:30:08 [PY] 2024-09-04 20:30:08,034 INFO: [PREPARE] Session ready for camera 83
+
+2024-09-04 20:30:08 [PY] 2024-09-04 20:30:08,034 INFO: [11] Obtained session ID: g1lndnv2ygoiarspv4nd4iix
+2024-09-04 20:30:08,035 INFO: [77] Playing video for session ID: ri325ygifnezvd4lcvudrh3j
+2024-09-04 20:30:08,036 INFO: [PREPARE] Session ready for camera 77
+
+2024-09-04 20:30:08 [PY] 2024-09-04 20:30:08,217 INFO: [7] Obtained session ID: bchu2bz4d4yja2jh3e0pzmkh
+
+2024-09-04 20:30:08 [PY] 2024-09-04 20:30:08,366 INFO: [11] Playing video for session ID: g1lndnv2ygoiarspv4nd4iix
+
+2024-09-04 20:30:08 [PY] 2024-09-04 20:30:08,366 INFO: [PREPARE] Session ready for camera 11
+
+2024-09-04 20:30:08 [PY] 2024-09-04 20:30:08,458 INFO: [7] Playing video for session ID: bchu2bz4d4yja2jh3e0pzmkh
+
+2024-09-04 20:30:08 [PY] 2024-09-04 20:30:08,459 INFO: [PREPARE] Session ready for camera 7
+
+2024-09-04 20:30:08 [PY] 2024-09-04 20:30:08,704 INFO: [572] Obtained session ID: lalvt1b5x0thqyi4dyo2cijh
+
+2024-09-04 20:30:08 [PY] 2024-09-04 20:30:08,832 INFO: [572] Playing video for session ID: lalvt1b5x0thqyi4dyo2cijh
+
+2024-09-04 20:30:08 [PY] 2024-09-04 20:30:08,832 INFO: [PREPARE] Session ready for camera 572
+2024-09-04 20:30:08,832 INFO: [INFO] Total number of scraped CCTVs: 6
+2024-09-04 20:30:08,833 INFO: [INFO] Successfully processed 6 CCTVs out of 6.
+
+2024-09-04 20:30:08 [PY] 2024-09-04 20:30:08,835 INFO: [INFO] JSON data has been written to ./cctvSessionTemp/cctv_sessions_2024-09-04_20-30-08.json
+
+2024-09-04 20:30:08 [PY] 2024-09-04 20:30:08,835 INFO: [INFO] All session IDs have been successfully prepared and saved.
+
+
+
+2024-09-04 20:30:08 Python script exited with code 0
+2024-09-04 20:30:08 
+
+############### End of Python Script ###############
+
+
+2024-09-04 20:30:08 Latest JSON file: cctv_sessions_2024-09-04_20-30-08.json
+2024-09-04 20:30:08 Loaded CCTV sessions: {"7":"bchu2bz4d4yja2jh3e0pzmkh","11":"g1lndnv2ygoiarspv4nd4iix","39":"h3wxf0vuhul3hbxwm4du4jlb","77":"ri325ygifnezvd4lcvudrh3j","83":"odz41rtxkkge4tvfxpz0ovrj","572":"lalvt1b5x0thqyi4dyo2cijh"}
+2024-09-04 20:30:08 All sessions initialized.
+2024-09-04 20:45:01 Running scheduled session initialization...
+2024-09-04 20:45:01 Initializing CCTV sessions...
+2024-09-04 20:45:01 
+############### Starting Python Script ###############
+
+
+2024-09-04 20:45:01 [PY] 2024-09-04 20:45:01,781 INFO: [MAIN] Logging setup completed!
+2024-09-04 20:45:01,781 INFO: [INFO] Initializing all session IDs.
+
+2024-09-04 20:45:01 [PY] 2024-09-04 20:45:01,782 INFO: [PREPARE] Preparing session for camera 7
+
+2024-09-04 20:45:01 [PY] 2024-09-04 20:45:01,783 INFO: [PREPARE] Preparing session for camera 11
+
+2024-09-04 20:45:01 [PY] 2024-09-04 20:45:01,783 INFO: [PREPARE] Preparing session for camera 39
+
+2024-09-04 20:45:01 [PY] 2024-09-04 20:45:01,784 INFO: [PREPARE] Preparing session for camera 77
+
+2024-09-04 20:45:01 [PY] 2024-09-04 20:45:01,784 INFO: [PREPARE] Preparing session for camera 83
+
+2024-09-04 20:45:01 [PY] 2024-09-04 20:45:01,785 INFO: [PREPARE] Preparing session for camera 572
+
+2024-09-04 20:45:07 [PY] 2024-09-04 20:45:07,655 INFO: [7] Obtained session ID: 42klokky0pf53pd42hzwargo
+
+2024-09-04 20:45:07 [PY] 2024-09-04 20:45:07,737 INFO: [7] Playing video for session ID: 42klokky0pf53pd42hzwargo
+
+2024-09-04 20:45:07 [PY] 2024-09-04 20:45:07,738 INFO: [PREPARE] Session ready for camera 7
+
+2024-09-04 20:45:07 [PY] 2024-09-04 20:45:07,886 INFO: [83] Obtained session ID: mprgctsjekls12o1mtndltxj
+
+2024-09-04 20:45:08 [PY] 2024-09-04 20:45:08,046 INFO: [83] Playing video for session ID: mprgctsjekls12o1mtndltxj
+
+2024-09-04 20:45:08 [PY] 2024-09-04 20:45:08,047 INFO: [PREPARE] Session ready for camera 83
+
+2024-09-04 20:45:08 [PY] 2024-09-04 20:45:08,392 INFO: [11] Obtained session ID: 1p3zezp10dyfsgumfasqqvdb
+
+2024-09-04 20:45:08 [PY] 2024-09-04 20:45:08,468 INFO: [39] Obtained session ID: akfueqslmpu1xbygjjrjc1br
+
+2024-09-04 20:45:08 [PY] 2024-09-04 20:45:08,505 INFO: [11] Playing video for session ID: 1p3zezp10dyfsgumfasqqvdb
+
+2024-09-04 20:45:08 [PY] 2024-09-04 20:45:08,505 INFO: [PREPARE] Session ready for camera 11
+
+2024-09-04 20:45:08 [PY] 2024-09-04 20:45:08,506 INFO: [572] Obtained session ID: 04e1m35e30hfbnohz5smajpg
+
+2024-09-04 20:45:08 [PY] 2024-09-04 20:45:08,557 INFO: [39] Playing video for session ID: akfueqslmpu1xbygjjrjc1br
+
+2024-09-04 20:45:08 [PY] 2024-09-04 20:45:08,557 INFO: [PREPARE] Session ready for camera 39
+2024-09-04 20:45:08,557 INFO: [77] Obtained session ID: fgt3oiewtcqgvtumpf3onrnf
+
+2024-09-04 20:45:08 [PY] 2024-09-04 20:45:08,605 INFO: [572] Playing video for session ID: 04e1m35e30hfbnohz5smajpg
+
+2024-09-04 20:45:08 [PY] 2024-09-04 20:45:08,606 INFO: [PREPARE] Session ready for camera 572
+
+2024-09-04 20:45:08 [PY] 2024-09-04 20:45:08,631 INFO: [77] Playing video for session ID: fgt3oiewtcqgvtumpf3onrnf
+
+2024-09-04 20:45:08 [PY] 2024-09-04 20:45:08,631 INFO: [PREPARE] Session ready for camera 77
+2024-09-04 20:45:08,631 INFO: [INFO] Total number of scraped CCTVs: 6
+2024-09-04 20:45:08,631 INFO: [INFO] Successfully processed 6 CCTVs out of 6.
+
+2024-09-04 20:45:08 [PY] 2024-09-04 20:45:08,633 INFO: [INFO] JSON data has been written to ./cctvSessionTemp/cctv_sessions_2024-09-04_20-45-08.json
+
+2024-09-04 20:45:08 [PY] 2024-09-04 20:45:08,633 INFO: [INFO] All session IDs have been successfully prepared and saved.
+
+
+
+2024-09-04 20:45:08 Python script exited with code 0
+2024-09-04 20:45:08 
+
+############### End of Python Script ###############
+
+
+2024-09-04 20:45:08 Latest JSON file: cctv_sessions_2024-09-04_20-45-08.json
+2024-09-04 20:45:08 Loaded CCTV sessions: {"7":"42klokky0pf53pd42hzwargo","11":"1p3zezp10dyfsgumfasqqvdb","39":"akfueqslmpu1xbygjjrjc1br","77":"fgt3oiewtcqgvtumpf3onrnf","83":"mprgctsjekls12o1mtndltxj","572":"04e1m35e30hfbnohz5smajpg"}
+2024-09-04 20:45:08 All sessions initialized.
+2024-09-04 21:00:00 Running scheduled session initialization...
+2024-09-04 21:00:00 Initializing CCTV sessions...
+2024-09-04 21:00:00 
+############### Starting Python Script ###############
+
+
+2024-09-04 21:00:01 [PY] 2024-09-04 21:00:01,417 INFO: [MAIN] Logging setup completed!
+
+2024-09-04 21:00:01 [PY] 2024-09-04 21:00:01,417 INFO: [INFO] Initializing all session IDs.
+2024-09-04 21:00:01,418 INFO: [PREPARE] Preparing session for camera 7
+2024-09-04 21:00:01,419 INFO: [PREPARE] Preparing session for camera 11
+2024-09-04 21:00:01,420 INFO: [PREPARE] Preparing session for camera 39
+
+2024-09-04 21:00:01 [PY] 2024-09-04 21:00:01,421 INFO: [PREPARE] Preparing session for camera 77
+
+2024-09-04 21:00:01 [PY] 2024-09-04 21:00:01,421 INFO: [PREPARE] Preparing session for camera 83
+
+2024-09-04 21:00:01 [PY] 2024-09-04 21:00:01,422 INFO: [PREPARE] Preparing session for camera 572
+
+2024-09-04 21:00:07 [PY] 2024-09-04 21:00:07,590 INFO: [39] Obtained session ID: l2o2pjvh3pdf3mhlyktt25et
+
+2024-09-04 21:00:07 [PY] 2024-09-04 21:00:07,693 INFO: [39] Playing video for session ID: l2o2pjvh3pdf3mhlyktt25et
+
+2024-09-04 21:00:07 [PY] 2024-09-04 21:00:07,693 INFO: [PREPARE] Session ready for camera 39
+
+2024-09-04 21:00:08 [PY] 2024-09-04 21:00:08,494 INFO: [77] Obtained session ID: 5h1nebebyl5pox4mwg44xcq0
+
+2024-09-04 21:00:08 [PY] 2024-09-04 21:00:08,612 INFO: [77] Playing video for session ID: 5h1nebebyl5pox4mwg44xcq0
+
+2024-09-04 21:00:08 [PY] 2024-09-04 21:00:08,613 INFO: [PREPARE] Session ready for camera 77
+
+2024-09-04 21:00:08 [PY] 2024-09-04 21:00:08,868 INFO: [83] Obtained session ID: ze5j3iflvwmxry33rfahfmno
+
+2024-09-04 21:00:08 [PY] 2024-09-04 21:00:08,940 INFO: [11] Obtained session ID: ujzebiookt4flu3gjmgh011s
+
+2024-09-04 21:00:09 [PY] 2024-09-04 21:00:09,012 INFO: [83] Playing video for session ID: ze5j3iflvwmxry33rfahfmno
+
+2024-09-04 21:00:09 [PY] 2024-09-04 21:00:09,013 INFO: [PREPARE] Session ready for camera 83
+
+2024-09-04 21:00:09 [PY] 2024-09-04 21:00:09,032 INFO: [11] Playing video for session ID: ujzebiookt4flu3gjmgh011s
+
+2024-09-04 21:00:09 [PY] 2024-09-04 21:00:09,032 INFO: [PREPARE] Session ready for camera 11
+
+2024-09-04 21:00:09 [PY] 2024-09-04 21:00:09,274 INFO: [572] Obtained session ID: vuza3l1ghw3lapsc4jtovng4
+
+2024-09-04 21:00:09 [PY] 2024-09-04 21:00:09,467 INFO: [572] Playing video for session ID: vuza3l1ghw3lapsc4jtovng4
+
+2024-09-04 21:00:09 [PY] 2024-09-04 21:00:09,468 INFO: [PREPARE] Session ready for camera 572
+
+2024-09-04 21:00:09 [PY] 2024-09-04 21:00:09,635 INFO: [7] Obtained session ID: 5s3pa5tiqkeinidqysjtlkaw
+
+2024-09-04 21:00:09 [PY] 2024-09-04 21:00:09,810 INFO: [7] Playing video for session ID: 5s3pa5tiqkeinidqysjtlkaw
+
+2024-09-04 21:00:09 [PY] 2024-09-04 21:00:09,810 INFO: [PREPARE] Session ready for camera 7
+2024-09-04 21:00:09,810 INFO: [INFO] Total number of scraped CCTVs: 6
+2024-09-04 21:00:09,810 INFO: [INFO] Successfully processed 6 CCTVs out of 6.
+2024-09-04 21:00:09,811 INFO: [INFO] JSON data has been written to ./cctvSessionTemp/cctv_sessions_2024-09-04_21-00-09.json
+2024-09-04 21:00:09,812 INFO: [INFO] All session IDs have been successfully prepared and saved.
+
+
+
+2024-09-04 21:00:09 Python script exited with code 0
+2024-09-04 21:00:09 
+
+############### End of Python Script ###############
+
+
+2024-09-04 21:00:09 Latest JSON file: cctv_sessions_2024-09-04_21-00-09.json
+2024-09-04 21:00:09 Loaded CCTV sessions: {"7":"5s3pa5tiqkeinidqysjtlkaw","11":"ujzebiookt4flu3gjmgh011s","39":"l2o2pjvh3pdf3mhlyktt25et","77":"5h1nebebyl5pox4mwg44xcq0","83":"ze5j3iflvwmxry33rfahfmno","572":"vuza3l1ghw3lapsc4jtovng4"}
+2024-09-04 21:00:09 All sessions initialized.
+2024-09-04 21:15:00 Running scheduled session initialization...
+2024-09-04 21:15:00 Initializing CCTV sessions...
+2024-09-04 21:15:00 
+############### Starting Python Script ###############
+
+
+2024-09-04 21:15:01 [PY] 2024-09-04 21:15:01,451 INFO: [MAIN] Logging setup completed!
+
+2024-09-04 21:15:01 [PY] 2024-09-04 21:15:01,452 INFO: [INFO] Initializing all session IDs.
+
+2024-09-04 21:15:01 [PY] 2024-09-04 21:15:01,452 INFO: [PREPARE] Preparing session for camera 7
+
+2024-09-04 21:15:01 [PY] 2024-09-04 21:15:01,453 INFO: [PREPARE] Preparing session for camera 11
+
+2024-09-04 21:15:01 [PY] 2024-09-04 21:15:01,454 INFO: [PREPARE] Preparing session for camera 39
+
+2024-09-04 21:15:01 [PY] 2024-09-04 21:15:01,455 INFO: [PREPARE] Preparing session for camera 77
+
+2024-09-04 21:15:01 [PY] 2024-09-04 21:15:01,455 INFO: [PREPARE] Preparing session for camera 83
+
+2024-09-04 21:15:01 [PY] 2024-09-04 21:15:01,456 INFO: [PREPARE] Preparing session for camera 572
+
+2024-09-04 21:15:08 [PY] 2024-09-04 21:15:08,672 INFO: [77] Obtained session ID: 3qu3crrgcw4q35k3sgcsrjwm
+
+2024-09-04 21:15:08 [PY] 2024-09-04 21:15:08,882 INFO: [77] Playing video for session ID: 3qu3crrgcw4q35k3sgcsrjwm
+
+2024-09-04 21:15:08 [PY] 2024-09-04 21:15:08,883 INFO: [PREPARE] Session ready for camera 77
+
+2024-09-04 21:15:08 [PY] 2024-09-04 21:15:08,905 INFO: [39] Obtained session ID: pfgj50vm5ls125dl4fzwazkw
+
+2024-09-04 21:15:08 [PY] 2024-09-04 21:15:08,907 INFO: [83] Obtained session ID: d2ldhsxfd240eho2ii51roib
+
+2024-09-04 21:15:09 [PY] 2024-09-04 21:15:09,032 INFO: [83] Playing video for session ID: d2ldhsxfd240eho2ii51roib
+
+2024-09-04 21:15:09 [PY] 2024-09-04 21:15:09,032 INFO: [PREPARE] Session ready for camera 83
+2024-09-04 21:15:09,033 INFO: [39] Playing video for session ID: pfgj50vm5ls125dl4fzwazkw
+2024-09-04 21:15:09,033 INFO: [PREPARE] Session ready for camera 39
+
+2024-09-04 21:15:09 [PY] 2024-09-04 21:15:09,097 INFO: [572] Obtained session ID: nordgxhajtjoofymmc2emhmy
+
+2024-09-04 21:15:09 [PY] 2024-09-04 21:15:09,254 INFO: [572] Playing video for session ID: nordgxhajtjoofymmc2emhmy
+
+2024-09-04 21:15:09 [PY] 2024-09-04 21:15:09,254 INFO: [PREPARE] Session ready for camera 572
+
+2024-09-04 21:15:09 [PY] 2024-09-04 21:15:09,531 INFO: [11] Obtained session ID: m1i1cbllh2xvylhylojrg41r
+
+2024-09-04 21:15:09 [PY] 2024-09-04 21:15:09,534 INFO: [7] Obtained session ID: k2zocj3fu4ge5m5wtxldeaij
+
+2024-09-04 21:15:09 [PY] 2024-09-04 21:15:09,696 INFO: [11] Playing video for session ID: m1i1cbllh2xvylhylojrg41r
+
+2024-09-04 21:15:09 [PY] 2024-09-04 21:15:09,696 INFO: [PREPARE] Session ready for camera 11
+
+2024-09-04 21:15:09 [PY] 2024-09-04 21:15:09,884 INFO: [7] Playing video for session ID: k2zocj3fu4ge5m5wtxldeaij
+
+2024-09-04 21:15:09 [PY] 2024-09-04 21:15:09,885 INFO: [PREPARE] Session ready for camera 7
+2024-09-04 21:15:09,885 INFO: [INFO] Total number of scraped CCTVs: 6
+2024-09-04 21:15:09,885 INFO: [INFO] Successfully processed 6 CCTVs out of 6.
+
+2024-09-04 21:15:09 [PY] 2024-09-04 21:15:09,887 INFO: [INFO] JSON data has been written to ./cctvSessionTemp/cctv_sessions_2024-09-04_21-15-09.json
+
+2024-09-04 21:15:09 [PY] 2024-09-04 21:15:09,887 INFO: [INFO] All session IDs have been successfully prepared and saved.
+
+
+
+2024-09-04 21:15:09 Python script exited with code 0
+2024-09-04 21:15:09 
+
+############### End of Python Script ###############
+
+
+2024-09-04 21:15:09 Latest JSON file: cctv_sessions_2024-09-04_21-15-09.json
+2024-09-04 21:15:09 Loaded CCTV sessions: {"7":"k2zocj3fu4ge5m5wtxldeaij","11":"m1i1cbllh2xvylhylojrg41r","39":"pfgj50vm5ls125dl4fzwazkw","77":"3qu3crrgcw4q35k3sgcsrjwm","83":"d2ldhsxfd240eho2ii51roib","572":"nordgxhajtjoofymmc2emhmy"}
+2024-09-04 21:15:09 All sessions initialized.
+2024-09-04 21:30:00 Running scheduled session initialization...
+2024-09-04 21:30:00 Initializing CCTV sessions...
+2024-09-04 21:30:00 
+############### Starting Python Script ###############
+
+
+2024-09-04 21:30:01 [PY] 2024-09-04 21:30:01,304 INFO: [MAIN] Logging setup completed!
+2024-09-04 21:30:01,304 INFO: [INFO] Initializing all session IDs.
+
+2024-09-04 21:30:01 [PY] 2024-09-04 21:30:01,304 INFO: [PREPARE] Preparing session for camera 7
+2024-09-04 21:30:01,305 INFO: [PREPARE] Preparing session for camera 11
+
+2024-09-04 21:30:01 [PY] 2024-09-04 21:30:01,306 INFO: [PREPARE] Preparing session for camera 39
+
+2024-09-04 21:30:01 [PY] 2024-09-04 21:30:01,308 INFO: [PREPARE] Preparing session for camera 77
+
+2024-09-04 21:30:01 [PY] 2024-09-04 21:30:01,309 INFO: [PREPARE] Preparing session for camera 83
+
+2024-09-04 21:30:01 [PY] 2024-09-04 21:30:01,309 INFO: [PREPARE] Preparing session for camera 572
+
+2024-09-04 21:30:07 [PY] 2024-09-04 21:30:07,903 INFO: [83] Obtained session ID: flbnnhhfium5tasz0s3hkgeb
+
+2024-09-04 21:30:08 [PY] 2024-09-04 21:30:08,008 INFO: [83] Playing video for session ID: flbnnhhfium5tasz0s3hkgeb
+
+2024-09-04 21:30:08 [PY] 2024-09-04 21:30:08,008 INFO: [PREPARE] Session ready for camera 83
+
+2024-09-04 21:30:08 [PY] 2024-09-04 21:30:08,278 INFO: [7] Obtained session ID: k2o3y2fmwv1nqwy2awtlarl3
+
+2024-09-04 21:30:08 [PY] 2024-09-04 21:30:08,327 INFO: [39] Obtained session ID: b4lpazqhfl0dnojynf4gafwr
+
+2024-09-04 21:30:08 [PY] 2024-09-04 21:30:08,355 INFO: [572] Obtained session ID: 1cstsggfa0a3ahpoyhljrxil
+
+2024-09-04 21:30:08 [PY] 2024-09-04 21:30:08,453 INFO: [11] Obtained session ID: 5mbahclgzj24yj2lvaoo21fc
+
+2024-09-04 21:30:08 [PY] 2024-09-04 21:30:08,725 INFO: [7] Playing video for session ID: k2o3y2fmwv1nqwy2awtlarl3
+
+2024-09-04 21:30:08 [PY] 2024-09-04 21:30:08,726 INFO: [PREPARE] Session ready for camera 7
+
+2024-09-04 21:30:08 [PY] 2024-09-04 21:30:08,805 INFO: [39] Playing video for session ID: b4lpazqhfl0dnojynf4gafwr
+
+2024-09-04 21:30:08 [PY] 2024-09-04 21:30:08,806 INFO: [PREPARE] Session ready for camera 39
+
+2024-09-04 21:30:08 [PY] 2024-09-04 21:30:08,853 INFO: [77] Obtained session ID: 0ngu3yp21zcmtqwzmfdht3qm
+
+2024-09-04 21:30:08 [PY] 2024-09-04 21:30:08,921 INFO: [572] Playing video for session ID: 1cstsggfa0a3ahpoyhljrxil
+
+2024-09-04 21:30:08 [PY] 2024-09-04 21:30:08,921 INFO: [PREPARE] Session ready for camera 572
+
+2024-09-04 21:30:08 [PY] 2024-09-04 21:30:08,968 INFO: [77] Playing video for session ID: 0ngu3yp21zcmtqwzmfdht3qm
+
+2024-09-04 21:30:08 [PY] 2024-09-04 21:30:08,969 INFO: [PREPARE] Session ready for camera 77
+
+2024-09-04 21:30:09 [PY] 2024-09-04 21:30:09,634 INFO: [11] Playing video for session ID: 5mbahclgzj24yj2lvaoo21fc
+
+2024-09-04 21:30:09 [PY] 2024-09-04 21:30:09,635 INFO: [PREPARE] Session ready for camera 11
+2024-09-04 21:30:09,635 INFO: [INFO] Total number of scraped CCTVs: 6
+2024-09-04 21:30:09,635 INFO: [INFO] Successfully processed 6 CCTVs out of 6.
+2024-09-04 21:30:09,637 INFO: [INFO] JSON data has been written to ./cctvSessionTemp/cctv_sessions_2024-09-04_21-30-09.json
+2024-09-04 21:30:09,637 INFO: [INFO] All session IDs have been successfully prepared and saved.
+
+
+
+2024-09-04 21:30:09 Python script exited with code 0
+2024-09-04 21:30:09 
+
+############### End of Python Script ###############
+
+
+2024-09-04 21:30:09 Latest JSON file: cctv_sessions_2024-09-04_21-30-09.json
+2024-09-04 21:30:09 Loaded CCTV sessions: {"7":"k2o3y2fmwv1nqwy2awtlarl3","11":"5mbahclgzj24yj2lvaoo21fc","39":"b4lpazqhfl0dnojynf4gafwr","77":"0ngu3yp21zcmtqwzmfdht3qm","83":"flbnnhhfium5tasz0s3hkgeb","572":"1cstsggfa0a3ahpoyhljrxil"}
+2024-09-04 21:30:09 All sessions initialized.
+2024-09-04 21:45:00 Running scheduled session initialization...
+2024-09-04 21:45:00 Initializing CCTV sessions...
+2024-09-04 21:45:00 
+############### Starting Python Script ###############
+
+
+2024-09-04 21:45:00 [PY] 2024-09-04 21:45:00,890 INFO: [MAIN] Logging setup completed!
+2024-09-04 21:45:00,891 INFO: [INFO] Initializing all session IDs.
+
+2024-09-04 21:45:00 [PY] 2024-09-04 21:45:00,891 INFO: [PREPARE] Preparing session for camera 7
+2024-09-04 21:45:00,892 INFO: [PREPARE] Preparing session for camera 11
+2024-09-04 21:45:00,892 INFO: [PREPARE] Preparing session for camera 39
+
+2024-09-04 21:45:00 [PY] 2024-09-04 21:45:00,894 INFO: [PREPARE] Preparing session for camera 77
+
+2024-09-04 21:45:00 [PY] 2024-09-04 21:45:00,895 INFO: [PREPARE] Preparing session for camera 83
+
+2024-09-04 21:45:00 [PY] 2024-09-04 21:45:00,895 INFO: [PREPARE] Preparing session for camera 572
+
+2024-09-04 21:45:06 [PY] 2024-09-04 21:45:06,897 INFO: [77] Obtained session ID: d3otqw0dgqtvn3ruwrknp23z
+
+2024-09-04 21:45:06 [PY] 2024-09-04 21:45:06,937 INFO: [39] Obtained session ID: vd0gy5mgcexu2c4345vkq0zi
+
+2024-09-04 21:45:06 [PY] 2024-09-04 21:45:06,939 INFO: [11] Obtained session ID: jywr4p2duoyxwp55ngse0000
+
+2024-09-04 21:45:07 [PY] 2024-09-04 21:45:07,017 INFO: [77] Playing video for session ID: d3otqw0dgqtvn3ruwrknp23z
+
+2024-09-04 21:45:07 [PY] 2024-09-04 21:45:07,017 INFO: [PREPARE] Session ready for camera 77
+
+2024-09-04 21:45:07 [PY] 2024-09-04 21:45:07,055 INFO: [39] Playing video for session ID: vd0gy5mgcexu2c4345vkq0zi
+
+2024-09-04 21:45:07 [PY] 2024-09-04 21:45:07,055 INFO: [PREPARE] Session ready for camera 39
+
+2024-09-04 21:45:07 [PY] 2024-09-04 21:45:07,060 INFO: [11] Playing video for session ID: jywr4p2duoyxwp55ngse0000
+
+2024-09-04 21:45:07 [PY] 2024-09-04 21:45:07,060 INFO: [PREPARE] Session ready for camera 11
+
+2024-09-04 21:45:07 [PY] 2024-09-04 21:45:07,104 INFO: [83] Obtained session ID: 1rwufv20xysvxad5chrgttin
+
+2024-09-04 21:45:07 [PY] 2024-09-04 21:45:07,179 INFO: [572] Obtained session ID: rujbcgtbxlr0ncil0hr52h3c
+
+2024-09-04 21:45:07 [PY] 2024-09-04 21:45:07,195 INFO: [83] Playing video for session ID: 1rwufv20xysvxad5chrgttin
+2024-09-04 21:45:07,196 INFO: [PREPARE] Session ready for camera 83
+
+2024-09-04 21:45:07 [PY] 2024-09-04 21:45:07,207 INFO: [7] Obtained session ID: fgzs3ijqjpnpr4znii5wz50l
+
+2024-09-04 21:45:07 [PY] 2024-09-04 21:45:07,250 INFO: [572] Playing video for session ID: rujbcgtbxlr0ncil0hr52h3c
+
+2024-09-04 21:45:07 [PY] 2024-09-04 21:45:07,251 INFO: [PREPARE] Session ready for camera 572
+
+2024-09-04 21:45:07 [PY] 2024-09-04 21:45:07,272 INFO: [7] Playing video for session ID: fgzs3ijqjpnpr4znii5wz50l
+
+2024-09-04 21:45:07 [PY] 2024-09-04 21:45:07,272 INFO: [PREPARE] Session ready for camera 7
+2024-09-04 21:45:07,272 INFO: [INFO] Total number of scraped CCTVs: 6
+
+2024-09-04 21:45:07 [PY] 2024-09-04 21:45:07,273 INFO: [INFO] Successfully processed 6 CCTVs out of 6.
+2024-09-04 21:45:07,274 INFO: [INFO] JSON data has been written to ./cctvSessionTemp/cctv_sessions_2024-09-04_21-45-07.json
+2024-09-04 21:45:07,274 INFO: [INFO] All session IDs have been successfully prepared and saved.
+
+
+
+2024-09-04 21:45:07 Python script exited with code 0
+2024-09-04 21:45:07 
+
+############### End of Python Script ###############
+
+
+2024-09-04 21:45:07 Latest JSON file: cctv_sessions_2024-09-04_21-45-07.json
+2024-09-04 21:45:07 Loaded CCTV sessions: {"7":"fgzs3ijqjpnpr4znii5wz50l","11":"jywr4p2duoyxwp55ngse0000","39":"vd0gy5mgcexu2c4345vkq0zi","77":"d3otqw0dgqtvn3ruwrknp23z","83":"1rwufv20xysvxad5chrgttin","572":"rujbcgtbxlr0ncil0hr52h3c"}
+2024-09-04 21:45:07 All sessions initialized.
