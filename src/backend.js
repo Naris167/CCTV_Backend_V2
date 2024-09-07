@@ -1,33 +1,40 @@
 // bun run ./src/backend.js
 
-
 import { spawn } from 'child_process';
 import fs from 'fs';
 import path from 'path';
-import { format } from 'date-fns'; // Library for date formatting
+import { format } from 'date-fns';
 import { schedule } from 'node-cron';
+import os from 'os';
 
-// Define the server port
+// Server port
 const PORT = 8001;
 
-// Dictionary to store session IDs for each CCTV ID
+// CCTV Set up
 let cctvSessions = {};
+const jsonDirectory = './cctvSessionTemp/';
+const jsonMaxAgeHours = 24;
+const updateCamInfoPath = './src/updateCamInfo.py';
+const cctvDistance = 170;
 
-// Function to set up logging to both console and a file
-function setupLogger({ logToConsole = true, logToFile = true } = {}) {
-  const logDirectory = './logs';
-  const timestamp = format(new Date(), 'yyyy-MM-dd_HH-mm-ss');
-  const logFile = path.join(logDirectory, `backend_${timestamp}.log`);
+// Set up logging
+let currentLogFile;
+let logStream;
+let logStartTime;
+const logToConsole = true;
+const logToFile = true;
+const logRotationIntervalHours = 1;
+const logMaxAgeHours = 24;
+const logDirectory = './logs';
 
-  if (logToFile && !fs.existsSync(logDirectory)) {
-    fs.mkdirSync(logDirectory, { recursive: true });
-  }
+function setupLogger() {
+  setupNewLogFile(logDirectory);
 
-  const logStream = logToFile ? fs.createWriteStream(logFile, { flags: 'a' }) : null;
   const originalLog = console.log;
   const originalError = console.error;
 
   console.log = function (...args) {
+    checkLogRotationAndCleanup();
     if (logToConsole) {
       originalLog.apply(console, args);
     }
@@ -37,6 +44,7 @@ function setupLogger({ logToConsole = true, logToFile = true } = {}) {
   };
 
   console.error = function (...args) {
+    checkLogRotationAndCleanup();
     if (logToConsole) {
       originalError.apply(console, args);
     }
@@ -45,23 +53,65 @@ function setupLogger({ logToConsole = true, logToFile = true } = {}) {
     }
   };
 
+  function setupNewLogFile(directory) {
+    const timestamp = format(new Date(), 'yyyy-MM-dd_HH-mm-ss');
+    currentLogFile = path.join(directory, `backend_${timestamp}.log`);
+    if (!fs.existsSync(directory)) {
+      fs.mkdirSync(directory, { recursive: true });
+    }
+    if (logStream) logStream.end();
+    logStream = fs.createWriteStream(currentLogFile, { flags: 'a' });
+    logStartTime = Date.now();
+  }
+
   function getFormattedLog(args) {
     const timestamp = format(new Date(), 'yyyy-MM-dd HH:mm:ss');
     return `${timestamp} ${args.map(arg => (typeof arg === 'string' ? arg : JSON.stringify(arg))).join(' ')}`;
   }
 }
 
+function checkLogRotationAndCleanup(directory = logDirectory, rotationIntervalMilliseconds = logRotationIntervalHours * 60 * 60 * 1000, logMaxAgeMilliseconds = logMaxAgeHours * 60 * 60 * 1000) {
+  checkLogRotation(directory, rotationIntervalMilliseconds);
+  deleteOldLogFiles(directory, logMaxAgeMilliseconds);
+}
+
+function checkLogRotation(directory, rotationInterval) {
+  const now = Date.now();
+  const elapsed = now - logStartTime;
+
+  if (elapsed >= rotationInterval) {
+    setupNewLogFile(directory);
+  }
+}
+
+function deleteOldLogFiles(directory, deletionInterval) {
+  const files = fs.readdirSync(directory);
+  const now = Date.now();
+
+  files.forEach(file => {
+    const filePath = path.join(directory, file);
+    const stats = fs.statSync(filePath);
+    const fileAge = now - stats.mtimeMs;
+
+    if (fileAge > deletionInterval) {
+      fs.unlinkSync(filePath);
+    }
+  });
+}
+
 // Initialize logging setup
 setupLogger();
+
+
 
 // Function to start the Python script and get CCTV IDs
 function startUpdate() {
   return new Promise((resolve, reject) => {
     console.log(`\n############### Starting Python Script ###############\n\n`);
-    const pythonProcess = spawn('python', ['./src/updateCamInfo.py', '170']);
+    const pythonProcess = spawn('python', [updateCamInfoPath, cctvDistance]);
 
     pythonProcess.stdout.on('data', (data) => {
-      console.log('Python script output:', data.toString());
+      console.log('[PY]', data.toString());
     });
 
     pythonProcess.stderr.on('data', (data) => {
@@ -82,7 +132,7 @@ function startUpdate() {
 }
 
 // Function to find and read the latest JSON file from the directory
-function getLatestJsonFile(directory) {
+function getLatestJsonFile(directory = jsonDirectory) {
   const files = fs.readdirSync(directory);
   const jsonFiles = files.filter(file => file.startsWith('cctv_sessions_') && file.endsWith('.json'));
 
@@ -101,10 +151,30 @@ function getLatestJsonFile(directory) {
   return path.join(directory, latestFile);
 }
 
+// Function to delete JSON files older than a specified number of hours
+function deleteOldJsonFiles(directory = jsonDirectory, maxAgeHours = jsonMaxAgeHours) {
+  const files = fs.readdirSync(directory);
+  const now = Date.now();
+  const maxAgeMilliseconds = maxAgeHours * 60 * 60 * 1000; // Convert hours to milliseconds
+
+  files.forEach(file => {
+    if (file.startsWith('cctv_sessions_') && file.endsWith('.json')) {
+      const filePath = path.join(directory, file);
+      const fileAge = now - fs.statSync(filePath).mtime.getTime();
+
+      if (fileAge > maxAgeMilliseconds) {
+        fs.unlinkSync(filePath);
+        console.log(`Deleted old JSON file: ${file}`);
+      }
+    }
+  });
+}
+
 // Function to load JSON data from the latest file into cctvSessions
 function loadCctvSessions() {
-  const directory = './cctvSessionTemp/';
-  const latestFile = getLatestJsonFile(directory);
+  deleteOldJsonFiles(); // Call the function to delete old files
+
+  const latestFile = getLatestJsonFile();
 
   if (latestFile) {
     try {
@@ -122,6 +192,7 @@ async function initializeSessions() {
   console.log('Initializing CCTV sessions...');
 
   try {
+    checkLogRotationAndCleanup();  // Check log rotation and cleanup before the operation
     await startUpdate();
     loadCctvSessions();
     console.log('All sessions initialized.');
@@ -155,14 +226,22 @@ Bun.serve({
   },
 });
 
-// Log server start and initialize sessions
-console.log(`Server running on http://127.0.0.1:${PORT}`);
+// Log all IP addresses where the server is running
+const interfaces = os.networkInterfaces();
+Object.keys(interfaces).forEach((interfaceName) => {
+  interfaces[interfaceName].forEach((iface) => {
+    if ('IPv4' === iface.family && !iface.internal) {
+      console.log(`Server running on http://${iface.address}:${PORT}`);
+    }
+  });
+});
+
 initializeSessions().then(() => {
   console.log('Session initialization completed.');
 });
 
 // Schedule the initializeSessions function to run every 15 minutes
-schedule('*/15 * * * *', async () => {
+schedule('*/20 * * * *', async () => {
   console.log('Running scheduled session initialization...');
   await initializeSessions();
 });

@@ -25,6 +25,10 @@ cctv_fail = []  # Stores CCTV ID that are failed to prepare
 cctv_sessions_lock = rwlock.RWLockFair()
 cctv_fail_lock = rwlock.RWLockFair()
 
+# Define the logger globally
+logger = logging.getLogger("my_logger")
+logger.setLevel(logging.DEBUG)
+
 '''
 1. Get the cctv list from BMATraffic (return a list of tuple)
 2. Get the cctv list (ID and coordinate) from DB
@@ -36,7 +40,14 @@ cctv_fail_lock = rwlock.RWLockFair()
 
 
 # Logging configuration
+import logging
+import os
+import sys
+from datetime import datetime
+
 def log_setup():
+    global logger  # Make sure to refer to the global logger
+    
     # Define the directory and log file path
     log_directory = "./logs"
     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
@@ -46,17 +57,49 @@ def log_setup():
     if not os.path.exists(log_directory):
         os.makedirs(log_directory, exist_ok=True)
 
-    # Setup logging configuration
-    logging.basicConfig(
-        level=logging.INFO,
-        format='%(asctime)s %(levelname)s: %(message)s',
-        handlers=[
-            logging.FileHandler(log_filename),
-            logging.StreamHandler()
-        ]
-    )
+    # Create handlers
+    stdout_handler = logging.StreamHandler(sys.stdout)
+    stderr_handler = logging.StreamHandler(sys.stderr)
+    file_handler = logging.FileHandler(log_filename)
 
-    logging.info("[MAIN] Logging setup completed!")
+    # Define custom filters for handlers
+    class InfoFilter(logging.Filter):
+        def filter(self, record):
+            return record.levelno < logging.WARNING  # Only log below WARNING (INFO and below)
+
+    class WarningErrorFilter(logging.Filter):
+        def filter(self, record):
+            return record.levelno >= logging.WARNING  # Only log WARNING and above
+
+    # Set levels for handlers
+    stdout_handler.setLevel(logging.DEBUG)  # All levels go to stdout but filtered
+    stderr_handler.setLevel(logging.WARNING)  # WARNING and above go to stderr
+    file_handler.setLevel(logging.DEBUG)  # All levels go to file
+
+    # Assign filters to handlers
+    stdout_handler.addFilter(InfoFilter())
+    stderr_handler.addFilter(WarningErrorFilter())
+
+    # Create formatters and add them to handlers
+    formatter = logging.Formatter('%(asctime)s %(levelname)s: %(message)s')
+    stdout_handler.setFormatter(formatter)
+    stderr_handler.setFormatter(formatter)
+    file_handler.setFormatter(formatter)
+
+    # Clear existing handlers, if any, to prevent duplication
+    if logger.hasHandlers():
+        logger.handlers.clear()
+
+    # Add handlers to the logger
+    logger.addHandler(stdout_handler)
+    logger.addHandler(stderr_handler)
+    logger.addHandler(file_handler)
+
+    # Avoid duplicate logs
+    logger.propagate = False
+
+    # Example log message to confirm setup
+    logger.info("[MAIN] Logging setup completed!")
 
 
 def save_cctv_sessions_to_file(cctv_sessions):
@@ -73,7 +116,7 @@ def save_cctv_sessions_to_file(cctv_sessions):
     with open(filename, "w") as json_file:
         json.dump(cctv_sessions, json_file, indent=4)
     
-    logging.info(f"[INFO] JSON data has been written to {filename}")
+    logger.info(f"[INFO] JSON data has been written to {filename}")
 
 
 '''
@@ -113,8 +156,31 @@ def retrieve_camLocation():
         return cam_locations
     
     except Exception as e:
-        logging.error(f"[DATABASE] Error: {e}")
+        logger.error(f"[DATABASE] Error: {e}")
         return []
+
+def retrieve_onlineCam():
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+
+        # Query to retrieve Cam_ID where is_online is TRUE
+        query = "SELECT Cam_ID FROM cctv_locations_preprocessing WHERE is_online = TRUE"
+        cur.execute(query)
+
+        # Fetch all records from the result and return the list of Cam_ID
+        cam_list = [row[0] for row in cur.fetchall()]
+
+        # Close the cursor and connection
+        cur.close()
+        conn.close()
+
+        return cam_list
+    
+    except Exception as e:
+        logger.error(f"[DATABASE] Error: {e}")
+        return []
+
 
 def add_camRecord(camera_data):
     #Accept list of tuple
@@ -153,12 +219,12 @@ def add_camRecord(camera_data):
         conn.close()
 
         if new_cameras_count > 0:
-            logging.info(f"[DATABASE] {new_cameras_count} new cameras were added to the database.\n")
+            logger.info(f"[DATABASE] {new_cameras_count} new cameras were added to the database.\n")
         else:
-            logging.info("[DATABASE] No new cameras were added to the database.\n")
+            logger.info("[DATABASE] No new cameras were added to the database.\n")
 
     except Exception as e:
-        logging.error(f"[DATABASE] An error occurred: {e}\n")
+        logger.error(f"[DATABASE] An error occurred: {e}\n")
 
 def update_camCluster(clustered_data):
     try:
@@ -174,48 +240,46 @@ def update_camCluster(clustered_data):
             
             # Check if the update was successful or not
             if cur.rowcount == 0:
-                logging.info(f"[DATABASE] Cannot update cluster for Cam[{cam_id}]. Record not found in the database.")
+                logger.info(f"[DATABASE] Cannot update cluster for Cam[{cam_id}]. Record not found in the database.")
 
         # Commit the changes to the database
         conn.commit()
 
     except Exception as e:
-        logging.error(f"[DATABASE] Error: {e}")
+        logger.error(f"[DATABASE] Error: {e}")
     finally:
         # Close the cursor and connection
         cur.close()
         conn.close()
 
-def update_isCamOnline(cctv_ids):
+def update_isCamOnline(cctv_ids, is_online=True):
     try:
         conn = get_db_connection()  # Assuming get_db_connection() returns a connection object
         cur = conn.cursor()
 
-        # First, update all cctvs to is_online = False
-        cur.execute("""
-            UPDATE cctv_locations_preprocessing
-            SET is_online = FALSE
-        """)
+        # Determine the value to set for is_online based on the input parameter
+        is_online_value = 'TRUE' if is_online else 'FALSE'
 
-        # Then, update the cctvs in the provided list to is_online = True
+        # Update the specified CCTV IDs to the given is_online value
         if cctv_ids:
-            # Cast the array elements to integers
             cur.execute("""
                 UPDATE cctv_locations_preprocessing
-                SET is_online = TRUE
+                SET is_online = %s
                 WHERE cam_id = ANY(%s::int[])
-            """, (cctv_ids,))
+            """, (is_online_value, cctv_ids))
+            
+            logger.info(f"[DATABASE] Updated is_online to {is_online_value} for CCTV IDs: {cctv_ids}")
 
         # Commit the changes to the database
-        logging.info(f"[DATABASE] Updated is_online to TRUE for CCTV IDs: {cctv_ids}")
         conn.commit()
 
     except Exception as e:
-        logging.error(f"[DATABASE] Error: {e}")
+        logger.error(f"[DATABASE] Error: {e}")
     finally:
         # Close the cursor and connection
         cur.close()
         conn.close()
+
 
 
 '''
@@ -254,7 +318,7 @@ def meters_to_degrees(meters):
 
 
 def cluster(meters, all_cams_coordinate):
-    logging.info(f"[CLUSTER] Distance set to {meters} meters")
+    logger.info(f"[CLUSTER] Distance set to {meters} meters")
 
     # Extract Cam_IDs and coordinates (Latitude, Longitude)
     cam_ids = [cam[0] for cam in all_cams_coordinate]
@@ -262,7 +326,7 @@ def cluster(meters, all_cams_coordinate):
     coordinates = np.array([(float(cam[1]), float(cam[2])) for cam in all_cams_coordinate], dtype=float)
 
     # Perform clustering using DBSCAN
-    logging.info("[CLUSTER] Starting clustering...")
+    logger.info("[CLUSTER] Starting clustering...")
     dbscan = DBSCAN(eps=float(meters_to_degrees(meters)), min_samples=1, metric='haversine')
     dbscan.fit(np.radians(coordinates))  # Convert degrees to radians for haversine metric
 
@@ -272,7 +336,7 @@ def cluster(meters, all_cams_coordinate):
     # Combine Cam_ID, cluster group, latitude, and longitude into a list of tuples
     clustered_data = [(cam_id, int(label), float(lat), float(lon)) for cam_id, label, (lat, lon) in zip(cam_ids, labels, coordinates)]
 
-    logging.info("[CLUSTER] Clustering completed!\n")
+    logger.info("[CLUSTER] Clustering completed!\n")
     return clustered_data
 
 
@@ -282,48 +346,59 @@ THIS IS CCTV UPDATE
 
 
 # Get online CCTV list from BMA Traffic
-def retrieve_camInfo_BMA(url = BASE_URL):
-    #Return list of tuple
-    logging.info(f"[UPDATER] Getting camera list from {url}")
-    response = requests.get(url)
-    response.raise_for_status()  # Check if the request was successful
+def retrieve_camInfo_BMA(url=BASE_URL, max_retries=5, delay=5, timeout=120):
+    # Return list of tuple or False if failed
+    logger.info(f"[UPDATER] Getting camera list from {url}")
+    retries = 0
+    while retries < max_retries:
+        try:
+            response = requests.get(url, timeout=timeout)
+            response.raise_for_status()  # Check if the request was successful
 
-    # Find the var locations = [...] data
-    data_pattern = re.compile(r"var locations = (\[.*?\]);", re.DOTALL)
-    match = data_pattern.search(response.text)
+            # Find the var locations = [...] data
+            data_pattern = re.compile(r"var locations = (\[.*?\]);", re.DOTALL)
+            match = data_pattern.search(response.text)
 
-    if match:
-        data_string = match.group(1)
-        
-        # Convert the JavaScript array to a Python list using ast.literal_eval
-        json_data = ast.literal_eval(data_string)
+            if match:
+                data_string = match.group(1)
+                
+                # Convert the JavaScript array to a Python list using ast.literal_eval
+                json_data = ast.literal_eval(data_string)
 
-        # Process data to use the specified column names
-        processed_data = []
-        for item in json_data:
-            code_match = re.match(r'^[A-Z0-9\-]+', item[1])
-            code = code_match.group(0) if code_match else ''
-            cam_name = item[1][len(code):].strip() if code else item[1]
-            
-            processed_item = (
-                item[0],       # ID
-                code or None,          # Code
-                cam_name or None,      # Cam_Name
-                item[2] or None,       # Cam_Name_e
-                item[3] or None,       # Cam_Location
-                item[4] or None,       # Cam_Direction
-                item[5] or None,       # Latitude
-                item[6] or None,       # Longitude
-                item[7] or None,       # IP
-                item[8] or None        # Icon
-            )
-            processed_data.append(processed_item)
-        
-        logging.info("[UPDATER] Successfully getting camera list.")
-        return processed_data
-    else:
-        logging.info("[UPDATER] Error getting camera list.")
-        return
+                # Process data to use the specified column names
+                processed_data = []
+                for item in json_data:
+                    code_match = re.match(r'^[A-Z0-9\-]+', item[1])
+                    code = code_match.group(0) if code_match else ''
+                    cam_name = item[1][len(code):].strip() if code else item[1]
+                    
+                    processed_item = (
+                        item[0],       # ID
+                        code or None,          # Code
+                        cam_name or None,      # Cam_Name
+                        item[2] or None,       # Cam_Name_e
+                        item[3] or None,       # Cam_Location
+                        item[4] or None,       # Cam_Direction
+                        item[5] or None,       # Latitude
+                        item[6] or None,       # Longitude
+                        item[7] or None,       # IP
+                        item[8] or None        # Icon
+                    )
+                    processed_data.append(processed_item)
+
+                logger.info("[UPDATER] Successfully retrieved camera list.")
+                return processed_data
+            else:
+                logger.error("[UPDATER] Error parsing camera list.")
+                return False
+
+        except requests.RequestException as e:
+            retries += 1
+            logger.warning(f"[UPDATER] Error retrieving camera list: {e}. Retry {retries}/{max_retries}...")
+            time.sleep(delay)  # Wait before retrying
+
+    logger.error(f"[UPDATER] Failed to retrieve camera list after {max_retries} retries.")
+    return False
 
 # Compare both online_cam and db_cam.
 # Take any duplicate record out from online_cam.
@@ -361,38 +436,47 @@ def startUpdate(meters):
     onlineCamInfo = retrieve_camInfo_BMA()
     dbCamCoordinate = retrieve_camLocation()
     global CCTV_LIST
-    CCTV_LIST = sorted([t[0] for t in onlineCamInfo], key=int)
-    new_cams_info, all_cams_coordinate = filter_new_and_all_cams(onlineCamInfo, dbCamCoordinate)
 
-    update_isCamOnline(CCTV_LIST)
+    if onlineCamInfo:
+        CCTV_LIST = sorted([t[0] for t in onlineCamInfo], key=int)
+        new_cams_info, all_cams_coordinate = filter_new_and_all_cams(onlineCamInfo, dbCamCoordinate)
 
-    # Check if there are any new cameras
-    # In case there are no new cctv, remove `not` here to manually run the script
-    if not new_cams_info:
-        logging.info("[UPDATER] No new cameras found.")
+        update_isCamOnline(CCTV_LIST, True)
+
+        # Check if there are any new cameras
+        # In case there are no new cctv, remove `not` here to manually run the script
+        if not new_cams_info:
+            logger.info("[UPDATER] No new cameras found.")
+        else:
+            logger.info(f"[UPDATER] {len(new_cams_info)} new cameras are found.")
+
+            new_cam_ids = [cam[0] for cam in new_cams_info]
+            logger.info(f"[UPDATER] New camera IDs: {', '.join(map(str, new_cam_ids))}\n")
+
+            logger.info(f"[UPDATER] Initializing clustering...")
+            
+            # Cluster the cameras based on their coordinates (DBSCAN)
+            clustered_cams_coordinate = cluster(meters, all_cams_coordinate)
+
+            # Insert new camera records into the database
+            add_camRecord(new_cams_info)
+            logger.info(f"[UPDATER] Added {len(new_cams_info)} new cameras to the database.")
+
+            # Update the camera clusters in the database
+            update_camCluster(clustered_cams_coordinate)
+            logger.info(f"[UPDATER] Updated camera clusters in the database.\n")
+
+        logger.info(f"[UPDATER] {len(CCTV_LIST)} cameras are online out of {len(all_cams_coordinate)}")
+        logger.info(f"[UPDATER] {len(all_cams_coordinate) - len(CCTV_LIST)} cameras are offline\n")
+        logger.info(f"[UPDATER] Starting scraping!\n")
+
     else:
-        logging.info(f"[UPDATER] {len(new_cams_info)} cameras are found.")
+        logger.warning("[UPDATER] Skipping camera update due to failure in retrieving the camera list.")
+        logger.warning("[UPDATER] Attempting to retrieve session IDs for cameras from the database.")
+        CCTV_LIST = sorted(retrieve_onlineCam(), key=int)
+        logger.info(f"[UPDATER] Scraping process initiated for {len(CCTV_LIST)} cameras.")
 
-        new_cam_ids = [cam[0] for cam in new_cams_info]
-        logging.info(f"[UPDATER] New camera IDs: {', '.join(map(str, new_cam_ids))}\n")
-
-        logging.info(f"[UPDATER] Initializing clustering...")
         
-        # Cluster the cameras based on their coordinates (DBSCAN)
-        clustered_cams_coordinate = cluster(meters, all_cams_coordinate)
-
-        # Insert new camera records into the database
-        add_camRecord(new_cams_info)
-        logging.info(f"[UPDATER] Added {len(new_cams_info)} new cameras to the database.")
-
-        # Update the camera clusters in the database
-        update_camCluster(clustered_cams_coordinate)
-        logging.info(f"[UPDATER] Updated camera clusters in the database.\n")
-
-    logging.info(f"[UPDATER] {len(CCTV_LIST)} cameras are online out of {len(all_cams_coordinate)}")
-    logging.info(f"[UPDATER] {len(all_cams_coordinate) - len(CCTV_LIST)} cameras are offline\n")
-    logging.info(f"[UPDATER] Starting scraping!\n")
-
     # return online_camera_ids
     # print(online_camera_ids)
 #     for element in online_camera_ids:
@@ -409,25 +493,25 @@ def get_cctv_session_id(url: str, camera_id: int, max_retries=3, delay=5):
     retries = 0
     while retries < max_retries:
         try:
-            response = requests.get(url, timeout=60)
+            response = requests.get(url, timeout=120)
             response.raise_for_status()
             cookie = response.headers.get('Set-Cookie', '')
 
             # Check if cookie is present
             if cookie:
                 session_id = cookie.split("=")[1].split(";")[0]
-                logging.info(f"[{camera_id}] Obtained session ID: {session_id}")
+                logger.info(f"[{camera_id}] Obtained session ID: {session_id}")
                 return session_id
             else:
-                logging.warning(f"[{camera_id}] No session cookie found. Retry {retries + 1}/{max_retries}...")
+                logger.warning(f"[{camera_id}] No session cookie found. Retry {retries + 1}/{max_retries}...")
         except requests.RequestException as e:
-            logging.error(f"[{camera_id}] Error getting session ID: {e}. Retry {retries + 1}/{max_retries}...")
+            logger.error(f"[{camera_id}] Error getting session ID: {e}. Retry {retries + 1}/{max_retries}...")
         
         retries += 1
         time.sleep(delay)
 
-    logging.error(f"[{camera_id}] Failed to obtain session ID after {max_retries} retries.")
-    return None
+    logger.error(f"[{camera_id}] Failed to obtain session ID after {max_retries} retries.")
+    return False
 
 # Function to play video for a camera session
 def play_video(camera_id: int, session_id: str, max_retries=3, delay=5):
@@ -440,16 +524,16 @@ def play_video(camera_id: int, session_id: str, max_retries=3, delay=5):
                 'Cookie': f'ASP.NET_SessionId={session_id};',
                 'Priority': 'u=4'
             }
-            response = requests.get(url, headers=headers, timeout=60)  # Added timeout
+            response = requests.get(url, headers=headers, timeout=120)  # Added timeout
             response.raise_for_status()
-            logging.info(f"[{camera_id}] Playing video for session ID: {session_id}")
+            logger.info(f"[{camera_id}] Playing video for session ID: {session_id}")
             return True  # Exit function if successful
         except requests.RequestException as e:
             retries += 1
-            logging.error(f"[{camera_id}] Error playing video: {e}. Retry {retries}/{max_retries}...")
+            logger.warning(f"[{camera_id}] Error playing video: {e}. Retry {retries}/{max_retries}...")
             time.sleep(delay)  # Wait before retrying
-    logging.error(f"[{camera_id}] Failed to play video after {max_retries} retries.")
-    return None
+    logger.error(f"[{camera_id}] Failed to play video after {max_retries} retries.")
+    return False
 
 
 # Function to refresh the session ID for a camera
@@ -463,21 +547,21 @@ def refresh_session_id(camera_id):
                 cctv_sessions[camera_id] = session_id
             # logging.info(f"Session ready for camera {camera_id}")
         else:
-            with cctv_fail_lock.gen_wlock:
+            with cctv_fail_lock.gen_wlock():
                 cctv_fail.append(camera_id)
-            logging.warning(f"Added failed camera (play video) to list: {camera_id}")
+            logger.warning(f"Added failed camera (play video) to list: {camera_id}")
     else:
-        with cctv_fail_lock.gen_wlock:
+        with cctv_fail_lock.gen_wlock():
             cctv_fail.append(camera_id)
-        logging.warning(f"Added failed camera (session ID) to list: {camera_id}")
+        logger.warning(f"Added failed camera (session ID) to list: {camera_id}")
 
 
 # Function to prepare session for a camera
 def prepare_session(camera_id, semaphore):
-    logging.info(f"[PREPARE] Preparing session for camera {camera_id}")
+    logger.info(f"[PREPARE] Preparing session for camera {camera_id}")
     try:
         refresh_session_id(camera_id)
-        logging.info(f"[PREPARE] Session ready for camera {camera_id}")
+        logger.info(f"[PREPARE] Session ready for camera {camera_id}")
     finally:
         semaphore.release()
 
@@ -489,7 +573,7 @@ def prepare_session_workers():
     max_workers = 80
     semaphore = Semaphore(max_workers)
 
-    logging.info("[INFO] Initializing all session IDs.")
+    logger.info("[INFO] Initializing all session IDs.")
     for camera_id in CCTV_LIST:
         semaphore.acquire()
         thread = threading.Thread(target=prepare_session, args=(camera_id, semaphore))
@@ -512,8 +596,8 @@ if __name__ == "__main__":
             sys.exit(1)
 
     log_setup()
-    CCTV_LIST = ['7', '11', '39', '77', '83', '572']
-    # startUpdate(param)
+    # CCTV_LIST = ['7', '11', '39', '77', '83', '572']
+    startUpdate(param)
     prepare_session_workers()
 
     # Alternatively, if you want to keep prepare_session_workers in a separate thread,
@@ -530,16 +614,16 @@ if __name__ == "__main__":
     processed_cctv = len(sorted_cctv_sessions)
     fail_to_processed_cctv = len(cctv_fail)
 
-    logging.info(f"[INFO] Total number of scraped CCTVs: {scraped_cctv}")
-    logging.info(f"[INFO] Successfully processed {processed_cctv} CCTVs out of {processed_cctv + fail_to_processed_cctv}.")
+    logger.info(f"\n\n[INFO] Total number of scraped CCTVs: {scraped_cctv}")
+    logger.info(f"[INFO] Successfully processed {processed_cctv} CCTVs out of {processed_cctv + fail_to_processed_cctv}.")
 
     if cctv_fail:
-        logging.info(f"[INFO] The following CCTV IDs failed to prepare and will not be available: {cctv_fail}")
-        update_isCamOnline(cctv_fail)
+        logger.info(f"[INFO] The following CCTV IDs failed to prepare and will not be available: {cctv_fail}")
+        update_isCamOnline(cctv_fail, False)
 
     if scraped_cctv != (processed_cctv + fail_to_processed_cctv):
-        logging.warning(f"[INFO] number of items in `CCTV_LIST` does not equal to the sum of `processed_cctv` and `fail_to_processed_cctv`")
+        logger.warning(f"[INFO] number of items in `CCTV_LIST` does not equal to the sum of `processed_cctv` and `fail_to_processed_cctv`")
 
     save_cctv_sessions_to_file(sorted_cctv_sessions)
 
-    logging.info("[INFO] All session IDs have been successfully prepared and saved.\n\n")
+    logger.info("[INFO] All session IDs have been successfully prepared and saved.\n\n")
