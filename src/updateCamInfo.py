@@ -10,19 +10,17 @@ from dotenv import load_dotenv
 import threading
 from threading import Semaphore
 import logging
-from datetime import datetime
+from datetime import datetime, timedelta
 import numpy as np
 from sklearn.cluster import DBSCAN
 from readerwriterlock import rwlock
 from decimal import Decimal, getcontext
 
 BASE_URL = "http://www.bmatraffic.com"
-CCTV_LIST = None
-cctv_sessions = {}  # Stores CCTV ID and session ID pairs
-cctv_fail = []  # Stores CCTV ID that are failed to prepare
+jsonDirectory = './cctvSessionTemp/'
 
 # Locks for thread safety
-cctv_sessions_lock = rwlock.RWLockFair()
+alive_sessions_lock = rwlock.RWLockFair()
 cctv_fail_lock = rwlock.RWLockFair()
 
 # Define the logger globally
@@ -38,13 +36,11 @@ logger.setLevel(logging.DEBUG)
 6. Return the list of online cam
 '''
 
+def sort_key(item):
+    # Split the string into parts with numeric and non-numeric components
+    return [int(part) if part.isdigit() else part for part in re.split('([0-9]+)', item)]
 
 # Logging configuration
-import logging
-import os
-import sys
-from datetime import datetime
-
 def log_setup():
     global logger  # Make sure to refer to the global logger
     
@@ -101,8 +97,22 @@ def log_setup():
     # Example log message to confirm setup
     logger.info("[MAIN] Logging setup completed!")
 
+def initialize():
+    if len(sys.argv) > 1:  # Check if an argument is provided
+        param = int(sys.argv[1])  # Get the parameter from command-line arguments
+    else:
+        try:
+            param = int(input("Please enter the parameter number: "))
+        except ValueError:
+            print("Invalid input. Please enter a valid number.", file=sys.stderr)
+            sys.exit(1)
+    log_setup()
 
-def save_cctv_sessions_to_file(cctv_sessions):
+    return param
+
+
+
+def save_alive_session_to_file(cctv_sessions: dict, latestRefreshTime: str, latest_update_time: str):
     # Define the directory and file path
     directory = "./cctvSessionTemp"
     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
@@ -112,10 +122,17 @@ def save_cctv_sessions_to_file(cctv_sessions):
     if not os.path.exists(directory):
         os.makedirs(directory, exist_ok=True)
 
-    # Write the dictionary to a JSON file
+    # Prepare the data structure for the JSON file
+    data_to_save = {
+        "latestRefreshTime": latestRefreshTime,
+        "latestUpdateTime": latest_update_time,
+        "cctvSessions": cctv_sessions
+    }
+
+    # Write the data to a JSON file
     with open(filename, "w") as json_file:
-        json.dump(cctv_sessions, json_file, indent=4)
-    
+        json.dump(data_to_save, json_file, indent=4)
+
     logger.info(f"[INFO] JSON data has been written to {filename}")
 
 
@@ -124,7 +141,7 @@ THIS IS DATABASE CONNECTION
 '''
 
 
-load_dotenv('.env.prod')
+load_dotenv('.env.local')
 
 def get_db_connection():
     return psycopg2.connect(
@@ -148,15 +165,18 @@ def retrieve_camLocation():
 
         # Fetch all results
         cam_locations = cur.fetchall()  # This will return a list of tuples
+        sorted_cam_locations = sorted(cam_locations, key=lambda x: sort_key(x[0]))
+        print("from database test")
+        print(sorted_cam_locations)
 
         # Close the cursor and connection
         cur.close()
         conn.close()
 
-        return cam_locations
+        return sorted_cam_locations
     
     except Exception as e:
-        logger.error(f"[DATABASE] Error: {e}")
+        logger.error(f"[DATABASE] Error retrieve_camLocation: {e}")
         return []
 
 def retrieve_onlineCam():
@@ -169,20 +189,21 @@ def retrieve_onlineCam():
         cur.execute(query)
 
         # Fetch all records from the result and return the list of Cam_ID
-        cam_list = [row[0] for row in cur.fetchall()]
+        cam_list = [str(row[0]) for row in cur.fetchall()]
+        sorted_cam_list = sorted(cam_list, key=sort_key)
 
         # Close the cursor and connection
         cur.close()
         conn.close()
 
-        return cam_list
+        return sorted_cam_list
     
     except Exception as e:
-        logger.error(f"[DATABASE] Error: {e}")
+        logger.error(f"[DATABASE] Error retrieve_onlineCam: {e}")
         return []
 
 
-def add_camRecord(camera_data):
+def add_camRecord(camera_data: list):
     #Accept list of tuple
     try:
         conn = get_db_connection()
@@ -224,9 +245,9 @@ def add_camRecord(camera_data):
             logger.info("[DATABASE] No new cameras were added to the database.\n")
 
     except Exception as e:
-        logger.error(f"[DATABASE] An error occurred: {e}\n")
+        logger.error(f"[DATABASE] An error occurred add_camRecord: {e}\n")
 
-def update_camCluster(clustered_data):
+def update_camCluster(clustered_data: list):
     try:
         conn = get_db_connection()
         cur = conn.cursor()
@@ -246,39 +267,58 @@ def update_camCluster(clustered_data):
         conn.commit()
 
     except Exception as e:
-        logger.error(f"[DATABASE] Error: {e}")
+        logger.error(f"[DATABASE] Error update_camCluster: {e}")
     finally:
         # Close the cursor and connection
         cur.close()
         conn.close()
 
-def update_isCamOnline(cctv_ids, is_online=True):
+def update_isCamOnline(cctv_data):
     try:
         conn = get_db_connection()  # Assuming get_db_connection() returns a connection object
         cur = conn.cursor()
 
-        # Determine the value to set for is_online based on the input parameter
-        is_online_value = 'TRUE' if is_online else 'FALSE'
+        if isinstance(cctv_data, dict):
+            # Case 1: If cctv_data is a dictionary with CCTV IDs as keys and TRUE/FALSE as values
+            for cam_id, is_online in cctv_data.items():
+                is_online_value = 'TRUE' if is_online else 'FALSE'
+                cur.execute("""
+                    UPDATE cctv_locations_preprocessing
+                    SET is_online = %s
+                    WHERE cam_id = %s
+                """, (is_online_value, cam_id))
+                logger.info(f"[DATABASE] Updated is_online to {is_online_value} for CCTV ID: {cam_id}")
 
-        # Update the specified CCTV IDs to the given is_online value
-        if cctv_ids:
+        elif isinstance(cctv_data, list):
+            # Case 2: If cctv_data is a list, set the records in the list to TRUE, and others to FALSE
+
+            # First, update all CCTV IDs to FALSE
             cur.execute("""
                 UPDATE cctv_locations_preprocessing
-                SET is_online = %s
-                WHERE cam_id = ANY(%s::int[])
-            """, (is_online_value, cctv_ids))
-            
-            logger.info(f"[DATABASE] Updated is_online to {is_online_value} for CCTV IDs: {cctv_ids}")
+                SET is_online = 'FALSE'
+            """)
+            logger.info(f"[DATABASE] Updated is_online to FALSE for all CCTV IDs")
+
+            if cctv_data:
+                # Set all CCTV IDs in the list to TRUE
+                cur.execute("""
+                    UPDATE cctv_locations_preprocessing
+                    SET is_online = 'TRUE'
+                    WHERE cam_id = ANY(%s::text[])
+                """, (cctv_data,))
+                logger.info(f"[DATABASE] Updated is_online to TRUE for CCTV IDs: {cctv_data}")
 
         # Commit the changes to the database
         conn.commit()
 
     except Exception as e:
-        logger.error(f"[DATABASE] Error: {e}")
+        logger.error(f"[DATABASE] Error update_isCamOnline: {e}")
     finally:
         # Close the cursor and connection
         cur.close()
         conn.close()
+
+
 
 
 
@@ -290,7 +330,7 @@ THIS IS CCTV CLUSTERING
 # Set the precision for Decimal calculations
 getcontext().prec = 100  # Set precision high enough for required accuracy
 
-def meters_to_degrees(meters):
+def meters_to_degrees(meters: int):
     """
     This fomular is calculated using brute force method
     It convert a distance in meters to degrees using a known conversion factor.
@@ -317,7 +357,7 @@ def meters_to_degrees(meters):
     return degrees
 
 
-def cluster(meters, all_cams_coordinate):
+def cluster(meters: int, all_cams_coordinate: list):
     logger.info(f"[CLUSTER] Distance set to {meters} meters")
 
     # Extract Cam_IDs and coordinates (Latitude, Longitude)
@@ -405,7 +445,7 @@ def retrieve_camInfo_BMA(url=BASE_URL, max_retries=5, delay=5, timeout=120):
 # Return a list of tuple of new CCTV only
 # Return a list of tuple of all CCTV (ID, Latitude, and Longitude)
 
-def filter_new_and_all_cams(online_cam_info, db_cam_coordinate):
+def filter_new_and_all_cams(online_cam_info: list, db_cam_coordinate: list):
     # Extract Cam_IDs from db_cam_coordinate (record from DB in a list of tuple) to create a set for quick lookup
     db_cam_ids = set(str(cam[0]) for cam in db_cam_coordinate)
 
@@ -432,16 +472,16 @@ def filter_new_and_all_cams(online_cam_info, db_cam_coordinate):
 
     return new_cam_info, all_cams_coordinate
 
-def startUpdate(meters):
+def startUpdate(meters: int):
     onlineCamInfo = retrieve_camInfo_BMA()
     dbCamCoordinate = retrieve_camLocation()
-    global CCTV_LIST
+    cctv_list = []
 
     if onlineCamInfo:
-        CCTV_LIST = sorted([t[0] for t in onlineCamInfo], key=int)
+        cctv_list = sorted([str(t[0]) for t in onlineCamInfo], key=sort_key)
         new_cams_info, all_cams_coordinate = filter_new_and_all_cams(onlineCamInfo, dbCamCoordinate)
 
-        update_isCamOnline(CCTV_LIST, True)
+        update_isCamOnline(cctv_list)
 
         # Check if there are any new cameras
         # In case there are no new cctv, remove `not` here to manually run the script
@@ -466,21 +506,71 @@ def startUpdate(meters):
             update_camCluster(clustered_cams_coordinate)
             logger.info(f"[UPDATER] Updated camera clusters in the database.\n")
 
-        logger.info(f"[UPDATER] {len(CCTV_LIST)} cameras are online out of {len(all_cams_coordinate)}")
-        logger.info(f"[UPDATER] {len(all_cams_coordinate) - len(CCTV_LIST)} cameras are offline\n")
+        logger.info(f"[UPDATER] {len(cctv_list)} cameras are online out of {len(all_cams_coordinate)}")
+        logger.info(f"[UPDATER] {len(all_cams_coordinate) - len(cctv_list)} cameras are offline\n")
         logger.info(f"[UPDATER] Starting scraping!\n")
+        return cctv_list
 
     else:
         logger.warning("[UPDATER] Skipping camera update due to failure in retrieving the camera list.")
         logger.warning("[UPDATER] Attempting to retrieve session IDs for cameras from the database.")
-        CCTV_LIST = sorted(retrieve_onlineCam(), key=int)
-        logger.info(f"[UPDATER] Scraping process initiated for {len(CCTV_LIST)} cameras.")
+        cctv_list = retrieve_onlineCam()
+        logger.info(f"[UPDATER] Scraping process initiated for {len(cctv_list)} cameras.")
+        return cctv_list
 
-        
-    # return online_camera_ids
-    # print(online_camera_ids)
-#     for element in online_camera_ids:
-#         print(f'Element: {element}, Type: {type(element)}')
+
+'''
+JSON
+'''
+
+
+jsonDirectory = './cctvSessionTemp/'
+
+def load_latest_cctv_sessions_from_json():
+    loaded_JSON_latestRefreshTime = ""
+    loaded_JSON_latestUpdateTime = ""
+    loaded_JSON_cctvSessions = {}
+
+    # Check if the directory exists
+    if not os.path.exists(jsonDirectory):
+        return False
+
+    # Get a list of all JSON files in the directory
+    json_files = [f for f in os.listdir(jsonDirectory) if f.endswith('.json')]
+    if not json_files:
+        return False
+
+    # Sort files by modified time to get the latest one
+    json_files = sorted(json_files, key=lambda x: os.path.getmtime(os.path.join(jsonDirectory, x)), reverse=True)
+    latest_file = os.path.join(jsonDirectory, json_files[0])
+
+    try:
+        # Load the data from the latest JSON file
+        with open(latest_file, 'r') as json_file:
+            data = json.load(json_file)
+
+        # Extract the required values from the JSON
+        loaded_JSON_latestRefreshTime = data.get("latestRefreshTime", "")
+        loaded_JSON_latestUpdateTime = data.get("latestUpdateTime", "")
+        loaded_JSON_cctvSessions = data.get("cctvSessions", {})
+
+        # Return the loaded values
+        return loaded_JSON_latestRefreshTime, loaded_JSON_latestUpdateTime, loaded_JSON_cctvSessions
+
+    except (json.JSONDecodeError, FileNotFoundError, OSError) as e:
+        print(f"Error loading the JSON file: {e}")
+        return False
+
+# Example usage
+# result = load_latest_cctv_sessions_from_json()
+# if result:
+#     loaded_JSON_latestRefreshTime, loaded_JSON_latestUpdateTime, loaded_JSON_cctvSessions = result
+#     print(f"Latest Refresh Time: {loaded_JSON_latestRefreshTime}")
+#     print(f"Latest Update Time: {loaded_JSON_latestUpdateTime}")
+#     print(f"CCTV Sessions: {loaded_JSON_cctvSessions}")
+# else:
+#     print("No JSON file found or failed to load.")
+
 
 
 '''
@@ -489,7 +579,7 @@ PREPARING CCTV SESSIONS
 
 
 # Function to get a session ID for a specific camera
-def get_cctv_session_id(url: str, camera_id: int, max_retries=3, delay=5):
+def get_cctv_session_id(url: str, camera_id: str, max_retries=3, delay=5):
     retries = 0
     while retries < max_retries:
         try:
@@ -514,16 +604,16 @@ def get_cctv_session_id(url: str, camera_id: int, max_retries=3, delay=5):
     return False
 
 # Function to play video for a camera session
-def play_video(camera_id: int, session_id: str, max_retries=3, delay=5):
+def play_video(camera_id: str, session_id: str, max_retries=3, delay=5):
+    url = f"{BASE_URL}/PlayVideo.aspx?ID={camera_id}"
+    headers = {
+        'Referer': f'{BASE_URL}/index.aspx',
+        'Cookie': f'ASP.NET_SessionId={session_id};',
+        'Priority': 'u=4'
+    }
     retries = 0
     while retries < max_retries:
         try:
-            url = f"{BASE_URL}/PlayVideo.aspx?ID={camera_id}"
-            headers = {
-                'Referer': f'{BASE_URL}/index.aspx',
-                'Cookie': f'ASP.NET_SessionId={session_id};',
-                'Priority': 'u=4'
-            }
             response = requests.get(url, headers=headers, timeout=120)  # Added timeout
             response.raise_for_status()
             logger.info(f"[{camera_id}] Playing video for session ID: {session_id}")
@@ -531,20 +621,41 @@ def play_video(camera_id: int, session_id: str, max_retries=3, delay=5):
         except requests.RequestException as e:
             retries += 1
             logger.warning(f"[{camera_id}] Error playing video: {e}. Retry {retries}/{max_retries}...")
-            time.sleep(delay)  # Wait before retrying
+            time.sleep(delay)
     logger.error(f"[{camera_id}] Failed to play video after {max_retries} retries.")
+    return False
+
+# Get image stream from BMA Traffic
+# This function will only be use for refreshing the session ID
+def get_image(session_id: str, camera_id: int, max_retries=3, delay=5):
+    url = f"{BASE_URL}/show.aspx"
+    headers = {
+        'Cookie': f'ASP.NET_SessionId={session_id};',
+        'Priority': 'u=4'
+    }
+    retries = 0
+    while retries < max_retries:
+        try:
+            response = requests.get(url, headers=headers, timeout=120)
+            response.raise_for_status()
+            logging.info(f"[{camera_id}] Image retrieved for session ID: {session_id}")
+            return response.content
+        except requests.RequestException as e:
+            logging.error(f"[{camera_id}] Error getting image: {e}. Retry {retries}/{max_retries}...")
+            time.sleep(delay)
+    logger.error(f"[{camera_id}] Failed to get image after {max_retries} retries.")  
     return False
 
 
 # Function to refresh the session ID for a camera
-def refresh_session_id(camera_id):
+def create_session_id(camera_id: str, alive_session: dict, cctv_fail: list):
     # logging.info(f"Preparing session for camera {camera_id}")
     session_id = get_cctv_session_id(BASE_URL, camera_id)
     if session_id:
         success = play_video(camera_id, session_id)
         if success:
-            with cctv_sessions_lock.gen_wlock():
-                cctv_sessions[camera_id] = session_id
+            with alive_sessions_lock.gen_wlock():
+                alive_session[camera_id] = session_id
             # logging.info(f"Session ready for camera {camera_id}")
         else:
             with cctv_fail_lock.gen_wlock():
@@ -557,10 +668,10 @@ def refresh_session_id(camera_id):
 
 
 # Function to prepare session for a camera
-def prepare_session(camera_id, semaphore):
+def prepare_session(camera_id: str, semaphore, alive_session: dict, cctv_fail: list):
     logger.info(f"[PREPARE] Preparing session for camera {camera_id}")
     try:
-        refresh_session_id(camera_id)
+        create_session_id(camera_id, alive_session, cctv_fail)
         logger.info(f"[PREPARE] Session ready for camera {camera_id}")
     finally:
         semaphore.release()
@@ -568,15 +679,94 @@ def prepare_session(camera_id, semaphore):
 
 
 # Function to manage workers for session preparation
-def prepare_session_workers():
+def prepare_session_workers(cctv_list: list, alive_session: dict = None):
     threads = []
     max_workers = 80
     semaphore = Semaphore(max_workers)
 
+    cctv_fail = []
+    if alive_session is None:
+        alive_session = {}
+
     logger.info("[INFO] Initializing all session IDs.")
-    for camera_id in CCTV_LIST:
+    for camera_id in cctv_list:
         semaphore.acquire()
-        thread = threading.Thread(target=prepare_session, args=(camera_id, semaphore))
+        thread = threading.Thread(target=prepare_session, args=(camera_id, semaphore, alive_session, cctv_fail))
+        thread.start()
+        threads.append(thread)
+
+    # Wait for all threads to finish
+    for thread in threads:
+        thread.join()
+
+    alive_session = dict(sorted(alive_session.items(), key=lambda x: sort_key(x[0])))
+    cctv_fail = sorted(cctv_fail, key=sort_key)
+
+    return alive_session, cctv_fail
+
+
+def startGettingNewSessionID(camDistance: int):
+    # cctv_list = ['7', '11', '39', '77', '83', '572']
+    cctv_list = startUpdate(camDistance)
+    alive_session, cctv_fail = prepare_session_workers(cctv_list)
+    scraped_cctv = len(cctv_list)
+    processed_cctv = len(alive_session)
+    fail_to_processed_cctv = len(cctv_fail)
+    current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    logger.info(f"\n\n[INFO] Total number of scraped CCTVs: {scraped_cctv}")
+    logger.info(f"[INFO] Successfully processed {processed_cctv} CCTVs out of {processed_cctv + fail_to_processed_cctv}.")
+
+    if cctv_fail:
+        logger.info(f"[INFO] The following CCTV IDs failed to prepare and will not be available: {cctv_fail}")
+        update_isCamOnline(cctv_fail)
+
+    if scraped_cctv != (processed_cctv + fail_to_processed_cctv):
+        logger.warning(f"[INFO] number of items in `CCTV_LIST` does not equal to the sum of `processed_cctv` and `fail_to_processed_cctv`")
+
+    
+    save_alive_session_to_file(alive_session, current_time, current_time)
+
+    logger.info("[INFO] All session IDs have been successfully prepared and saved.\n\n")
+
+
+def process_session(camera_id, session_id, semaphore, alive_session, offline_session):
+    try:
+        retries = 0
+        success = False
+
+        while retries < 5:  # Retry up to 5 times
+            image_data = get_image(session_id, camera_id, max_retries=3, delay=5)
+
+            if image_data and len(image_data) > 5120:  # If image size > 5120 bytes
+                alive_session[camera_id] = session_id
+                logger.info(f"[{camera_id}] Success: Image size is greater than 5120 bytes.")
+                success = True
+                break  # No need to retry if successful
+            else:
+                retries += 1
+                logger.warning(f"[{camera_id}] Failed to retrieve valid image. Attempt {retries}/5.")
+
+        if not success:
+            offline_session.append(camera_id)
+            logger.error(f"[{camera_id}] Marked as offline after {retries} failed attempts.")
+
+    finally:
+        semaphore.release()  # Release the semaphore once the thread finishes
+
+def process_cctv_sessions_multithreaded(loaded_JSON_cctvSessions: dict):
+    threads = []
+    max_workers = 80
+    semaphore = Semaphore(max_workers)
+    
+    alive_session = {}
+    offline_session = []
+
+    logger.info("[INFO] Starting session validation workers.")
+    
+    for camera_id, session_id in loaded_JSON_cctvSessions.items():
+        semaphore.acquire()  # Acquire a slot for this thread
+        thread = threading.Thread(target=process_session, args=(camera_id, session_id, semaphore, alive_session, offline_session))
         thread.start()
         threads.append(thread)
 
@@ -585,45 +775,108 @@ def prepare_session_workers():
         thread.join()
 
 
-if __name__ == "__main__":
-    if len(sys.argv) > 1:  # Check if an argument is provided
-        param = int(sys.argv[1])  # Get the parameter from command-line arguments
-    else:
-        try:
-            param = int(input("Please enter the parameter number: "))
-        except ValueError:
-            print("Invalid input. Please enter a valid number.", file=sys.stderr)
-            sys.exit(1)
+    offline_session = sorted(offline_session, key=sort_key)
+    alive_session = dict(sorted(alive_session.items(), key=lambda x: sort_key(x[0])))
 
-    log_setup()
-    # CCTV_LIST = ['7', '11', '39', '77', '83', '572']
-    startUpdate(param)
-    prepare_session_workers()
+    alive_count = len(alive_session)
+    offline_count = len(offline_session)
 
-    # Alternatively, if you want to keep prepare_session_workers in a separate thread,
-    # make sure to join it so the script waits for it to finish:
-    # worker_thread = threading.Thread(target=prepare_session_workers)
-    # worker_thread.start()
-    # worker_thread.join()
+    logger.info(f"[INFO] All sessions are validated.")
+    logger.info(f"[INFO] Total alive sessions: {alive_count}")
+    logger.info(f"[INFO] Alive CCTV IDs: {list(alive_session.keys())}")
     
-    # Sort the `cctv_sessions` dictionary by keys (camera IDs) in ascending order
-    sorted_cctv_sessions = dict(sorted(cctv_sessions.items(), key=lambda item: int(item[0])))
+    logger.info(f"[INFO] Total offline sessions: {offline_count}")
+    logger.info(f"[INFO] Offline CCTV IDs: {offline_session}")
+    return alive_session, offline_session
 
 
-    scraped_cctv = len(CCTV_LIST)
-    processed_cctv = len(sorted_cctv_sessions)
-    fail_to_processed_cctv = len(cctv_fail)
+def update_cctv_sessions(alive_session: dict, offline_session: list):
+    # Call retrieve_camInfo_BMA() to get a list of tuples or False if failed
+    result = retrieve_camInfo_BMA()
 
-    logger.info(f"\n\n[INFO] Total number of scraped CCTVs: {scraped_cctv}")
-    logger.info(f"[INFO] Successfully processed {processed_cctv} CCTVs out of {processed_cctv + fail_to_processed_cctv}.")
+    if not result:
+        logger.error("[ERROR] Failed to retrieve camera info from BMA.")
+        return False, None
 
-    if cctv_fail:
-        logger.info(f"[INFO] The following CCTV IDs failed to prepare and will not be available: {cctv_fail}")
-        update_isCamOnline(cctv_fail, False)
+    # Extract the cam IDs from the result (assuming the tuple format is like (cam_id, some_other_data))
+    current_cctv = [cam[0] for cam in result]  # List of current cam IDs
 
-    if scraped_cctv != (processed_cctv + fail_to_processed_cctv):
-        logger.warning(f"[INFO] number of items in `CCTV_LIST` does not equal to the sum of `processed_cctv` and `fail_to_processed_cctv`")
+    # Initialize get_session list to store new cam IDs that need sessions
+    get_session = []
 
-    save_cctv_sessions_to_file(sorted_cctv_sessions)
+    # Step 1: Check for cam IDs in current_cctv that are not present in alive_session
+    for cam_id in current_cctv:
+        if cam_id not in alive_session:
+            get_session.append(cam_id)
 
-    logger.info("[INFO] All session IDs have been successfully prepared and saved.\n\n")
+    # Step 2: Check for cam IDs in alive_session that are not present in current_cctv
+    for cam_id in alive_session.keys():
+        if cam_id not in current_cctv:
+            offline_session.append(cam_id)
+            logger.warning(f"[WARNING] CCTV ID {cam_id} is alive but not found in current cam list. Marking as offline for edge case.")
+
+    # Log results
+    logger.info(f"[INFO] Total current cam IDs: {len(current_cctv)}")
+    logger.info(f"[INFO] Total cams that need new sessions: {len(get_session)}")
+    logger.info(f"[INFO] New session needed for cam IDs: {sorted(get_session, key=sort_key)}")
+    logger.info(f"[INFO] Total offline cams (including edge cases): {len(offline_session)}")
+    logger.info(f"[INFO] Offline CCTV IDs: {offline_session}")
+
+    return get_session, offline_session
+
+
+def startRefreshingSessionID(loaded_JSON_cctvSessions: dict, loaded_JSON_latestUpdateTime: str):
+    alive_session, offline_session = process_cctv_sessions_multithreaded(loaded_JSON_cctvSessions)
+    get_session, offline_session = update_cctv_sessions(alive_session, offline_session)
+    alive_session, cctv_fail = prepare_session_workers(get_session, alive_session)
+    update_isCamOnline(list(alive_session.keys()))
+    current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    save_alive_session_to_file(alive_session, current_time, loaded_JSON_latestUpdateTime)
+
+
+def readableTime(total_seconds: int):
+    hours = total_seconds // 3600
+    minutes = (total_seconds % 3600) // 60
+    seconds = total_seconds % 60
+
+    if hours > 0:
+        readable_diff = f"{hours} hours, {minutes} minutes, and {seconds} seconds ago"
+    elif minutes > 0:
+        readable_diff = f"{minutes} minutes and {seconds} seconds ago"
+    else:
+        readable_diff = f"{seconds} seconds ago"
+    
+    return readable_diff
+
+
+
+if __name__ == "__main__":
+    camDistance = initialize()
+    result = load_latest_cctv_sessions_from_json()
+
+    if result:
+        loaded_JSON_latestRefreshTime, loaded_JSON_latestUpdateTime, loaded_JSON_cctvSessions = result
+        logger.info(f"[INFO] Latest Refresh Time: {loaded_JSON_latestRefreshTime}")
+        logger.info(f"[INFO] Latest Update Time: {loaded_JSON_latestUpdateTime}")
+        logger.info(f"[INFO] CCTV Sessions: {loaded_JSON_cctvSessions}")
+
+        current_time = datetime.now()
+        loaded_JSON_latestUpdateTime_dt = datetime.strptime(loaded_JSON_latestUpdateTime, "%Y-%m-%d %H:%M:%S")
+        timeDiff = current_time - loaded_JSON_latestUpdateTime_dt
+
+        total_seconds = int(timeDiff.total_seconds())
+        readable_diff = readableTime(total_seconds)
+
+        if timeDiff < timedelta(hours=3):
+            logger.info(f"[INFO] The latest update occurred at {loaded_JSON_latestUpdateTime}, which was {readable_diff}.")
+            startRefreshingSessionID(loaded_JSON_cctvSessions, loaded_JSON_latestUpdateTime)
+
+        else:
+            logger.info("[INFO] The latest update time is older than 3 hours.")
+            startGettingNewSessionID(camDistance)
+    else:
+        logger.warning("[INFO] No JSON file found or failed to load. Fetching all session ID")
+        startGettingNewSessionID(camDistance)
+        
+
+    

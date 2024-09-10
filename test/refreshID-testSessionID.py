@@ -92,7 +92,7 @@ def play_video(camera_id: int, session_id: str) -> bool:
         'Priority': 'u=4'
     }
     try:
-        response = requests.get(url, headers=headers)
+        response = requests.get(url, headers=headers, timeout=120)
         response.raise_for_status()
         time.sleep(5)  # Wait for 5 seconds before fetching the image
         return True
@@ -161,10 +161,22 @@ def test_session_id_duration(camera_id: int, save_path: str, test_interval: int 
 
     # Play video every 18 minutes
     while time.time() < end_time:
-        # Play video every 18 minutes
-        if not play_video(camera_id, session_id):
-            logging.error("Failed to play video")
-            break
+        MAX_RETRIES = 3
+        retries = 0
+        while retries < MAX_RETRIES:
+            if play_video(camera_id, session_id):
+                logging.info("Played video successfully to keep session alive.")
+                break  # Exit the loop if successful
+            else:
+                retries += 1
+                logging.error(f"Failed to play video. Retry {retries}/{MAX_RETRIES}")
+                time.sleep(10)  # Wait a bit before retrying, for example, 10 seconds
+
+        # If the maximum number of retries is reached
+        if retries == MAX_RETRIES:
+            logging.error("Failed to play video after maximum retries.")
+            break  # Exit the main loop or handle as needed
+
         
         logging.info("Played video to keep session alive.")
         

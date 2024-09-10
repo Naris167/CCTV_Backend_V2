@@ -12,6 +12,8 @@ const PORT = 8001;
 
 // CCTV Set up
 let cctvSessions = {};
+let latestUpdateTime;
+let latestRefreshTime;
 const jsonDirectory = './cctvSessionTemp/';
 const jsonMaxAgeHours = 24;
 const updateCamInfoPath = './src/updateCamInfo.py';
@@ -170,7 +172,7 @@ function deleteOldJsonFiles(directory = jsonDirectory, maxAgeHours = jsonMaxAgeH
   });
 }
 
-// Function to load JSON data from the latest file into cctvSessions
+// Function to load JSON data from the latest file into cctvSessions, latestUpdateTime, and latestRefreshTime
 function loadCctvSessions() {
   deleteOldJsonFiles(); // Call the function to delete old files
 
@@ -179,8 +181,19 @@ function loadCctvSessions() {
   if (latestFile) {
     try {
       const data = fs.readFileSync(latestFile, 'utf8');
-      cctvSessions = JSON.parse(data);
+      const jsonData = JSON.parse(data);
+
+      // Extract values from JSON data
+      cctvSessions = jsonData.cctvSessions;
+      latestUpdateTime = jsonData.latestUpdateTime;
+      latestRefreshTime = jsonData.latestRefreshTime;
+
       console.log('Loaded CCTV sessions:', cctvSessions);
+      console.log('Latest update time:', latestUpdateTime);
+      console.log('Latest refresh time:', latestRefreshTime);
+
+      // You can use cctvSessions, latestUpdateTime, and latestRefreshTime as needed in your code
+
     } catch (error) {
       console.error('Failed to read or parse the latest JSON file:', error);
     }
@@ -241,7 +254,7 @@ initializeSessions().then(() => {
 });
 
 // Schedule the initializeSessions function to run every 15 minutes
-schedule('*/20 * * * *', async () => {
+schedule('*/15 * * * *', async () => {
   console.log('Running scheduled session initialization...');
   await initializeSessions();
 });

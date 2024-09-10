@@ -39,3 +39,96 @@ Conclusion:
 4. Session ID will be expried after 20 minutes if there is no play video or getting image.
 5. Test it to see if playing video every 18 minutes for whole day can still keep sesssion ID alive or not.
 '''
+
+**Edit the script to use multithread to get all the information from every source at the start to reduce time consume**
+
+**When using `update_isCamOnline()` must use it twice to update record to online and offline. It could be a better idea to make it accept dictionary that have list of cctv as key and TRUE FALSE as a value. So this function will be call once**
+
+To store data
+`loaded_JSON_cctvSessions` dictionary
+`current_cctv` list
+`offline_session` list
+`cctv_fail` list (cam id that falied to get session ID)
+
+
+`alive_session` dictionary (put in new JSON)
+`get_session` list (get session again)
+string `loaded_JSON_latestRefreshTime`
+string `loaded_JSON_latestUpdateTime`
+
+
+This script will be call every 15 minutes 
+1. Get the distance in meters for clustering
+2. `log_setup()` is called
+3. Load data from latest JSON. If there is no JSON available, skip this entire steps and start with `startUpdate(param)`.
+    1. Load data from JSON
+        - "latestRefreshTime" load to string `loaded_JSON_latestRefreshTime`,
+        - "latestUpdateTime" load to string `loaded_JSON_latestUpdateTime`,
+        - "cctvSessions" load to `loaded_JSON_cctvSessions` dictionary
+    2. If string `loaded_JSON_latestUpdateTime` is older than 3 hours compare with time now skip this entire steps and start with `startUpdate(param)`.
+    3. Call `get_images` using information in `loaded_JSON_cctvSessions` dictionary.
+        1. If images size is more than 5120 bytes, this is success. Add cctv ID and its session ID to `alive_session` dictionary.
+        2. If images size is less than 5120 bytes, this is failed. Retry 5 times. If still failed, add cctv ID to `offline_session` list.
+    4. Call `retrieve_camInfo_BMA()` and put the cam ID in `current_cctv` list.
+        1. For any item (cam ID) in `current_cctv` list that is not present in `alive_session` dictionary, add it to `get_session` list.
+        2. For any item in `alive_session` dictionary that is not present in `current_cctv` list, add it to `offline_session` list. (This step is redundant since offline cctv will result in image size less than 5120 bytes, but just do it for edge case and display a warning log as this is unusal)
+    5. If `get_session` list is not empty, put it into a `create_session_id()`. This function will get and play video for new session ID. Then it will store session ID in the `alive_session` dictionary. Any falied to prepare session ID will be store in `cctv_fail` list
+    6. Extract key from `alive_session` dictionary to list, then put that list into `update_isCamOnline()` function.
+    7. call `save_cctv_sessions_to_file` to write data to new JSON
+        - "latestRefreshTime" use time now
+        - "latestUpdateTime" use time from string `loaded_JSON_latestUpdateTime`
+        - "cctvSessions" use data from `alive_session` dictionary
+    8. END OF SCRIPT
+
+2. If there is no JSON available or string `loaded_JSON_latestUpdateTime` is older than 3 hours, the following process will be run.
+    1. Get the distance in meters for clustering
+    2. `log_setup()` is called
+    3. `startUpdate(param)` is called
+        1. `retrieve_camInfo_BMA()` is called 
+            1. Fetch and extract online cam from URL
+            2. max_retries=5, delay=5, timeout=120
+            3. Return `list of tuple` or `False` if failed
+        2. `retrieve_camLocation()` is called
+            1. Get `Cam_ID`, `Latitude`, `Longitude` from DB
+        3. if result from `retrieve_camInfo_BMA()` is not empty
+            1. Sort the result and put in `CCTV_LIST`
+            2. `filter_new_and_all_cams(onlineCamInfo, dbCamCoordinate)` is called
+                1. Any `onlineCamInfo` that is not found in `dbCamCoordinate` will be added to `new_cam_info`
+                2. `onlineCamInfo` will also be added to `all_cams_coordinate`
+            3. Any cam ID in `CCTV_LIST` will be update to online
+            4. if `new_cam_info` is not empty
+                1. Start clustering
+                2. `add_camRecord(new_cams_info)` is called to add cam info to DB
+                3. `update_camCluster(clustered_cams_coordinate)` is called to update cam group in DB
+                4. else `logger.info("[UPDATER] No new cameras found.")`
+            5. else `retrieve_onlineCam()` is called and result is put in `CCTV_LIST`
+    4. `prepare_session_workers()` is called to distribute workers
+        1. `get_cctv_session_id()` is called
+        2. `play_video()` is called
+        3. if the process success, add session ID to dictionary with cam ID as a key
+        4. if the process failed, add cam ID to `cctv_fail` list
+    5. Sort and display `cctv_sessions` dictionary
+    6. If `cctv_fail` list is not empty, update those cam ID to offline
+    7. Error check if scraped cctv ID list is not equal to processed_cctv and fail to processed cctv.
+    8. Call `save_cctv_sessions_to_file` to write data to new JSON
+        - "latestRefreshTime" use time now
+        - "latestUpdateTime" use time from string `loaded_JSON_latestUpdateTime`
+        - "cctvSessions" use data from `cctv_sessions` dictionary
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
