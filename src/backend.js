@@ -16,7 +16,7 @@ let latestUpdateTime;
 let latestRefreshTime;
 const jsonDirectory = './cctvSessionTemp/';
 const jsonMaxAgeHours = 24;
-const updateCamInfoPath = './src/updateCamInfo.py';
+const updateCamInfoPath = './src/main.py';
 const cctvDistance = 170;
 
 // Set up logging
@@ -254,7 +254,7 @@ initializeSessions().then(() => {
 });
 
 // Schedule the initializeSessions function to run every 15 minutes
-schedule('*/15 * * * *', async () => {
+schedule('*/10 * * * *', async () => {
   console.log('Running scheduled session initialization...');
   await initializeSessions();
 });

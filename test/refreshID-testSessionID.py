@@ -169,7 +169,7 @@ def test_session_id_duration(camera_id: int, save_path: str, test_interval: int 
                 break  # Exit the loop if successful
             else:
                 retries += 1
-                logging.error(f"Failed to play video. Retry {retries}/{MAX_RETRIES}")
+                logging.error(f"Failed to play video. Retry {retries + 1}/{MAX_RETRIES}")
                 time.sleep(10)  # Wait a bit before retrying, for example, 10 seconds
 
         # If the maximum number of retries is reached
@@ -215,4 +215,10 @@ def test_session_id_duration(camera_id: int, save_path: str, test_interval: int 
 camera_id = 7  # Replace with the actual camera ID
 save_path = "./images/"  # Replace with your desired save directory
 os.makedirs(save_path, exist_ok=True)  # Ensure the image directory exists
-test_session_id_duration(camera_id, save_path)
+# test_session_id_duration(camera_id, save_path)
+
+sessionID = get_session_id(BASE_URL)
+play_video(1661, sessionID)
+get_image(1661, sessionID, save_path)
+
+
