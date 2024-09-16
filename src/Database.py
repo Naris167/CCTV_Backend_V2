@@ -17,6 +17,26 @@ def get_db_connection():
         port=os.getenv('DB_PORT')
     )
 
+def retrieve_camID() -> List[str]:
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+
+        query = "SELECT Cam_ID FROM cctv_locations_preprocessing"
+        cur.execute(query)
+
+        cam_ids = [row[0] for row in cur.fetchall()]  # This will return a list of cam_ids
+        sorted_cam_ids = sorted(cam_ids, key=sort_key)
+
+        cur.close()
+        conn.close()
+
+        return sorted_cam_ids
+    
+    except Exception as e:
+        logger.error(f"[DATABASE] Error retrieve_camID: {e}")
+        return []
+
 def retrieve_camLocation() -> List[Tuple[str, float, float]]:
     try:
         conn = get_db_connection()
@@ -113,7 +133,7 @@ def add_camRecord(
     except Exception as e:
         logger.error(f"[DATABASE] An error occurred add_camRecord: {e}\n")
 
-def update_camCluster(clustered_data: List[Tuple[str, int, float, float]]):
+def update_camCluster(clustered_data: List[Tuple[str, str, float, float]]):
     try:
         conn = get_db_connection()
         cur = conn.cursor()
@@ -123,7 +143,7 @@ def update_camCluster(clustered_data: List[Tuple[str, int, float, float]]):
 
         # Iterate over each camera in the clustered_data
         for cam_id, label, lat, lon in clustered_data:
-            cur.execute(update_query, (str(label), int(cam_id)))
+            cur.execute(update_query, (str(label), str(cam_id)))
             
             # Check if the update was successful or not
             if cur.rowcount == 0:

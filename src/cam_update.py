@@ -108,10 +108,10 @@ def filter_new_and_all_cams(
 def update_cctv_database(meters: int) -> List[str]:
     onlineCamInfo = retrieve_camInfo_BMA()
     dbCamCoordinate = retrieve_camLocation()
-    cctv_list = []
+    cctv_list_all_db = [cam_id for cam_id, lat, long in dbCamCoordinate]
 
     if onlineCamInfo:
-        cctv_list = sorted([str(t[0]) for t in onlineCamInfo], key=sort_key)
+        cctv_list_bma = sorted([str(t[0]) for t in onlineCamInfo], key=sort_key)
         new_cams_info, all_cams_coordinate = filter_new_and_all_cams(onlineCamInfo, dbCamCoordinate)
 
         # Check if there are any new cameras
@@ -122,7 +122,7 @@ def update_cctv_database(meters: int) -> List[str]:
             logger.info(f"[UPDATER] {len(new_cams_info)} new cameras are found.")
 
             new_cam_ids = [cam[0] for cam in new_cams_info]
-            logger.info(f"[UPDATER] New camera IDs: {', '.join(map(str, new_cam_ids))}\n")
+            logger.info(f"[UPDATER] New camera IDs: {new_cam_ids}\n")
 
             logger.info(f"[UPDATER] Initializing clustering...")
             
@@ -137,17 +137,20 @@ def update_cctv_database(meters: int) -> List[str]:
             update_camCluster(clustered_cams_coordinate)
             logger.info(f"[UPDATER] Updated camera clusters in the database.\n")
 
-        logger.info(f"[UPDATER] {len(cctv_list)} cameras are online out of {len(all_cams_coordinate)}")
-        logger.info(f"[UPDATER] {len(all_cams_coordinate) - len(cctv_list)} cameras are offline\n")
-        logger.info(f"[UPDATER] Starting scraping!\n")
-        return cctv_list
+        # This logic might have to be modify as this is just the online cam, not the working cam.
+        logger.info(f"[UPDATER] {len(cctv_list_bma)} cameras are online out of {len(all_cams_coordinate)}")
+        logger.info(f"[UPDATER] {len(all_cams_coordinate) - len(cctv_list_bma)} cameras are offline\n")
+        logger.info(f"[UPDATER] Please note that this number only represents the list of CCTVs from BMA Traffic."
+                    f" It does not guarantee their operational status. A CCTV may be online but not functioning correctly. Further checks will be initiated.\n")
+        # logger.info(f"[UPDATER] Starting scraping!\n")
+        return cctv_list_bma, cctv_list_all_db
 
     else:
         logger.warning("[UPDATER] Skipping camera update due to failure in retrieving the camera list from BMA Traffic.")
         logger.warning("[UPDATER] Attempting to retrieve CCTV IDs from the database.")
-        cctv_list = retrieve_onlineCam()
-        if not cctv_list:
+        cctv_list_online_db = retrieve_onlineCam()
+        if not cctv_list_online_db and cctv_list_all_db:
             logger.warning("[UPDATER] Failed to retrieve CCTV IDs from the database.")
-            return cctv_list
-        logger.info(f"[UPDATER] Scraping process initiated for {len(cctv_list)} cameras.")
-        return cctv_list
+            return cctv_list_online_db, cctv_list_all_db
+        logger.info(f"[UPDATER] Scraping process initiated for {len(cctv_list_online_db)} cameras.")
+        return cctv_list_online_db, cctv_list_all_db

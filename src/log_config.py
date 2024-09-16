@@ -3,6 +3,24 @@ import os
 import sys
 from datetime import datetime
 
+# Custom StreamHandler to support encoding
+class CustomStreamHandler(logging.StreamHandler):
+    def __init__(self, stream=None, encoding=None):
+        super().__init__(stream)
+        self.encoding = encoding
+
+    def emit(self, record):
+        try:
+            msg = self.format(record)
+            stream = self.stream
+            if hasattr(self, 'encoding') and self.encoding:
+                stream.write(msg.encode(self.encoding, errors="replace").decode(self.encoding) + self.terminator)
+            else:
+                stream.write(msg + self.terminator)
+            self.flush()
+        except Exception:
+            self.handleError(record)
+
 # Initialize and configure the logger
 logger = logging.getLogger("my_logger")
 logger.setLevel(logging.DEBUG)
@@ -20,10 +38,10 @@ def log_setup():
     if not os.path.exists(log_directory):
         os.makedirs(log_directory, exist_ok=True)
 
-    # Create handlers
-    stdout_handler = logging.StreamHandler(sys.stdout)
-    stderr_handler = logging.StreamHandler(sys.stderr)
-    file_handler = logging.FileHandler(log_filename)
+    # Create handlers with UTF-8 encoding
+    stdout_handler = CustomStreamHandler(sys.stdout, encoding='utf-8')
+    stderr_handler = CustomStreamHandler(sys.stderr, encoding='utf-8')
+    file_handler = logging.FileHandler(log_filename, encoding='utf-8')
 
     # Define custom filters for handlers
     class InfoFilter(logging.Filter):

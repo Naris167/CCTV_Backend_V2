@@ -122,13 +122,33 @@ This script will be call every 15 minutes
 
 
 
+```python
+cctv_working = {"cam1": "A1", "cam2": "B2"}
+cctv_unresponsive = {"cam3": "C3", "cam4": "A1"}  # Note: "A1" is duplicate
+cctv_fail = ["E5", "cam1"]  # Note: "cam1" is duplicate
+```
+Edit it so that it can check for all types of conbinations that can happen. Use this as a template for output
+
+In case a value is duplicate in 2 source
+Duplicate found: Found '{duplicate value}' which is a {'key', 'value', or 'item' (choose base on type of input. If it is a list, use word 'item', if it is dictionary, use word 'key' or 'value' which you have to find out)} in {'cctv_working' or 'cctv_unresponsive' or 'cctv_fail', choose the source name} {data type of source name; list or dictionary}
+
+In case a value is duplicate in 3 source
+Duplicate found: Found '{duplicate value}' which is a {'key', 'value', or 'item' (choose base on type of input. If it is a list, use word 'item', if it is dictionary, use word 'key' or 'value' which you have to find out)} in {'cctv_working' or 'cctv_unresponsive' or 'cctv_fail', choose the source name} {data type of source name; list or dictionary} and is a {'key', 'value', or 'item' (choose base on type of input. If it is a list, use word 'item', if it is dictionary, use word 'key' or 'value' which you have to find out)} in {'cctv_working' or 'cctv_unresponsive' or 'cctv_fail', choose the source name} {data type of source name; list or dictionary}
+
+
+make it so that it can handle the case where there are more than 1 record in dictionary that have same value in 2 differemce key. You can tell it like (key: 'cam2', value: 'B2'), (key: 'cam3', value: 'B2') and so on. On the other hand, if it is a list tell how many you found in that list like "... is a item in cctv_fail list (found 3 duplicate in this one)"
 
 
 
-
-
-
-
-
-
+Integrity check passed: False
+Issues found:
+- Found 'cam1' which is a key in cctv_working dictionary (key: 'cam1', value: 'A1') duplicated in the following items:
+--- is a item in cctv_fail list (found 1 duplicate in this one)
+- Found 'A1' which is a value in cctv_working dictionary (key: 'cam1', value: 'A1') duplicated in the following items:
+--- is a value in cctv_unresponsive dictionary (key: 'cam4', value: 'A1')
+--- is a item in cctv_fail list (found 2 duplicates in this one)
+- Found 'B2' which is a value in cctv_working dictionary (key: 'cam2', value: 'B2'), (key: 'cam3', value: 'B2') duplicated in the following items:
+--- is a key in cctv_unresponsive dictionary (key: 'B2', value: 'D4')
+--- is a value in cctv_unresponsive dictionary (key: 'B3', value: 'B2')
+--- is a item in cctv_fail list (found 3 duplicates in this one)
 

@@ -35,7 +35,7 @@ def meters_to_degrees(meters: int) -> Decimal:
     return degrees
 
 
-def cluster(meters: int, all_cams_coordinate: List[Tuple[str, float, float]]) -> List[Tuple[str, int, float, float]]:
+def cluster(meters: int, all_cams_coordinate: List[Tuple[str, float, float]]) -> List[Tuple[str, str, float, float]]:
     logger.info(f"[CLUSTER] Distance set to {meters} meters")
 
     # Extract Cam_IDs and coordinates (Latitude, Longitude)
@@ -52,7 +52,7 @@ def cluster(meters: int, all_cams_coordinate: List[Tuple[str, float, float]]) ->
     labels = dbscan.labels_
 
     # Combine Cam_ID, cluster group, latitude, and longitude into a list of tuples
-    clustered_data = [(cam_id, int(label), float(lat), float(lon)) for cam_id, label, (lat, lon) in zip(cam_ids, labels, coordinates)]
+    clustered_data = [(cam_id, str(label), float(lat), float(lon)) for cam_id, label, (lat, lon) in zip(cam_ids, labels, coordinates)]
 
     logger.info("[CLUSTER] Clustering completed!\n")
     return clustered_data

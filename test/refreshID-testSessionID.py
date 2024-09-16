@@ -218,7 +218,7 @@ os.makedirs(save_path, exist_ok=True)  # Ensure the image directory exists
 # test_session_id_duration(camera_id, save_path)
 
 sessionID = get_session_id(BASE_URL)
-play_video(1661, sessionID)
-get_image(1661, sessionID, save_path)
+play_video(12, sessionID)
+get_image(12, sessionID, save_path)
 
 

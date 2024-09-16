@@ -7,3 +7,5 @@ cctvSessionTemp/
 tempCodeRunnerFile.*
 images/
 *jpg
+__pycache__/
+/__pycache__

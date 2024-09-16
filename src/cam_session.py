@@ -68,6 +68,7 @@ def get_image(camera_id: int, session_id: str, max_retries=3, delay=5) -> bytes 
             logger.info(f"[{camera_id}] Image retrieved for session ID: {session_id}")
             return response.content
         except requests.RequestException as e:
+            retries += 1
             logger.error(f"[{camera_id}] Error getting image: {e}. Retry {retries}/{max_retries}...")
             time.sleep(delay)
     logger.error(f"[{camera_id}] Failed to get image after {max_retries} retries.")  

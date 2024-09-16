@@ -4,7 +4,6 @@ import { spawn } from 'child_process';
 import fs from 'fs';
 import path from 'path';
 import { format } from 'date-fns';
-import { schedule } from 'node-cron';
 import os from 'os';
 
 // Server port
@@ -15,7 +14,7 @@ let cctvSessions = {};
 let latestUpdateTime;
 let latestRefreshTime;
 const jsonDirectory = './cctvSessionTemp/';
-const jsonMaxAgeHours = 24;
+const jsonMaxAgeHours = 2400000000;
 const updateCamInfoPath = './src/main.py';
 const cctvDistance = 170;
 
@@ -26,7 +25,7 @@ let logStartTime;
 const logToConsole = true;
 const logToFile = true;
 const logRotationIntervalHours = 1;
-const logMaxAgeHours = 24;
+const logMaxAgeHours = 2400000000;
 const logDirectory = './logs';
 
 function setupLogger() {
@@ -214,6 +213,16 @@ async function initializeSessions() {
   }
 }
 
+// Function to schedule the next execution
+const INTERVAL = 10 * 60 * 1000; // 10 minutes in milliseconds
+function scheduleNextExecution() {
+  setTimeout(async () => {
+    console.log('Running scheduled session initialization...');
+    await initializeSessions();
+    scheduleNextExecution(); // Schedule the next execution after this one completes
+  }, INTERVAL);
+}
+
 // Start the server using Bun's `Bun.serve`
 Bun.serve({
   port: PORT,
@@ -249,12 +258,17 @@ Object.keys(interfaces).forEach((interfaceName) => {
   });
 });
 
-initializeSessions().then(() => {
-  console.log('Session initialization completed.');
-});
+// initializeSessions().then(() => {
+//   console.log('Session initialization completed.');
+// });
 
 // Schedule the initializeSessions function to run every 15 minutes
-schedule('*/10 * * * *', async () => {
-  console.log('Running scheduled session initialization...');
-  await initializeSessions();
+// schedule('*/10 * * * *', async () => {
+//   console.log('Running scheduled session initialization...');
+//   await initializeSessions();
+// });
+
+initializeSessions().then(() => {
+  console.log('Session initialization completed.');
+  scheduleNextExecution(); // Start the scheduling after initial execution
 });
