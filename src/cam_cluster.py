@@ -54,5 +54,5 @@ def cluster(meters: int, all_cams_coordinate: List[Tuple[str, float, float]]) ->
     # Combine Cam_ID, cluster group, latitude, and longitude into a list of tuples
     clustered_data = [(cam_id, str(label), float(lat), float(lon)) for cam_id, label, (lat, lon) in zip(cam_ids, labels, coordinates)]
 
-    logger.info("[CLUSTER] Clustering completed!\n")
+    logger.info("[CLUSTER] Clustering completed!")
     return clustered_data

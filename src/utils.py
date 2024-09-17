@@ -9,46 +9,33 @@ def sort_key(item):
     # Split the string into parts with numeric and non-numeric components
     return [int(part) if part.isdigit() else part.lower() for part in re.split('([0-9]+)', str(item))]
 
-def readableTime(total_seconds: int) -> str:
-    hours = total_seconds // 3600
-    minutes = (total_seconds % 3600) // 60
-    seconds = total_seconds % 60
+def readable_time(total_seconds: int) -> str:
+    units = [
+        (3600, "hour"),
+        (60, "minute"),
+        (1, "second")
+    ]
+    parts = []
 
-    if hours > 0:
-        readable_time = f"{hours} hours, {minutes} minutes, and {seconds} seconds"
-    elif minutes > 0:
-        readable_time = f"{minutes} minutes and {seconds} seconds"
-    else:
-        readable_time = f"{seconds} seconds"
-    
-    return readable_time
+    for divisor, unit in units:
+        value, total_seconds = divmod(total_seconds, divisor)
+        if value:
+            parts.append(f"{value} {unit}{'s' if value > 1 else ''}")
+
+    return " and ".join(parts) if parts else "0 seconds"
 
 def create_cctv_status_dict(cctv_list: List[str], status: bool) -> Dict[str, bool]:
-    return {cctv_id: status for cctv_id in cctv_list}
+    return dict.fromkeys(cctv_list, status)
 
-def select_non_empty(primary: Any, primary_name: Union[str, None], 
-                     secondary: Union[Any, None], secondary_name: Union[str, None], 
-                     tertiary: Union[Any, None], tertiary_name: Union[str, None], 
-                     item_description: str = "item") -> Tuple[Any, str]:
-    primary_type = type(primary)
-    secondary_type = type(secondary)
-    tertiary_type = type(tertiary)
+def select_non_empty(*items: Tuple[Any, str], item_description: str = "item") -> Tuple[Any, str]:
+    for value, name in items:
+        if value:
+            logger.info(f"[SELECTOR] Using {name} {item_description} of type {type(value)}")
+            return value, name
+    
+    logger.error(f"[SELECTOR] All {len(items)} {item_description}s are empty.")
+    return None, None
 
-    if primary:
-        logger.info(f"[SELECTOR] Using primary {item_description} of type {primary_type}")
-        return primary, primary_name
-    elif secondary:
-        logger.warning(f"[SELECTOR] Primary {item_description} of type {primary_type} is empty. "
-                       f"[SELECTOR] Using secondary {item_description} of type {secondary_type} instead.")
-        return secondary, secondary_name
-    elif tertiary:
-        logger.warning(f"[SELECTOR] Primary {item_description} of type {primary_type} and secondary {item_description} "
-                       f"[SELECTOR] of type {secondary_type} are empty. Using tertiary {item_description} of type {tertiary_type} instead.")
-        return tertiary, tertiary_name
-    else:
-        logger.error(f"[SELECTOR] All three {item_description}s are empty: "
-                     f"[SELECTOR] primary ({primary_type}), secondary ({secondary_type}), and tertiary ({tertiary_type}).")
-        return False
 
 def check_cctv_integrity(cctv_working: Dict[str, str], cctv_unresponsive: Dict[str, str], cctv_fail: List[str]) -> Tuple[bool, List[str]]:
     integrity_issues = []
