@@ -233,15 +233,28 @@ if __name__ == "__main__":
         readable_diff_refresh = readable_time(total_seconds_timeDiffRefresh)
 
 
-        max_timeDiff = timedelta(hours=4, minutes=0)
-        readable_max_timeDiff = readable_time(max_timeDiff.total_seconds())
+        max_timeDiffUpdate = timedelta(hours=4, minutes=0)
+        readable_max_timeDiffUpdate = readable_time(max_timeDiffUpdate.total_seconds())
 
-        if timeDiffUpdate < max_timeDiff:
+        max_timeDiffRefresh = timedelta(minutes=17)
+        readable_max_timeDiffRefresh = readable_time(max_timeDiffRefresh.total_seconds())
+
+        if timeDiffUpdate < max_timeDiffUpdate and timeDiffRefresh < max_timeDiffRefresh:
             logger.info(f"[INFO] The latest update occurred at {loaded_JSON_latestUpdateTime}, which was {readable_diff_update} ago.")
+            logger.info(f"[INFO] The latest refresh occurred at {loaded_JSON_latestRefreshTime}, which was {readable_diff_refresh} ago.")
             startValidatingSessionID(camDistance, loaded_JSON_cctvSessions, loaded_JSON_latestUpdateTime)
-        else:
-            logger.info(f"[INFO] The latest update occurred at {loaded_JSON_latestUpdateTime}, {readable_diff_update} ago, exceeding the maximum allowed time difference of {readable_max_timeDiff}.")
+        elif timeDiffUpdate < max_timeDiffUpdate and timeDiffRefresh >= max_timeDiffRefresh:
+            logger.info(f"[INFO] The latest update occurred at {loaded_JSON_latestUpdateTime}, {readable_diff_update} ago.")
+            logger.info(f"[INFO] The latest refresh occurred at {loaded_JSON_latestRefreshTime}, {readable_diff_refresh} ago, exceeding the maximum allowed time difference of {readable_max_timeDiffUpdate}.")
+            startGettingNewSessionID(camDistance)
+        elif timeDiffUpdate >= max_timeDiffUpdate and timeDiffRefresh <= max_timeDiffRefresh:
+            logger.info(f"[INFO] The latest update occurred at {loaded_JSON_latestUpdateTime}, {readable_diff_update} ago, exceeding the maximum allowed time difference of {readable_max_timeDiffUpdate}.")
+            logger.info(f"[INFO] The latest refresh occurred at {loaded_JSON_latestRefreshTime}, {readable_diff_refresh} ago.")
             startQuickRefreshSessionID(loaded_JSON_cctvSessions)
+            startGettingNewSessionID(camDistance)
+        else:
+            logger.info(f"[INFO] The latest update occurred at {loaded_JSON_latestUpdateTime}, {readable_diff_update} ago, exceeding the maximum allowed time difference of {readable_max_timeDiffUpdate}.")
+            logger.info(f"[INFO] The latest refresh occurred at {loaded_JSON_latestRefreshTime}, {readable_diff_refresh} ago, exceeding the maximum allowed time difference of {readable_max_timeDiffUpdate}.")
             startGettingNewSessionID(camDistance)
     else:
         logger.warning("[INFO] No JSON file found or failed to load. Fetching all session ID")
@@ -251,3 +264,5 @@ if __name__ == "__main__":
 2. In case where all max time diff exceeded, it will take time around 10 minutes
 3. In case of validating sesion IDs, it will take around 
 '''
+
+
