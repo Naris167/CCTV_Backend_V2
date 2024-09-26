@@ -5,6 +5,7 @@ import re
 
 def capture_cctv_image():
     url = "http://118.174.138.142:1031/stw-cgi/video.cgi?msubmenu=stream&action=view&Profile=1" 
+    #  http://user7:rangsit1027@118.174.138.142:1027/stw-cgi/video.cgi?msubmenu=stream&action=view&Profile=1
 
     auth = HTTPDigestAuth('user7', 'rangsit1031') # This must be metch with the port number
 

@@ -131,12 +131,21 @@ function startServer() {
 
   function handleRequest(req) {
     const url = new URL(req.url);
+
+    // https://flood-innotech.gistda.or.th/cctv_session?cctv_id=7
     if (url.pathname === '/session_id') {
       return handleSessionIdRequest(url);
     }
+
+    // https://flood-innotech.gistda.or.th/cctv_data?cctv_id=7
+    // if (url.pathname === '/cctv_data') {
+    //   return handleCCTVDataRequest(url);
+    // }
+
     return new Response('Not found', { status: 404 });
   }
   
+  // This is old function to handle request for BMA CCTV
   function handleSessionIdRequest(url) {
     const cameraID = url.searchParams.get('cctv_id');
     logger.log(`User requested CCTV: ${cameraID}`);
@@ -150,6 +159,30 @@ function startServer() {
       return new Response(JSON.stringify({ error: 'Session ID not found for the given CCTV ID' }), { status: 404 });
     }
   }
+
+  // Updated function to handle request
+  // https://flood-innotech.gistda.or.th/cctv_data?id=7&owner=BMA&host=BMA
+  // function handleCCTVDataRequest(url) {
+  //   const cameraID = url.searchParams.get('id');
+  //   const owner = url.searchParams.get('owner');
+  //   const host = url.searchParams.get('host');
+    
+  //   logger.log(`User requested CCTV ID: ${cameraID}, Owner: ${owner}, Host: ${host}`);
+    
+
+  //   const sessionID = cctvSessions[cameraID];
+    
+  //   if (sessionID) {
+  //     return new Response(JSON.stringify({ cctv_id: cameraID, session_id: sessionID }), {
+  //       headers: { 'Content-Type': 'application/json' },
+  //     });
+  //   } else {
+  //     logger.log(`Session ID not found for the given CCTV ID: ${cameraID}`);
+  //     return new Response(JSON.stringify({ error: 'Session ID not found for the given CCTV ID' }), { status: 404 });
+  //   }
+
+  // }
+
   
   function handleError(err) {
     logger.error(err);

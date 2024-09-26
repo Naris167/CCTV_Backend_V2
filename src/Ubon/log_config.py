@@ -32,7 +32,7 @@ def log_setup():
     # Define the directory and log file path
     log_directory = "./logs"
     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    log_filename = f"{log_directory}/BMACamInfo_{timestamp}.log"
+    log_filename = f"{log_directory}/UbonCamInfo_{timestamp}.log"
 
     # Check if the directory exists, if not, create it
     if not os.path.exists(log_directory):

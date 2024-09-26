@@ -152,3 +152,28 @@ Issues found:
 --- is a value in cctv_unresponsive dictionary (key: 'B3', value: 'B2')
 --- is a item in cctv_fail list (found 3 duplicates in this one)
 
+
+
+
+
+
+
+
+
+
+```sql
+-- Create the cctv_locations_preprocessing table
+CREATE TABLE cctv_locations_ubon (
+    Cam_ID VARCHAR(50) PRIMARY KEY NOT NULL,
+    Cam_Group VARCHAR(50),
+    Cam_Name TEXT,
+    Cam_Name_e TEXT,
+    Cam_Location TEXT,
+    Cam_Direction TEXT,
+    Latitude DOUBLE PRECISION,
+    Longitude DOUBLE PRECISION,
+    Verify BOOLEAN DEFAULT FALSE,
+    is_online BOOLEAN DEFAULT FALSE,
+    is_flooded BOOLEAN DEFAULT FALSE
+);
+```
