@@ -163,15 +163,17 @@ Issues found:
 
 ```sql
 -- Create the cctv_locations_preprocessing table
-CREATE TABLE cctv_locations_ubon (
+CREATE TABLE cctv_locations_general (
     Cam_ID VARCHAR(50) PRIMARY KEY NOT NULL,
     Cam_Group VARCHAR(50),
-    Cam_Name TEXT,
+    Cam_Name TEXT NOT NULL,
     Cam_Name_e TEXT,
     Cam_Location TEXT,
     Cam_Direction TEXT,
-    Latitude DOUBLE PRECISION,
-    Longitude DOUBLE PRECISION,
+    Latitude DOUBLE PRECISION NOT NULL,
+    Longitude DOUBLE PRECISION NOT NULL,
+    Cam_Owner VARCHAR(255) NOT NULL,
+    Cam_Host VARCHAR(255) NOT NULL,
     Verify BOOLEAN DEFAULT FALSE,
     is_online BOOLEAN DEFAULT FALSE,
     is_flooded BOOLEAN DEFAULT FALSE

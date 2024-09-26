@@ -36,7 +36,7 @@ def execute_fetch_query(query, params=None):
 
 def retrieve_camID() -> List[str]:
     try:
-        query = "SELECT Cam_ID FROM cctv_locations_ubon"
+        query = "SELECT Cam_ID FROM cctv_locations_general"
         return sorted([row[0] for row in execute_fetch_query(query)], key=sort_key)
     except Exception as e:
         logger.error(f"[DATABASE] Error retrieve_camID: {e}")
@@ -47,9 +47,9 @@ def add_camRecord(
         ) -> None:
     with get_db_connection() as conn:
         try:
-            check_query = "SELECT Cam_ID FROM cctv_locations_ubon WHERE Cam_ID = ANY(%s)"
+            check_query = "SELECT Cam_ID FROM cctv_locations_general WHERE Cam_ID = ANY(%s)"
             insert_query = """
-                INSERT INTO cctv_locations_ubon (
+                INSERT INTO cctv_locations_general (
                     Cam_ID, Cam_Name, Latitude, Longitude
                 ) VALUES (%s, %s, %s, %s)
             """

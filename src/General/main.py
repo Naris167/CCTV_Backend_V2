@@ -2,7 +2,8 @@ import time
 import os
 from typing import List, Tuple, Set, Dict
 from io import BytesIO
-from GetCCTVList import getCamList, get_m3u8_info, get_media_info
+from get_cam_list import getCamList
+from HLSUbon import get_m3u8_info, get_media_info
 from utils import sort_key
 from database import add_camRecord
 from log_config import logger, log_setup
@@ -84,10 +85,10 @@ def main():
     # Uncomment the following lines if you want to print the CCTV list or add it to the database
     # for cctv in cctv_list:
     #     print(cctv)
-    add_camRecord(cctv_list)
+    # add_camRecord(cctv_list)
 
     cctv_id = "cctvp2c003"
-    # monitor_cctv(cctv_id)
+    monitor_cctv(cctv_id)
 
 if __name__ == "__main__":
     main()
