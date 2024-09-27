@@ -178,4 +178,119 @@ CREATE TABLE cctv_locations_general (
     is_online BOOLEAN DEFAULT FALSE,
     is_flooded BOOLEAN DEFAULT FALSE
 );
+
+-- Create the cctv_locations_preprocessing table
+CREATE TABLE cctv_locations_general (
+    -- Basic CCTV info
+    Cam_ID VARCHAR(100) PRIMARY KEY NOT NULL,
+    Cam_Group VARCHAR(50),
+    Cam_Name TEXT NOT NULL,
+    Cam_Name_e TEXT,
+    Cam_Location TEXT,
+    Cam_Direction TEXT,
+    Latitude DOUBLE PRECISION NOT NULL,
+    Longitude DOUBLE PRECISION NOT NULL,
+
+    Organization TEXT,
+    SponsorText TEXT,
+
+    -- Streaming method and link
+    Stream_Method VARCHAR(255) NOT NULL,
+    Stream_Link_1 TEXT NOT NULL,
+    Stream_Link_2 TEXT,
+    Stream_Link_3 TEXT,
+    Stream_Link_4 TEXT,
+    Stream_Link_5 TEXT,
+    Stream_Link_6 TEXT,
+    Stream_Link_7 TEXT,
+    
+    LastUpdate TIMESTAMP,
+    Verify BOOLEAN DEFAULT FALSE,
+    is_inCity BOOLEAN,
+    is_motion BOOLEAN,
+    is_online BOOLEAN DEFAULT TRUE,
+    is_flooded BOOLEAN DEFAULT FALSE
+);
+
+```
+
+
+```python
+List[Tuple[str, str, float, float, str, str, str, str, str, str, str, str, str, str, bool, bool]]
+List[Tuple["camid", "title", "latitude", "longitude", "organization", "sponsertext", "Stream_Method", "hls_url", "link", "vdourl", "imgurl", "imgurl_specific", "overlay_file", "lastupdate", "incity", "motion"]]
+```
+
+Write a python function that access this URL "https://camera.longdo.com/feed/?command=json&callback=longdo.callback.cameras" to retrive the information and return a list of tuple in the following format "List[Tuple[str, str, float, float, str, str, str, str, str, str, str, str, str, str, bool, bool]]". This is how the data from URL looks like:
+
+```json
+longdo.callback.cameras([
+    {
+        "title": "(จ.ชลบุรี) แยกแกแล็คซี่ 1",
+        "link": "https://camera1.iticfoundation.org/mjpeg2.php?camid=X.X.X.X:YYYY",
+        "camid": "ITICM_BMAMI0112",
+        "lastupdate": "2030-04-17 00:00:00",
+        "latitude": "13.286483",
+        "longitude": "100.938967",
+        "incity": "N",
+        "organization": "iTIC Motion",
+        "sponsertext": "iTIC Motion",
+        "motion": "Y",
+        "vdourl": "https://camera1.iticfoundation.org/mjpeg2.php?camid=X.X.X.X:YYYY",
+        "imgurl": "https://camera1.iticfoundation.org/jpeg2.php?camid=X.X.X.X:YYYY",
+        "imgurl_specific": "https://camera1.iticfoundation.org/mjpeg2.cgi?camid=X.X.X.X:YYYY",
+        "overlay_file": "banner_sponsors_sansuk_itic.jpg",
+        "hls_url": "https://camerai1.iticfoundation.org/hls/ss10.m3u8"
+    },
+    {
+        "title": "(จ.เพชรบุรี) 4 - อ.ชะอำ จ.เพชรบุรี ทิศทางมุ่งหน้าหัวหิน",
+        "link": "https://camera1.iticfoundation.org/mjpeg.php?camid=PER-5-006-out",
+        "camid": "DOH-PER-5-006-out",
+        "lastupdate": "2030-04-17 00:00:00",
+        "latitude": "12.8295",
+        "longitude": "99.9352",
+        "incity": "N",
+        "organization": "กรมทางหลวง",
+        "sponsertext": "สำนักอำนวยความปลอดภัย กรมทางหลวง",
+        "motion": "Y",
+        "vdourl": "https://camera1.iticfoundation.org/mjpeg.php?camid=PER-5-006-out",
+        "imgurl": "https://camera1.iticfoundation.org/jpeg.cgi?camid=PER-5-006-out",
+        "imgurl_specific": "https://camera1.iticfoundation.org/mjpeg.cgi?camid=PER-5-006-out",
+        "overlay_file": "banner_sponsors_doh.jpg",
+        "hls_url": "https://camerai1.iticfoundation.org/pass/180.180.242.207:1935/Phase5/PER_5_006_OUT.stream/playlist.m3u8"
+    }
+]);
+```
+
+Put the data into list of tuple in the following way:
+
+"List[Tuple["camid", "title", "latitude", "longitude", "organization", "sponsertext", "Stream_Method", "hls_url", "link", "vdourl", "imgurl", "imgurl_specific", "overlay_file", "lastupdate", "incity", "motion"]]"
+
+You may see that "Stream_Method" is not present in the JSON data. The value that you should put in this depend on the value from key "hls_url" in JSON. If the value of key "hls_url" in JSON have a value of URL that ended with ".m3u8", the value that you should assign for "Stream_Method" in the tuple will be "HLS", otherwise put "UNKNOWN"
+
+For the last 2 value in the tuple, "incity" and "motion", originally the data in JSON will be "Y" or "N", if the value in JSON is "Y" put TRUE, if it is "N" put FALSE in the tuple
+
+
+
+
+
+
+
+
+
+
+
+
+So I have here 3 list. For "cctv_list_ubon" and "cctv_list_itic" I will put in the argument of the function. This function should directly use "all_cctv_ids" list because this is the master record.
+
+This function should find out which cctv is not online by check if any record in "cctv_list_ubon" and "cctv_list_itic" is not present in "all_cctv_ids", then that one is offline. This function should also check if "cctv_list_ubon" and "cctv_list_itic" and all input arguments, if their  "Stream_Method" is equal to "UNKNOWN" or "Stream_Link_1" is an empty text, then that record is offline too. The output of this function should be a list of "Cam_ID" that are offline
+
+
+```python
+cctv_list_ubon = List[Tuple["Cam_ID", "Cam_Name", "Latitude", "Longitude", "Stream_Method", "Stream_Link_1"]]
+
+cctv_list_itic = List[Tuple["Cam_ID", "Cam_Name", "Latitude", "Longitude", "Stream_Method", "Stream_Link_1", "Stream_Link_2", 
+"Stream_Link_3", "Stream_Link_4", "Stream_Link_5", "Stream_Link_6", "Organization", "SponsorText", "LastUpdate", "is_inCity", "is_motion"]]
+
+all_cctv_ids = List["Cam_ID","Cam_ID","Cam_ID"...]
+
 ```

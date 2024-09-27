@@ -528,3 +528,180 @@ Please give me these 2 function only for your answer
     });
   }
 ```
+
+
+
+
+This code output a list of tuple with the following informaiton "List[Tuple["camid", "title", "latitude", "longitude"]]". I want you to change this function so it have 2 more element in each tuple. So new format will be "List[Tuple["camid", "title", "latitude", "longitude", "Stream_Method", "hls_url"]]" and data type for each element will be "List[Tuple[str, str, float, float, str, str]]:"
+
+For "Stream_Method" always put "HLS".
+For "hls_url", you have to construct the URL in the following way.
+This is based URL "http://183.88.214.137:1935/livecctv/{"camid"}.stream/playlist.m3u8"
+
+For example, thw record with "camid" "cctvp2c003" the URL will be "http://183.88.214.137:1935/livecctv/cctvp2c003.stream/playlist.m3u8"
+
+Then put this URL into the last element of the tuple
+
+```python
+def getCamList_Ubon() -> List[Tuple[str, str, float, float]]:
+    url = "http://183.88.214.137:8000/cctvList.js"
+    
+    response = requests.get(url)
+
+    # Check if the request was successful
+    if response.status_code == 200:
+        # Get the content of the response
+        content = response.text
+        
+        # Define the regex pattern to extract the required fields
+        pattern = r'"name":\s*"([^"]+)",\s*"streamId":\s*"([^"]+)",\s*"lat":\s*"([^"]+)",\s*"lng":\s*"([^"]+)"'
+        
+        # Find all matches in the content
+        matches = re.findall(pattern, content)
+        
+        # Process the extracted information, remove '\n' and extra spaces in the name
+        cctv_list = [
+            (streamId, re.sub(r'\s+', ' ', name.replace("\\n", " ").strip()), lat, lng) 
+            for name, streamId, lat, lng in matches
+        ]
+        
+        # Return the cleaned data
+        cctv_list = sorted(cctv_list, key=lambda x: sort_key(x[0]))
+        return cctv_list
+    else:
+        logger.info("Failed to retrieve the data. Status code:", response.status_code)
+        return []
+```
+
+
+I have my API endpoint here
+
+```js
+app.get('/cctv', apiKeyMiddleware, async (req, res) => {
+  try {
+      const result = await pool2.query('SELECT cam_id, cam_name, cam_name_e, cam_location, cam_direction, latitude, longitude , is_online , is_flooded FROM cctv_locations_preprocessing ');
+
+      // Format the rows
+      const formattedRows = result.rows.map(row => (
+
+        {
+          cameraId: row.cam_id,
+              name: row.cam_name,
+              nameEnglish: row.cam_name_e,
+              location: row.cam_location,
+              direction: row.cam_direction,
+              latitude: row.latitude,
+              longitude: row.longitude,
+              is_online :row.is_online,
+              is_flooded : row.is_flooded
+             
+      }));
+
+      res.json({
+        status: 200,
+        errMsg: "",
+        data: formattedRows
+    });
+  } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: 'An error occurred' });
+  }
+});
+```
+
+
+now it will output the following JSON
+
+```json
+{
+    "status": 200,
+    "errMsg": "",
+    "data": [
+        {
+            "cameraId": "170",
+            "name": "สะพานลอยใกล้โรงพยาบาลวุฒิสมเด็จย่า ถนนพหลโยธิน",
+            "nameEnglish": "Footbridge near  Nawati Somdet Ya Hospital on Phahon Yothin Road",
+            "location": "รถมาจากอนุสาวรีย์ชัยสมรภูมิ มุ่งหน้าไปแยกสะพานควาย",
+            "direction": "From Victory Monument towards Saphan Khwai Intersection",
+            "latitude": 13.78402,
+            "longitude": 100.54611,
+            "is_online": false,
+            "is_flooded": false
+        },
+        {
+            "cameraId": "1039",
+            "name": "ใกล้สะพานนริศดำรัส คลองมหานาค ถนนจักรพรรดิพงษ์",
+            "nameEnglish": "Near Narit Damras Bridge, Khlong Mahanak, Chakraphat Phong Road",
+            "location": "สะพานนริศดำรัส ",
+            "direction": "Towards Maen Si Intersection",
+            "latitude": 13.754920632102062,
+            "longitude": 100.50943762381905,
+            "is_online": false,
+            "is_flooded": false
+        }
+    ]
+}
+
+```
+
+
+I want you to change it so that it will fetch the data from 2 table from databse. If the data coming from `cctv_locations_preprocessing`, the json output will be the same information but you will have to add 2 more key and value for each record from database. The first key and value is ""Stream_Method": "BMA"", and the second one will be ""Stream_Data": row.cam_id" ensure that the value from "row.cam_id" will be string.
+
+The first data processing from first table is done. Now, next table have a name "cctv_locations_general". You have to fetch the value from the following column "Cam_ID", "Cam_Name", "Cam_Name_e", "Cam_Location", "Cam_Direction", "Latitude", "Longitude", "is_online", "is_flooded", "Stream_Method", "Stream_Link_1". This time you don't need to process data but take it directly from this table ""Stream_Method": from column "Stream_Method"", and the second one will be ""Stream_Data": from column "Stream_Link_1""
+
+This is how the databased structure looks like.
+
+```sql
+CREATE TABLE cctv_locations_general (
+    Cam_ID VARCHAR(100) PRIMARY KEY NOT NULL,
+    Cam_Group VARCHAR(50),
+    Cam_Name TEXT NOT NULL,
+    Cam_Name_e TEXT,
+    Cam_Location TEXT,
+    Cam_Direction TEXT,
+    Latitude DOUBLE PRECISION NOT NULL,
+    Longitude DOUBLE PRECISION NOT NULL,
+    Stream_Method VARCHAR(255) NOT NULL,
+    Stream_Link_1 TEXT NOT NULL,
+    is_online BOOLEAN DEFAULT TRUE,
+    is_flooded BOOLEAN DEFAULT FALSE
+);
+```
+
+The final JSON structure should looks like this. This is just a sample one for a quick look for you to understand what data type I want
+
+```json
+{
+    "status": 200,
+    "errMsg": "",
+    "data": [
+        {
+            "cameraId": "170",
+            "name": "สะพานลอยใกล้โรงพยาบาลวุฒิสมเด็จย่า ถนนพหลโยธิน",
+            "nameEnglish": "Footbridge near  Nawati Somdet Ya Hospital on Phahon Yothin Road",
+            "location": "รถมาจากอนุสาวรีย์ชัยสมรภูมิ มุ่งหน้าไปแยกสะพานควาย",
+            "direction": "From Victory Monument towards Saphan Khwai Intersection",
+            "latitude": 13.78402,
+            "longitude": 100.54611,
+            "is_online": false,
+            "is_flooded": false,
+            "Stream_Method": "BMA",
+            "Stream_Data": "170"
+        },
+        {
+            "cameraId": "CCTVP2C003",
+            "name": "ใกล้สะพานนริศดำรัส คลองมหานาค ถนนจักรพรรดิพงษ์",
+            "nameEnglish": "Near Narit Damras Bridge, Khlong Mahanak, Chakraphat Phong Road",
+            "location": "สะพานนริศดำรัส ",
+            "direction": "Towards Maen Si Intersection",
+            "latitude": 13.754920632102062,
+            "longitude": 100.50943762381905,
+            "is_online": false,
+            "is_flooded": false,
+            "Stream_Method": "HLS", (sample value from database)
+            "Stream_Data": "http://link.com" (sample value from database)
+        }
+    ]
+}
+
+```

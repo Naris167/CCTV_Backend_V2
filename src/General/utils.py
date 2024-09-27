@@ -36,3 +36,28 @@ def select_non_empty(*items: Tuple[Any, str], item_description: str = "item") ->
     logger.error(f"[SELECTOR] All {len(items)} {item_description}s are empty.")
     return None, None
 
+def detect_cctv_status(all_cctv_ids, *args):
+    offline_cctvs = set()
+    online_cctvs = set()
+
+    # Convert all_cctv_ids to a set for faster lookup
+    all_cctv_ids_set = set(all_cctv_ids)
+
+    for cctv_list in args:
+        for cctv in cctv_list:
+            cam_id = cctv[0]  # Assuming Cam_ID is always the first element
+            stream_method = cctv[4]  # Assuming Stream_Method is always the fifth element
+            stream_link_1 = cctv[5]  # Assuming Stream_Link_1 is always the sixth element
+
+            if cam_id not in all_cctv_ids_set or stream_method == "UNKNOWN" or stream_link_1 == "":
+                offline_cctvs.add(cam_id)
+            else:
+                online_cctvs.add(cam_id)
+
+    # Remove any CCTVs that are in both sets (should not happen, but just in case)
+    online_cctvs -= offline_cctvs
+
+    offline_cctvs = sorted(list(offline_cctvs), key=sort_key)
+    online_cctvs = sorted(list(online_cctvs), key=sort_key)
+
+    return offline_cctvs, online_cctvs
