@@ -61,3 +61,28 @@ def detect_cctv_status(all_cctv_ids, *args):
     online_cctvs = sorted(list(online_cctvs), key=sort_key)
 
     return offline_cctvs, online_cctvs
+
+def process_cctv_names(tuple_list):
+    def process_name(name):
+        # Replace en dash with hyphen
+        name = name.replace("–", "-")
+
+        # Rule 5: If all characters are English, return as is
+        if re.match(r'^[a-zA-Z\s]+$', name):
+            return name
+
+        # Rule 8 and 9: Remove parenthesis and content inside, along with any numbers and dashes that follow
+        name = re.sub(r'\([^)]*\)\s*(?:\d+\s*-\s*)?', '', name)
+
+        # Rule 10: Remove prefix like "CRM-014", "ATC4-03" with more flexible format
+        name = re.sub(r'^[A-Za-z]+\d*-?\d+\s+', '', name)
+
+        # Rule 6 and 7: Check if name starts with Thai character or number followed by space and Thai character
+        if re.match(r'^[\u0E00-\u0E7F]|^\d+\s+[\u0E00-\u0E7F]', name):
+            return name.strip()
+
+        # If none of the rules match, return the original name
+        return name.strip()
+
+    # Process the second element of each tuple
+    return [(t[0], process_name(t[1])) + t[2:] for t in tuple_list]

@@ -71,7 +71,7 @@ def update_isCamOnline(cctv_data: Union[Dict[str, bool], List[str]]) -> None:
                     if not cctv_data:
                         logger.warning("[DATABASE] Empty dictionary provided to update_isCamOnline. No updates performed.")
                         return
-                    update_query = "UPDATE cctv_locations_preprocessing SET is_online = %s WHERE cam_id = %s"
+                    update_query = "UPDATE cctv_locations_general SET is_online = %s WHERE cam_id = %s"
                     update_value = [(is_online, cam_id) for cam_id, is_online in cctv_data.items()]
                     cur.executemany(update_query, update_value)
                     logger.info(f"[DATABASE] Updated is_online status for CCTV IDs: {cctv_data}")
@@ -80,8 +80,8 @@ def update_isCamOnline(cctv_data: Union[Dict[str, bool], List[str]]) -> None:
                     if not cctv_data:
                         logger.warning("[DATABASE] Empty list provided to update_isCamOnline. No updates performed.")
                         return
-                    cur.execute("UPDATE cctv_locations_preprocessing SET is_online = FALSE")
-                    cur.execute("UPDATE cctv_locations_preprocessing SET is_online = TRUE WHERE cam_id = ANY(%s::text[])", (cctv_data,))
+                    cur.execute("UPDATE cctv_locations_general SET is_online = FALSE")
+                    cur.execute("UPDATE cctv_locations_general SET is_online = TRUE WHERE cam_id = ANY(%s::text[])", (cctv_data,))
                     logger.info(f"[DATABASE] Updated is_online status: Set to TRUE for CCTV IDs {cctv_data}, and FALSE for all others")
                 else:
                     logger.error("[DATABASE] Invalid data type provided to update_isCamOnline. Expected dict or list.")

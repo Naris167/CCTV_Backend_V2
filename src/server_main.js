@@ -10,6 +10,7 @@ import { formatDate, calculateRuntime } from './server_utils.js';
 
 const CONFIG = {
   PORT: 7000,
+  API_KEY: 'rTqn57BPAyKSRc6mkaLeNbWptHUw9Dhj3GsQg48zfXdVZuMvEJ',
   CCTV: {
     jsonDirectory: './cctvSessionTemp/',
     jsonMaxAgeHours: 2400000000,
@@ -130,19 +131,31 @@ function startServer() {
   });
 
   function handleRequest(req) {
+    // Check API key before processing the request
+    const authResponse = checkApiKey(req);
+    if (authResponse) return authResponse;
+
     const url = new URL(req.url);
 
-    // https://flood-innotech.gistda.or.th/cctv_session?cctv_id=7
     if (url.pathname === '/session_id') {
       return handleSessionIdRequest(url);
     }
 
-    // https://flood-innotech.gistda.or.th/cctv_data?cctv_id=7
-    // if (url.pathname === '/cctv_data') {
-    //   return handleCCTVDataRequest(url);
-    // }
-
     return new Response('Not found', { status: 404 });
+  }
+
+  function checkApiKey(req) {
+    const apiKey = req.headers.get('x-api-key');
+    
+    if (!apiKey || apiKey !== CONFIG.API_KEY) {
+      return new Response(JSON.stringify({ error: "Hmm... looks like you don't have permission to access this information." }), {
+        status: 401,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+    
+    // If API key is valid, return null to continue processing the request
+    return null;
   }
   
   // This is old function to handle request for BMA CCTV
@@ -160,37 +173,12 @@ function startServer() {
     }
   }
 
-  // Updated function to handle request
-  // https://flood-innotech.gistda.or.th/cctv_data?id=7&owner=BMA&host=BMA
-  // function handleCCTVDataRequest(url) {
-  //   const cameraID = url.searchParams.get('id');
-  //   const owner = url.searchParams.get('owner');
-  //   const host = url.searchParams.get('host');
-    
-  //   logger.log(`User requested CCTV ID: ${cameraID}, Owner: ${owner}, Host: ${host}`);
-    
-
-  //   const sessionID = cctvSessions[cameraID];
-    
-  //   if (sessionID) {
-  //     return new Response(JSON.stringify({ cctv_id: cameraID, session_id: sessionID }), {
-  //       headers: { 'Content-Type': 'application/json' },
-  //     });
-  //   } else {
-  //     logger.log(`Session ID not found for the given CCTV ID: ${cameraID}`);
-  //     return new Response(JSON.stringify({ error: 'Session ID not found for the given CCTV ID' }), { status: 404 });
-  //   }
-
-  // }
-
-  
   function handleError(err) {
     logger.error(err);
   }
 
   collectServerAddresses(CONFIG.PORT);
   printServerAddresses();
-
 }
 
 

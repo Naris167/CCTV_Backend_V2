@@ -665,6 +665,7 @@ CREATE TABLE cctv_locations_general (
     Stream_Link_1 TEXT NOT NULL,
     is_online BOOLEAN DEFAULT TRUE,
     is_flooded BOOLEAN DEFAULT FALSE
+    is_usable BOOLEAN DEFAULT TRUE
 );
 ```
 
