@@ -209,7 +209,8 @@ CREATE TABLE cctv_locations_general (
     is_inCity BOOLEAN,
     is_motion BOOLEAN,
     is_online BOOLEAN DEFAULT TRUE,
-    is_flooded BOOLEAN DEFAULT FALSE
+    is_flooded BOOLEAN DEFAULT FALSE,
+    is_usable BOOLEAN DEFAULT TRUE
 );
 
 ```

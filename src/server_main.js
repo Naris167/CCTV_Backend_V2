@@ -19,7 +19,7 @@ const CONFIG = {
     updateInterval: 10 * 1 * 60 * 1000, // 10 minutes
   },
   LOGGING: {
-    directory: './logs',
+    directory: './logs/ServerLogs',
     toConsole: true,
     toFile: true,
     rotationInterval: 1 * 60 * 60 * 1000, // 1 hour

@@ -38,10 +38,6 @@ class CustomLogger {
     return `${timestamp} ${args.map(arg => (typeof arg === 'string' ? arg : JSON.stringify(arg))).join(' ')}`;
   }
 
-  checkLogRotationAndCleanup() {
-    // Implement your log rotation and cleanup logic here
-  }
-
   log(...args) {
     this._writeLog('log', ...args);
   }
@@ -52,7 +48,6 @@ class CustomLogger {
 
   _writeLog(method, ...args) {
     if (!this.isRotating) {
-      this.checkLogRotationAndCleanup();
       if (this.config.toConsole) console[method](...args);
       if (this.config.toFile && this.logStream) {
         this.logStream.write(this.getFormattedLog(args));

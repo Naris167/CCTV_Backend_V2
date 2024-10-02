@@ -30,7 +30,7 @@ def log_setup():
     global logger  # Make sure to refer to the global logger
     
     # Define the directory and log file path
-    log_directory = "./logs"
+    log_directory = "./logs/BMATrafficLogs"
     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     log_filename = f"{log_directory}/BMACamInfo_{timestamp}.log"
 
