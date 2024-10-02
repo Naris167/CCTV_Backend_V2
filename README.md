@@ -122,7 +122,7 @@ python src/main.py
 ```sql
 -- Create the cctv_locations_preprocessing table
 CREATE TABLE cctv_locations_preprocessing (
-   Cam_ID INT PRIMARY KEY NOT NULL,
+   Cam_ID VARCHAR(50) PRIMARY KEY NOT NULL,
    Cam_Code VARCHAR(50),
 	Cam_Group VARCHAR(50),
    Cam_Name TEXT,
@@ -132,14 +132,17 @@ CREATE TABLE cctv_locations_preprocessing (
    Latitude DOUBLE PRECISION,
    Longitude DOUBLE PRECISION,
    IP VARCHAR(50),
-   Icon VARCHAR(100)
-   Verify BOOLEAN DEFAULT FALSE;
+   Icon VARCHAR(100),
+   Verify BOOLEAN DEFAULT FALSE,
+   is_online BOOLEAN DEFAULT FALSE,
+   is_flooded BOOLEAN DEFAULT FALSE,
+   is_usable BOOLEAN DEFAULT TRUE
 );
 
 -- Create the CCTV_images table with a foreign key to CCTV_locations
 CREATE TABLE cctv_images (
    Img_ID SERIAL PRIMARY KEY NOT NULL,
-   Cam_ID INT NOT NULL REFERENCES cctv_locations_preprocessing(Cam_ID),
+   Cam_ID VARCHAR(50) NOT NULL REFERENCES cctv_locations_preprocessing(Cam_ID),
    Image_data BYTEA,
    Captured_at TIMESTAMP
 );

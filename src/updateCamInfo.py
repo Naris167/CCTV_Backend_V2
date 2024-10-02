@@ -100,6 +100,7 @@ def startUpdate(meters):
     new_cams_info, all_cams_coordinate = filter_new_and_all_cams(onlineCamInfo, dbCamCoordinate)
 
     # Check if there are any new cameras
+    # In case there are no new cctv, remove `not` here to manually run the script
     if not new_cams_info:
         print("[UPDATER] No new cameras found.")
     else:

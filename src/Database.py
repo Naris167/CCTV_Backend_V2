@@ -5,7 +5,7 @@ from utils import image_to_binary, binary_to_image
 
 
 # Load environment variables from .env file
-load_dotenv('.env.local')
+load_dotenv('.env.prod')
 
 # Verify environment variables
 # print(f"DB_NAME: {os.getenv('DB_NAME')}")

@@ -6,5 +6,6 @@ tempCodeRunnerFile.py
 .env.prod
 __pycache__/
 Images/
+Images_new/
 *.zip
 ~$*

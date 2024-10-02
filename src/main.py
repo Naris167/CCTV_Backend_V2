@@ -17,8 +17,8 @@ sleep_after_connect = 1          # Waiting time (in seconds) after obtaining the
 sleep_between_download = 1       # Waiting time (in seconds) between each image download
 
 # Storage Settings
-save_path = "./images/"          # Directory path to save images when 'save_to_db' is set to False
-save_to_db = True               # Set to True to save images to the database
+save_path = "./images_new/"          # Directory path to save images when 'save_to_db' is set to False
+save_to_db = False               # Set to True to save images to the database
 
 # Image Quality Settings
 img_size = 5120                  # Minimum acceptable image size in bytes (images smaller than this will be skipped)
@@ -28,7 +28,7 @@ multi_threading = True          # Enable multi-threading for scraping (recommend
 refresh_interval = 100           # Number of images scraped before refreshing the session ID (applicable in sequential mode)
 
 # Multi-threading Settings
-max_workers = 20                  # Maximum number of concurrent connections to scrape images (applicable in multi-threading mode)
+max_workers = 80                  # Maximum number of concurrent connections to scrape images (applicable in multi-threading mode)
 
 # Configure logging
 # logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
