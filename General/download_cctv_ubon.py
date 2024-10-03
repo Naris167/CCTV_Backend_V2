@@ -6,7 +6,7 @@ from get_cam_list import getCamListUbon
 from HLSUbon import get_m3u8_info, get_media_info
 from utils import sort_key
 from database import add_camRecord
-from log_config import logger, log_setup
+from utils.log_config import logger, log_setup
 import requests
 
 def fetch_and_sort_cctv_list(url: str) -> List[Tuple]:

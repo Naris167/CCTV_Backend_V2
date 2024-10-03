@@ -1,7 +1,7 @@
 from io import BytesIO
 from get_cam_list import *
 from database import retrieve_camID, add_camRecord_Ubon, add_camRecord_iTic, update_isCamOnline
-from log_config import logger, log_setup
+from utils.log_config import logger, log_setup
 from utils import create_cctv_status_dict, detect_cctv_status, process_cctv_names
 
 

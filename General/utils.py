@@ -1,6 +1,6 @@
 import re
 from typing import List, Dict, Any, Tuple, Union
-from log_config import logger
+from utils.log_config import logger
 from collections import defaultdict
 
 BASE_URL = "http://www.bmatraffic.com"

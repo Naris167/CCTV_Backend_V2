@@ -3,7 +3,7 @@ from psycopg2.extras import execute_values
 import os
 from dotenv import load_dotenv
 from contextlib import contextmanager
-from log_config import logger
+from utils.log_config import logger
 from utils import sort_key
 from typing import List, Tuple, Union, Dict
 

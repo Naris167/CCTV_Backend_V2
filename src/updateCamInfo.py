@@ -1,129 +1,103 @@
-from Database import retrieve_data, insert_data, update_data
 import re
 import ast
 import requests
-from GeoCluster import cluster
+import time
+from typing import List, Tuple, Union, Literal, Dict
+
+from utils.Database import retrieve_data, insert_data, update_data
+from utils.GeoCluster import cluster
+from utils.log_config import logger
+from utils.utils import sort_key
 
 BASE_URL = "http://www.bmatraffic.com"
 
-'''
-1. Get the cctv list from BMATraffic (return a list of tuple)
-2. Get the cctv list (ID and coordinate) from DB
-3. Check for duplicate
-4. Apply DBSCAN 
-5. Insert new data into DB
-6. Return the list of online cam
-'''
+CamInfo = Tuple[str, Union[str, None], Union[str, None], Union[str, None], Union[str, None], Union[str, None], Union[float, None], Union[float, None], Union[str, None], Union[str, None]]
+CamCoordinate = Tuple[str, float, float]
 
-# Get online CCTV list from BMA Traffic
+def retrieve_camInfo_BMA(url: str = BASE_URL, max_retries: int = 5, delay: int = 5, timeout: int = 120) -> Union[List[CamInfo], Literal[False]]:
+    logger.info(f"[UPDATER] Getting camera list from {url}")
+    
+    def fetch_data():
+        for _ in range(max_retries):
+            try:
+                response = requests.get(url, timeout=timeout)
+                response.raise_for_status()
+                return response.text
+            except requests.RequestException as e:
+                logger.warning(f"[UPDATER] Error retrieving camera list: {e}. Retrying...")
+                time.sleep(delay)
+        return None
 
-def retrieve_camInfo_BMA(url = BASE_URL):
-    #Return list of tuple
-    print(f"\n[UPDATER] Getting camera list from {url}")
-    response = requests.get(url)
-    response.raise_for_status()  # Check if the request was successful
+    data = fetch_data()
+    if not data:
+        logger.error(f"[UPDATER] Failed to retrieve camera list after {max_retries} retries.")
+        return False
 
-    # Find the var locations = [...] data
-    data_pattern = re.compile(r"var locations = (\[.*?\]);", re.DOTALL)
-    match = data_pattern.search(response.text)
+    match = re.search(r"var locations = (\[.*?\]);", data, re.DOTALL)
+    if not match:
+        logger.error("[UPDATER] Error parsing camera list.")
+        return False
 
-    if match:
-        data_string = match.group(1)
+    try:
+        json_data = ast.literal_eval(match.group(1))
+    except (SyntaxError, ValueError) as e:
+        logger.error(f"[UPDATER] Error parsing JSON data: {e}")
+        return False
+
+    processed_data = []
+    for item in json_data:
+        code_match = re.match(r'^[A-Z0-9\-]+', item[1])
+        code = code_match.group(0) if code_match else None
+        cam_name = item[1][len(code):].strip() if code else item[1]
         
-        # Convert the JavaScript array to a Python list using ast.literal_eval
-        json_data = ast.literal_eval(data_string)
+        processed_item = (item[0], code, cam_name, *[i or None for i in item[2:9]])
+        processed_data.append(processed_item)
 
-        # Process data to use the specified column names
-        processed_data = []
-        for item in json_data:
-            code_match = re.match(r'^[A-Z0-9\-]+', item[1])
-            code = code_match.group(0) if code_match else ''
-            cam_name = item[1][len(code):].strip() if code else item[1]
-            
-            processed_item = (
-                item[0],       # ID
-                code or None,          # Code
-                cam_name or None,      # Cam_Name
-                item[2] or None,       # Cam_Name_e
-                item[3] or None,       # Cam_Location
-                item[4] or None,       # Cam_Direction
-                item[5] or None,       # Latitude
-                item[6] or None,       # Longitude
-                item[7] or None,       # IP
-                item[8] or None        # Icon
-            )
-            processed_data.append(processed_item)
-        
-        print("[UPDATER] Successfully getting camera list.")
-        return processed_data
-    else:
-        print("[UPDATER] Error getting camera list.")
-        return
+    logger.info("[UPDATER] Successfully retrieved camera list.")
+    return processed_data
 
-# Compare both online_cam and db_cam.
-# Take any duplicate record out from online_cam.
-# Return a list of tuple of new CCTV only
-# Return a list of tuple of all CCTV (ID, Latitude, and Longitude)
-
-def filter_new_and_all_cams(online_cam_info, db_cam_coordinate):
-    # Extract Cam_IDs from db_cam_coordinate (record from DB in a list of tuple) to create a set for quick lookup
-    db_cam_ids = set(str(cam[0]) for cam in db_cam_coordinate)
-
-    # List of tuple to store new camera info
+def filter_new_and_all_cams(online_cam_info: List[CamInfo], db_cam_coordinate: List[CamCoordinate]) -> Tuple[List[CamInfo], List[CamCoordinate]]:
+    db_cam_ids = {str(cam[0]) for cam in db_cam_coordinate}
     new_cam_info = []
+    all_cams_coordinate = set(db_cam_coordinate)
 
-    # List to store all unique cameras (combined db_cam_coordinate and online_cam_info)
-    all_cams_coordinate = db_cam_coordinate.copy()  # Start with db_cam_coordinate data
-
-    # Iterate over online_cam (list of tuple) to filter new cameras and update all_cams_combined
     for cam in online_cam_info:
-        
         cam_id = str(cam[0])
-
         if cam_id not in db_cam_ids:
-            # This camera is new, add to new_cam_info list
             new_cam_info.append(cam)
-            # Also add to all_cams_combined list
-            all_cams_coordinate.append((cam_id, cam[6], cam[7]))  # (Cam_ID, Latitude, Longitude)
-        else:
-            # Camera exists in db_cam, ensure it's in all_cams_combined
-            # Since all_cams_combined starts with db_cam data, this step is redundant here
-            pass
+            all_cams_coordinate.add((cam_id, cam[6], cam[7]))
 
-    return new_cam_info, all_cams_coordinate
+    return new_cam_info, list(all_cams_coordinate)
 
-def startUpdate(meters):
+def update_cctv_database(meters: int) -> Tuple[List[str], List[str]]:
     onlineCamInfo = retrieve_camInfo_BMA()
     table = 'cctv_locations_preprocessing'
     columns = ['cam_id', 'latitude', 'longitude']
     dbCamCoordinate = retrieve_data(table, columns)
+    cctv_list_all_db = [cam_id for cam_id, _, _ in dbCamCoordinate]
 
-    # Get new camera information and all camera coordinates
+    if not onlineCamInfo:
+        logger.warning("[UPDATER] Failed to retrieve camera list from BMA Traffic. Falling back to database.")
+        table = 'cctv_locations_preprocessing'
+        columns = ['Cam_ID']
+        condition = {'is_online': True}
+        cctv_list_online_db = retrieve_data(table, columns, condition)
+        return cctv_list_online_db, cctv_list_all_db
+
+    cctv_list_bma = sorted([str(t[0]) for t in onlineCamInfo], key=sort_key)
     new_cams_info, all_cams_coordinate = filter_new_and_all_cams(onlineCamInfo, dbCamCoordinate)
 
-    # Check if there are any new cameras
-    # In case there are no new cctv, remove `not` here to manually run the script
-    if not new_cams_info:
-        print("[UPDATER] No new cameras found.")
-    else:
-        print(f"[UPDATER] {len(new_cams_info)} cameras are found.")
-
-        new_cam_ids = [cam[0] for cam in new_cams_info]
-        print(f"[UPDATER] New camera IDs: {', '.join(map(str, new_cam_ids))}\n")
-
-        print(f"[UPDATER] Initializing clustering...")
+    if new_cams_info:
+        logger.info(f"[UPDATER] {len(new_cams_info)} new cameras found: {[cam[0] for cam in new_cams_info]}")
+        logger.info("[UPDATER] Initializing clustering...")
         
-        # Cluster the cameras based on their coordinates (DBSCAN)
-        clustered_cams_coordinate = cluster(meters, all_cams_coordinate)
-
         # Insert new camera records into the database
         table = 'cctv_image'
         columns = ['cam_id', 'cam_code', 'cam_name', 'cam_name_e', 'cam_location', 'cam_direction', 'latitude', 'longitude', 'ip', 'icon']
         insert_data(table, columns, new_cams_info)
-
-        print(f"[UPDATER] Added {len(new_cams_info)} new cameras to the database.")
-
+        
         # Update the camera clusters in the database
+        clustered_cams_coordinate = cluster(meters, all_cams_coordinate)
         table = 'cctv_locations_preprocessing'
         columns_to_update = ['cam_group']
         data_to_update = [(coord[1],) for coord in clustered_cams_coordinate]
@@ -136,19 +110,18 @@ def startUpdate(meters):
             columns_to_check_condition,
             data_to_check_condition
         )
+        
+        logger.info(f"[UPDATER] Added {len(new_cams_info)} new cameras and updated clusters in the database.")
+    else:
+        logger.info("[UPDATER] No new cameras found.")
 
-        print(f"[UPDATER] Updated camera clusters in the database.\n")
+    online_count = len(cctv_list_bma)
+    total_count = len(all_cams_coordinate)
+    logger.info(f"[UPDATER] {online_count} cameras are online out of {total_count}")
+    logger.info(f"[UPDATER] {total_count - online_count} cameras are offline")
+    logger.info("[UPDATER] Note: Online status doesn't guarantee operational status. Further checks will be initiated.")
 
-    # Get only the online camera IDs from the info
-    online_camera_ids = [t[0] for t in onlineCamInfo]
-
-    print(f"[UPDATER] {len(online_camera_ids)} cameras are online out of {len(all_cams_coordinate)}")
-    print(f"[UPDATER] {len(all_cams_coordinate) - len(online_camera_ids)} cameras are offline\n")
-    print(f"[UPDATER] Starting scraping!\n")
-
-    return online_camera_ids
-    # print(online_camera_ids)
-#     for element in online_camera_ids:
-#         print(f'Element: {element}, Type: {type(element)}')
+    return cctv_list_bma, cctv_list_all_db
+   
 
 # startUpdate(170)

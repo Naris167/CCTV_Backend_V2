@@ -1,7 +1,7 @@
 import re
 import requests
 import os
-from log_config import logger
+from utils.log_config import logger
 from typing import Optional, Tuple, List, Union
 import json
 from utils import sort_key
