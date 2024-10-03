@@ -30,9 +30,9 @@ def log_setup():
     global logger  # Make sure to refer to the global logger
     
     # Define the directory and log file path
-    log_directory = "./logs/GeneralCamLogs"
+    log_directory = "./logs/CameraScraper"
     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    log_filename = f"{log_directory}/GeneralCamInfo_{timestamp}.log"
+    log_filename = f"{log_directory}/CameraScraper_{timestamp}.log"
 
     # Check if the directory exists, if not, create it
     if not os.path.exists(log_directory):

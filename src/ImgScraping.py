@@ -2,7 +2,7 @@ import time
 import requests
 from requests.exceptions import RequestException, Timeout
 from typing import Optional
-from Database import *
+from log_config import logger
 from ImgSaving import save_image_to_db, save_image_to_file
 
 """ How this works? 
@@ -25,10 +25,10 @@ def get_session_id(url: str) -> Optional[str]:
             return session_id
         return None
     except Timeout:
-        print("Error: Request timed out while getting session ID")
+        logger.error("Error: Request timed out while getting session ID")
         return None
     except RequestException as e:
-        print(f"Error getting session ID: {e}")
+        logger.error(f"Error getting session ID: {e}")
         return None
 
 
@@ -44,7 +44,7 @@ def get_image(camera_id: int, session_id: str, save_path: str, save_to_db: bool,
 
         # Check if the image size is less than a certain size
         if len(response.content) < img_size:
-            print(f"Ignoring image from camera {camera_id} as it is smaller than {img_size} bytes")
+            logger.info(f"Ignoring image from camera {camera_id} as it is smaller than {img_size} bytes")
             return False
 
         if save_to_db:
@@ -52,7 +52,7 @@ def get_image(camera_id: int, session_id: str, save_path: str, save_to_db: bool,
         else:
             return save_image_to_file(camera_id, response.content, save_path)
     except RequestException as e:
-        print(f"Error getting image: {e}")
+        logger.error(f"Error getting image: {e}")
         return False
 
 
@@ -69,49 +69,49 @@ def play_video(camera_id: int, session_id: str, sleep: int, save_path: str, save
         time.sleep(sleep)  # Give some time for the video to start streaming
         return get_image(camera_id, session_id, save_path, save_to_db, img_size)
     except RequestException as e:
-        print(f"Error playing video: {e}")
+        logger.error(f"Error playing video: {e}")
         return False
 
 def scrape(camera_id: str, loop: int, sleep_after_connect: int, sleep_between_download: int, save_path: str, save_to_db: bool, img_size: int):
-    print(f"Getting sessionID for [{camera_id}]")
+    logger.info(f"Getting sessionID for [{camera_id}]")
     session_id = get_session_id(BASE_URL)
     if not session_id:
-        print(f"Failed to obtain session ID [{camera_id}]")
+        logger.error(f"Failed to obtain session ID [{camera_id}]")
         return
 
-    print(f"Session ID [{camera_id}]: {session_id}")
+    logger.info(f"Session ID [{camera_id}]: {session_id}")
     time.sleep(sleep_after_connect)
 
-    print(f"Playing video for [{camera_id}] ...")
+    logger.info(f"Playing video for [{camera_id}] ...")
     
     for i in range(loop):
         if play_video(camera_id, session_id, sleep_between_download, save_path, save_to_db, img_size):
-            print(f"Image saved [{camera_id}] [{i+1}/{loop}]")
+            logger.info(f"Image saved [{camera_id}] [{i+1}/{loop}]")
         else:
-            print(f"Failed to play video and get image for camera {camera_id} [{i}/{loop}]")
+            logger.error(f"Failed to play video and get image for camera {camera_id} [{i}/{loop}]")
 
 def scrape_sequential(camera_ids: str, loop: int, sleep_after_connect: int, sleep_between_download: int, save_path: str, save_to_db: bool, img_size: int, refresh_interval: int, progress_gui):
-    print(f"Getting sessionID for [{camera_ids}]")
+    logger.info(f"Getting sessionID for [{camera_ids}]")
     session_id = get_session_id(BASE_URL)
     if not session_id:
-        print("Failed to obtain initial session ID")
+        logger.error("Failed to obtain initial session ID")
         return
 
     for index, camera_id in enumerate(camera_ids):
         if index > 0 and index % refresh_interval == 0:
             session_id = get_session_id(BASE_URL)
             if not session_id:
-                print(f"Failed to refresh session ID after {index} images")
+                logger.error(f"Failed to refresh session ID after {index} images")
                 return
 
-        print(f"Session ID [{camera_id}]: {session_id}")
+        logger.info(f"Session ID [{camera_id}]: {session_id}")
         time.sleep(sleep_after_connect)
 
         for i in range(loop):
             if play_video(camera_id, session_id, sleep_between_download, save_path, save_to_db, img_size):
-                print(f"Image saved [{camera_id}] [{i+1}/{loop}]")
+                logger.info(f"Image saved [{camera_id}] [{i+1}/{loop}]")
             else:
-                print(f"Failed to play video and get image for camera {camera_id} [{i}/{loop}]")
+                logger.error(f"Failed to play video and get image for camera {camera_id} [{i}/{loop}]")
         progress_gui.increment_progress()
 
 

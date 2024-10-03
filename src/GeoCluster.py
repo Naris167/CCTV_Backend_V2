@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 from sklearn.cluster import DBSCAN
 from decimal import Decimal, getcontext
+from log_config import logger
 
 # Set the precision for Decimal calculations
 getcontext().prec = 100  # Set precision high enough for required accuracy
@@ -34,7 +35,7 @@ def meters_to_degrees(meters):
 
 
 def cluster(meters, all_cams_coordinate):
-    print(f"[CLUSTER] Distance set to {meters} meters")
+    logger.info(f"[CLUSTER] Distance set to {meters} meters")
 
     # Extract Cam_IDs and coordinates (Latitude, Longitude)
     cam_ids = [cam[0] for cam in all_cams_coordinate]
@@ -42,7 +43,7 @@ def cluster(meters, all_cams_coordinate):
     coordinates = np.array([(float(cam[1]), float(cam[2])) for cam in all_cams_coordinate], dtype=float)
 
     # Perform clustering using DBSCAN
-    print("[CLUSTER] Starting clustering...")
+    logger.info("[CLUSTER] Starting clustering...")
     dbscan = DBSCAN(eps=float(meters_to_degrees(meters)), min_samples=1, metric='haversine')
     dbscan.fit(np.radians(coordinates))  # Convert degrees to radians for haversine metric
 
@@ -52,7 +53,7 @@ def cluster(meters, all_cams_coordinate):
     # Combine Cam_ID, cluster group, latitude, and longitude into a list of tuples
     clustered_data = [(cam_id, int(label), float(lat), float(lon)) for cam_id, label, (lat, lon) in zip(cam_ids, labels, coordinates)]
 
-    print("[CLUSTER] Clustering completed!\n")
+    logger.info("[CLUSTER] Clustering completed!\n")
     return clustered_data
 
 

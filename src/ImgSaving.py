@@ -1,6 +1,7 @@
 from datetime import datetime
 import os
-from Database import add_image
+from Database import insert_data
+from log_config import logger
 
 
 def save_image_to_file(camera_id: int, image_data: bytes, save_path: str) -> bool:
@@ -10,13 +11,16 @@ def save_image_to_file(camera_id: int, image_data: bytes, save_path: str) -> boo
     try:
         with open(full_path, 'wb') as f:
             f.write(image_data)
-        print(f"Image saved as {full_path}")
+        logger.info(f"Image saved as {full_path}")
         return True
     except IOError as e:
-        print(f"Error saving image: {e}")
+        logger.error(f"Error saving image: {e}")
         return False
 
 
 def save_image_to_db(camera_id: int, image_data: bytes) -> bool:
-    add_image(camera_id, image_data, datetime.now())
+    table = 'cctv_images'
+    columns = ['cam_id', 'image_data', 'captured_at']
+    data_to_insert = [(camera_id, image_data, datetime.now())]
+    insert_data(table, columns, data_to_insert)
     return True

@@ -1,4 +1,4 @@
-from Database import retrieve_camLocation, add_camRecord, update_camCluster
+from Database import retrieve_data, insert_data, update_data
 import re
 import ast
 import requests
@@ -94,7 +94,9 @@ def filter_new_and_all_cams(online_cam_info, db_cam_coordinate):
 
 def startUpdate(meters):
     onlineCamInfo = retrieve_camInfo_BMA()
-    dbCamCoordinate = retrieve_camLocation()
+    table = 'cctv_locations_preprocessing'
+    columns = ['cam_id', 'latitude', 'longitude']
+    dbCamCoordinate = retrieve_data(table, columns)
 
     # Get new camera information and all camera coordinates
     new_cams_info, all_cams_coordinate = filter_new_and_all_cams(onlineCamInfo, dbCamCoordinate)
@@ -115,11 +117,26 @@ def startUpdate(meters):
         clustered_cams_coordinate = cluster(meters, all_cams_coordinate)
 
         # Insert new camera records into the database
-        add_camRecord(new_cams_info)
+        table = 'cctv_image'
+        columns = ['cam_id', 'cam_code', 'cam_name', 'cam_name_e', 'cam_location', 'cam_direction', 'latitude', 'longitude', 'ip', 'icon']
+        insert_data(table, columns, new_cams_info)
+
         print(f"[UPDATER] Added {len(new_cams_info)} new cameras to the database.")
 
         # Update the camera clusters in the database
-        update_camCluster(clustered_cams_coordinate)
+        table = 'cctv_locations_preprocessing'
+        columns_to_update = ['cam_group']
+        data_to_update = [(coord[1],) for coord in clustered_cams_coordinate]
+        columns_to_check_condition = ['cam_id']
+        data_to_check_condition = [coord[0] for coord in clustered_cams_coordinate]
+        update_data(
+            table,
+            columns_to_update,
+            data_to_update,
+            columns_to_check_condition,
+            data_to_check_condition
+        )
+
         print(f"[UPDATER] Updated camera clusters in the database.\n")
 
     # Get only the online camera IDs from the info

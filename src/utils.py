@@ -1,4 +1,10 @@
 import psycopg2
+import re
+from typing import List, Dict, Any, Tuple, Union
+from log_config import logger
+from collections import defaultdict
+
+BASE_URL = "http://www.bmatraffic.com"
 
 def image_to_binary(image_input):
     if isinstance(image_input, bytes):
@@ -13,14 +19,6 @@ def binary_to_image(binary_data, output_path):
     with open(output_path, 'wb') as file:
         file.write(binary_data)
 
-
-
-import re
-from typing import List, Dict, Any, Tuple, Union
-from log_config import logger
-from collections import defaultdict
-
-BASE_URL = "http://www.bmatraffic.com"
 
 def sort_key(item):
     # Split the string into parts with numeric and non-numeric components

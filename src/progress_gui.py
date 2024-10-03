@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 import threading
 import time
-import logging
+from log_config import logger
 
 class ProgressGUI:
     def __init__(self, total_tasks):
@@ -42,7 +42,7 @@ class ProgressGUI:
     # logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
     def increment_progress(self):
-        logging.debug("Incrementing progress")
+        logger.info("Incrementing progress")
         self.completed_tasks += 1
         self.root.after(0, self.update_progress)
 
