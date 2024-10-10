@@ -1,7 +1,7 @@
 import subprocess
 import json
 import os
-from utils import binary_to_image
+from utils.utils import binary_to_image
 
 def get_video_resolution(stream_url):
     """Get the resolution (width, height) of the video stream using ffprobe."""
@@ -19,12 +19,8 @@ def get_video_resolution(stream_url):
     except (subprocess.CalledProcessError, json.JSONDecodeError, KeyError, IndexError) as e:
         raise RuntimeError(f"Failed to get video resolution: {str(e)}")
 
-def capture_one_screenshot_from_hls(stream_url, output_dir):
+def capture_one_screenshot_from_hls(stream_url):
     """Captures a single frame from an HLS stream and saves it as an image."""
-    try:
-        os.makedirs(output_dir, exist_ok=True)
-    except PermissionError:
-        raise PermissionError(f"Permission denied when creating directory {output_dir}. Check your write permissions.")
 
     try:
         width, height = get_video_resolution(stream_url)

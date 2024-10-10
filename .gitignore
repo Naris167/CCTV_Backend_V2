@@ -5,6 +5,8 @@ tempCodeRunnerFile.py
 .env.local
 .env.prod
 __pycache__/
+downloads/
+captured_screenshot/
 Images/
 Images_new/
 *.zip

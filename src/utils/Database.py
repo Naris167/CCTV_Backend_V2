@@ -6,7 +6,7 @@ from utils.log_config import logger
 from utils.utils import sort_key
 from typing import List, Tuple, Dict, Optional, Any
 
-load_dotenv('.env.local')
+load_dotenv('.env.prod')
 
 @contextmanager
 def get_db_connection():
@@ -69,7 +69,12 @@ def execute_db_operation(query: str, operation_type: str, params: Optional[Any] 
 table = 'cctv_locations_general'
 columns = ['Cam_ID', 'Location'] # If you want to query for specified clomuns
 all_column = ['*'] # If you want to query for all clomuns
-condition = {'IsActive': True, 'IsFlood': True} # This param is optional
+conditions = {
+    'cam_id': ['CAM001', 'CAM002', 'CAM003'],  # List of CCTV IDs
+    'location': ['New York', 'Los Angeles'],   # List of locations
+    'status': 'active'                         # Single value for status
+}
+
 
 results = retrieve_data(table, columns, condition)
 '''
@@ -84,8 +89,13 @@ def retrieve_data(table: str, columns: List[str], conditions: Optional[Dict[str,
         if conditions:
             where_clauses = []
             for key, value in conditions.items():
-                where_clauses.append(f"{key} = %({key})s")
-                params[key] = value
+                if isinstance(value, list):
+                    placeholders = [f"%({key}_{i})s" for i in range(len(value))]
+                    where_clauses.append(f"{key} IN ({', '.join(placeholders)})")
+                    params.update({f"{key}_{i}": v for i, v in enumerate(value)})
+                else:
+                    where_clauses.append(f"{key} = %({key})s")
+                    params[key] = value
             query += " WHERE " + " AND ".join(where_clauses)
 
         # Execute the query
@@ -94,9 +104,7 @@ def retrieve_data(table: str, columns: List[str], conditions: Optional[Dict[str,
         # Sort the results if 'Cam_ID' is in the columns
         if 'Cam_ID' in columns:
             cam_id_index = columns.index('Cam_ID')
-            results = sorted([row[cam_id_index] for row in results], key=sort_key)
-        else:
-            results = [row for row in results]
+            results = sorted(results, key=lambda x: sort_key(x[cam_id_index]))
         
         logger.info(f"[DATABASE] Successfully retrieved data from {table}")
         return results
@@ -120,14 +128,14 @@ data_to_insert = [
 insert_data(table, columns, data_to_insert)
 '''
 
-def insert_data(table: str, columns: List[str], params: List[Tuple[Any, ...]]) -> int:
+def insert_data(table: str, columns: List[str], data_to_insert: List[Tuple[Any, ...]]) -> int:
     try:
         # Construct the base query
         placeholders = ', '.join(['%s' for _ in columns])
         query = f"INSERT INTO {table} ({', '.join(columns)}) VALUES ({placeholders})"
 
         # Execute the query
-        rows_inserted = execute_db_operation(query, "insert", params)
+        rows_inserted = execute_db_operation(query, "insert", data_to_insert)
         logger.info(f"[DATABASE] Successfully inserted {rows_inserted} rows to {table}")
         return
 
