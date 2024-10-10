@@ -1,0 +1,12 @@
+.env
+.env.local
+.env.prod
+*.zip
+logs/
+cctvSessionTemp/
+tempCodeRunnerFile.*
+images/
+*jpg
+__pycache__/
+/__pycache__
+src/General/downloads
