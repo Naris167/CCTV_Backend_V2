@@ -1,0 +1,35 @@
+# Environment and local configuration files
+.env
+.env.local
+.env.prod
+
+# Python-related files and directories
+__pycache__/
+*.pyc
+tempCodeRunnerFile.py
+tempCodeRunnerFile.*
+
+# Log files
+*.log
+logs/
+
+# Temporary and session files
+cctvSessionTemp/
+
+# Image files and directories
+*.jpg
+Images/
+Images_new/
+images/
+captured_screenshot/
+
+# Download directories
+downloads/
+src/General/downloads
+
+# Compressed files
+*.zip
+
+# Microsoft Office temporary files
+~$*
+

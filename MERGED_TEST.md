@@ -8,6 +8,8 @@ git init
 # Set up the new remote
 git remote add origin https://github.com/Naris167/CCTV_Backend_V2.git
 
+create a test file and commit on master as initial commit
+
 # Create and switch to bmatraffic branch
 git checkout -b bmatraffic
 git remote add bmatraffic https://github.com/Naris167/bmatraffic_cctv_scraping.git

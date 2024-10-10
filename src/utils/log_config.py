@@ -2,6 +2,8 @@ import logging
 import os
 import sys
 from datetime import datetime
+import os
+import errno
 
 # Custom StreamHandler to support encoding
 class CustomStreamHandler(logging.StreamHandler):
@@ -26,17 +28,21 @@ logger = logging.getLogger("my_logger")
 logger.setLevel(logging.DEBUG)
 
 # Logging configuration
-def log_setup():
+def log_setup(log_directory: str, log_name: str):
     global logger  # Make sure to refer to the global logger
     
     # Define the directory and log file path
-    log_directory = "./logs/CameraScraper"
+    # log_directory = "./logs/CameraScraper"
     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    log_filename = f"{log_directory}/CameraScraper_{timestamp}.log"
+    log_filename = f"{log_directory}/{log_name}_{timestamp}.log"
+    # log_filename = f"{log_directory}/CameraScraper_{timestamp}.log"
 
     # Check if the directory exists, if not, create it
-    if not os.path.exists(log_directory):
-        os.makedirs(log_directory, exist_ok=True)
+    try:
+        isDirExist(log_directory)
+    except Exception as e:
+        print(f"Error: {e}")
+        return
 
     # Create handlers with UTF-8 encoding
     stdout_handler = CustomStreamHandler(sys.stdout, encoding='utf-8')
@@ -81,3 +87,32 @@ def log_setup():
 
     # Example log message to confirm setup
     logger.info("[MAIN] Logging setup completed!")
+
+
+def isDirExist(directory: str):
+    try:
+        # Check if the directory exists
+        if not os.path.exists(directory):
+            os.makedirs(directory, exist_ok=True)
+        
+        # Check if the directory is writable
+        test_file = os.path.join(directory, 'test_write.tmp')
+        try:
+            with open(test_file, 'w') as f:
+                f.write('test')
+            os.remove(test_file)
+        except IOError as e:
+            raise IOError(f"Directory {directory} is not writable: {e}")
+        
+        print(f"Directory {directory} exists and is writable.")
+        return True
+    
+    except PermissionError:
+        raise PermissionError(f"No permission to create or write to directory: {directory}")
+    except OSError as e:
+        if e.errno == errno.ENOSPC:
+            raise OSError(f"No space left on device to create directory: {directory}")
+        elif e.errno == errno.ENAMETOOLONG:
+            raise OSError(f"File name too long: {directory}")
+        else:
+            raise OSError(f"Error creating or accessing directory {directory}: {e}")

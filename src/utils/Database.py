@@ -6,7 +6,7 @@ from utils.log_config import logger
 from utils.utils import sort_key
 from typing import List, Tuple, Dict, Optional, Any
 
-load_dotenv('.env.prod')
+load_dotenv('.env.local')
 
 @contextmanager
 def get_db_connection():
@@ -79,7 +79,7 @@ conditions = {
 results = retrieve_data(table, columns, condition)
 '''
 
-def retrieve_data(table: str, columns: List[str], conditions: Optional[Dict[str, Any]] = None) -> List[Any]:
+def retrieve_data(table: str, columns: List[str], conditions: Optional[Dict[str, Any]] = None) -> List[Tuple[Any, ...]]:
     try:
         # Construct the base query
         query = f"SELECT {', '.join(columns)} FROM {table}"
@@ -100,11 +100,6 @@ def retrieve_data(table: str, columns: List[str], conditions: Optional[Dict[str,
 
         # Execute the query
         results = execute_db_operation(query, "fetch", params if params else None)
-
-        # Sort the results if 'Cam_ID' is in the columns
-        if 'Cam_ID' in columns:
-            cam_id_index = columns.index('Cam_ID')
-            results = sorted(results, key=lambda x: sort_key(x[cam_id_index]))
         
         logger.info(f"[DATABASE] Successfully retrieved data from {table}")
         return results

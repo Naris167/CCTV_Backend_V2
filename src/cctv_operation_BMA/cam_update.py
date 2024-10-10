@@ -4,12 +4,11 @@ import requests
 import time
 from typing import List, Tuple, Union, Literal, Dict
 
-from database import retrieve_camLocation, add_camRecord, retrieve_onlineCam, update_camCluster
-from utils import sort_key
-from cam_cluster import cluster
-from log_config import logger
-
-BASE_URL = "http://www.bmatraffic.com"
+from utils.Database import retrieve_data, update_data, insert_data
+from utils.utils import sort_key
+from utils.GeoCluster import cluster
+from utils.log_config import logger
+from utils.utils import BASE_URL 
 
 CamInfo = Tuple[str, Union[str, None], Union[str, None], Union[str, None], Union[str, None], Union[str, None], Union[float, None], Union[float, None], Union[str, None], Union[str, None]]
 CamCoordinate = Tuple[str, float, float]
@@ -71,12 +70,12 @@ def filter_new_and_all_cams(online_cam_info: List[CamInfo], db_cam_coordinate: L
 
 def update_cctv_database(meters: int) -> Tuple[List[str], List[str]]:
     onlineCamInfo = retrieve_camInfo_BMA()
-    dbCamCoordinate = retrieve_camLocation()
+    dbCamCoordinate = retrieve_data('cctv_locations_preprocessing', ['cam_id', 'latitude', 'longitude'])
     cctv_list_all_db = [cam_id for cam_id, _, _ in dbCamCoordinate]
 
     if not onlineCamInfo:
         logger.warning("[UPDATER] Failed to retrieve camera list from BMA Traffic. Falling back to database.")
-        cctv_list_online_db = retrieve_onlineCam()
+        cctv_list_online_db = retrieve_data('cctv_locations_preprocessing', ['Cam_ID'], {'is_online': True})
         return cctv_list_online_db, cctv_list_all_db
 
     cctv_list_bma = sorted([str(t[0]) for t in onlineCamInfo], key=sort_key)
@@ -87,8 +86,18 @@ def update_cctv_database(meters: int) -> Tuple[List[str], List[str]]:
         logger.info("[UPDATER] Initializing clustering...")
         
         clustered_cams_coordinate = cluster(meters, all_cams_coordinate)
-        add_camRecord(new_cams_info)
-        update_camCluster(clustered_cams_coordinate)
+        
+        insert_data('cctv_image',
+                    ['cam_id', 'cam_code', 'cam_name', 'cam_name_e', 'cam_location', 'cam_direction', 'latitude', 'longitude', 'ip', 'icon'],
+                    new_cams_info
+        )
+        update_data(
+            'cctv_locations_preprocessing',
+            ['cam_group'],
+            [(coord[1],) for coord in clustered_cams_coordinate],
+            ['cam_id'],
+            [coord[0] for coord in clustered_cams_coordinate]
+        )
         
         logger.info(f"[UPDATER] Added {len(new_cams_info)} new cameras and updated clusters in the database.")
     else:

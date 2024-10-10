@@ -7,7 +7,7 @@ config = {
     'sleep_between_download': 1,  # Waiting time (in seconds) between each image download
 
     # Storage Settings
-    'json_path': "./images_new/",
+    'json_path': "./cctvSessionTemp/",
     'save_path': "./images_new/",  # Directory path to save images when 'save_to_db' is set to False
     'save_to_db': True,  # Set to True to save images to the database
 

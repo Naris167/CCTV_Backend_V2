@@ -3,8 +3,8 @@ import json
 from datetime import datetime
 from typing import Tuple, Dict, Optional
 from pathlib import Path
-from utils.scraper_config import config
-from utils.log_config import logger
+from python_config import config
+from utils.log_config import isDirExist, logger
 
 JSON_DIRECTORY = Path(config['json_path'])
 
@@ -35,7 +35,7 @@ def load_latest_cctv_sessions_from_json() -> Optional[Tuple[str, str, Dict[str, 
         return None
 
 def save_alive_session_to_file(cctv_sessions: Dict[str, str], latest_refresh_time: str, latest_update_time: str) -> None:
-    JSON_DIRECTORY.mkdir(exist_ok=True)
+    isDirExist(JSON_DIRECTORY)
     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     filename = JSON_DIRECTORY / f"cctv_sessions_{timestamp}.json"
 

@@ -12,3 +12,4 @@ beautifulsoup4
 openpyxl
 distance-metrics
 tk
+readerwriterlock

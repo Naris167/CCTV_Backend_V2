@@ -7,6 +7,7 @@ from typing import List, Dict, Any, Tuple, Union
 from utils.log_config import logger
 from collections import defaultdict
 
+
 BASE_URL = "http://www.bmatraffic.com"
 
 def image_to_binary(image_input):
@@ -198,3 +199,6 @@ def check_cctv_integrity(cctv_working: Dict[str, str], cctv_unresponsive: Dict[s
             integrity_issues.append(f"Same key-value pair found in both dictionaries: key '{key}', value '{value}'")
 
     return len(integrity_issues) == 0, integrity_issues
+
+
+

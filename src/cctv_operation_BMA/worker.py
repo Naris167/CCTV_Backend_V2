@@ -3,9 +3,9 @@ from threading import Semaphore
 import time
 from typing import List, Dict
 
-from cam_session import get_cctv_session_id, play_video, get_image
-from cam_movement import detect_movement
-from log_config import logger
+from cctv_operation_BMA.getDataBMA import get_cctv_session_id, play_video, get_image
+from utils.utils import detect_movement
+from utils.log_config import logger
 
 
 # Locks for thread safety

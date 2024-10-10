@@ -1,24 +1,34 @@
-from worker import create_sessionID, validate_sessionID
-from updateCamInfo import startUpdate
-from utils.progress_gui import gui_setup, get_progress_gui
-from utils.log_config import log_setup, logger
-from utils.scraper_config import config
-from utils.utils import sort_key, select_non_empty, create_cctv_status_dict, check_cctv_integrity
-from utils.Database import retrieve_data, update_data
-from updateCamInfo import update_cctv_database, retrieve_camInfo_BMA
+import sys
 import threading
 from threading import Semaphore
-from typing import List, Dict, Tuple, Optional, Union, Literal
 from datetime import datetime, timedelta
+from typing import Dict, List, Tuple, Union, Optional, Literal
 
-camera_ids = startUpdate(170)    # List of online CCTV IDs + update CCTV info in DB + distance in meter for clustering
+from cctv_operation_BMA.cam_update import update_cctv_database, retrieve_camInfo_BMA
+from utils.log_config import logger, log_setup
+from utils.Database import retrieve_data, update_data
+from utils.json_manager import save_alive_session_to_file, load_latest_cctv_sessions_from_json
+from cctv_operation_BMA.worker import create_sessionID, validate_sessionID, quick_refresh_sessionID
+from utils.utils import sort_key, readable_time, create_cctv_status_dict, select_non_empty, check_cctv_integrity
 
-# Configure logging
-log_setup()
-
-# Setup the ProgressGUI is disable now
-# gui_setup(total_tasks=len(camera_ids))
-
+def initialize() -> int:
+    while True:
+        try:
+            if len(sys.argv) > 1:
+                param = int(sys.argv[1])
+            else:
+                user_input = input("Please enter the parameter number: ")
+                param = int(user_input)
+            
+            log_setup("./logs/sessionID","sessionID")
+            logger.info(f"[MAIN] Application initialized with parameter {param}")
+            logger.info("[MAIN] Application started...")
+            return param
+        except ValueError:
+            print("Invalid input. Please enter a valid integer.")
+            logger.error("Invalid parameter input. User will be prompted to try again.")
+            if len(sys.argv) > 1:
+                sys.argv.pop(1)  # Remove the invalid argument so we prompt for input next time
 
 def finalize(cctv_list: Optional[List[str]], cctv_working: Dict[str, str], cctv_unresponsive: Dict[str, str], 
              cctv_fail: List[str], cctv_recheck: Optional[Dict[str, str]], current_time: str, latest_update_time: str) -> None:
@@ -41,37 +51,29 @@ def finalize(cctv_list: Optional[List[str]], cctv_working: Dict[str, str], cctv_
         if items:
             logger.warning(f"[MAIN] {count} CCTVs are {category}: {items}")
 
-
     table = 'cctv_locations_preprocessing'
     columns_to_update = ['is_online']
     
-    data_to_update = [(False,)]
     update_data(
         table,
         columns_to_update,
-        data_to_update
+        [(False,)]
     )
 
-    data_to_update = [(True,)]
-    columns_to_check_condition = ['cam_id']
-    data_to_check_condition = [list(cctv_working.keys())]
     update_data(
         table,
         columns_to_update,
-        data_to_update,
-        columns_to_check_condition,
-        data_to_check_condition
+        [(True,)],
+        ['cam_id'],
+        [list(cctv_working.keys())]
     )
 
-    data_to_update = [(False,)]
-    columns_to_check_condition = ['cam_id']
-    data_to_check_condition = [list(cctv_unresponsive.keys()) + cctv_fail]
     update_data(
         table,
         columns_to_update,
-        data_to_update,
-        columns_to_check_condition,
-        data_to_check_condition
+        [(False,)],
+        ['cam_id'],
+        [list(cctv_unresponsive.keys()) + cctv_fail]
     )
 
     integrity_passed, issues = check_cctv_integrity(cctv_working, cctv_unresponsive, cctv_fail)
@@ -80,9 +82,8 @@ def finalize(cctv_list: Optional[List[str]], cctv_working: Dict[str, str], cctv_
         for issue in issues:
             logger.warning(f"[MAIN] {issue}")
 
-    # save_alive_session_to_file(cctv_working, current_time, latest_update_time)
+    save_alive_session_to_file(cctv_working, current_time, latest_update_time)
     logger.info("[MAIN] Finalization process completed.")
-
 
 def prepare_create_sessionID_workers(cctv_list: List[str], alive_session: Dict[str, str] = None) -> Tuple[Dict[str, str], List[str]]:
     max_workers = 80
@@ -111,19 +112,18 @@ def prepare_create_sessionID_workers(cctv_list: List[str], alive_session: Dict[s
 
     return alive_session, cctv_fail
 
-def prepare_validate_sessionID_workers(cctvSessions: Dict[str, str]) -> Tuple[Dict[str, str], Dict[str, str], Dict[str, List[bytes]]]:
+def prepare_validate_sessionID_workers(cctvSessions: Dict[str, str]) -> Tuple[Dict[str, str], Dict[str, str]]:
     max_workers = 80
     semaphore = Semaphore(max_workers)
     threads = []
     working_session = {}
     unresponsive_session = {}
-    all_cctv_image_list = {}
 
     logger.info("[THREADING-V] Initializing session validation workers.")
 
     for camera_id, session_id in cctvSessions.items():
         semaphore.acquire()
-        thread = threading.Thread(target=validate_sessionID, args=(camera_id, session_id, semaphore, working_session, unresponsive_session, all_cctv_image_list))
+        thread = threading.Thread(target=validate_sessionID, args=(camera_id, session_id, semaphore, working_session, unresponsive_session))
         thread.start()
         threads.append(thread)
 
@@ -139,8 +139,23 @@ def prepare_validate_sessionID_workers(cctvSessions: Dict[str, str]) -> Tuple[Di
     logger.info(f"[THREADING-V] {len(unresponsive_session)} sessions are unresponsive from CCTV: {unresponsive_session}")
     logger.info("[THREADING-V] All sessions are validated.")
 
-    return working_session, unresponsive_session, all_cctv_image_list
+    return working_session, unresponsive_session
 
+def prepare_quick_refresh_sessionID_workers(loaded_JSON_cctvSessions: Dict[str, str]) -> None:
+    max_workers = 80
+    semaphore = Semaphore(max_workers)
+    threads = []
+
+    for camera_id, session_id in loaded_JSON_cctvSessions.items():
+        semaphore.acquire()
+        thread = threading.Thread(target=quick_refresh_sessionID, args=(camera_id, session_id, semaphore))
+        thread.start()
+        threads.append(thread)
+
+    for thread in threads:
+        thread.join()
+
+    logger.info("[THREADING-Q] Quick refresh completed for all sessions.")
 
 def sync_cctv_sessions(working_session: Dict[str, str]) -> Tuple[Union[List[str], Literal[False]], Optional[Dict[str, str]]]:
     logger.info("[SYNC_CCTV] Syncing CCTV sessions...")
@@ -163,17 +178,16 @@ def sync_cctv_sessions(working_session: Dict[str, str]) -> Tuple[Union[List[str]
 
     return get_session, recheck_session
 
-# Run this using JSON session ID
 def startValidatingSessionID(camDistance: int, loaded_JSON_cctvSessions: Dict[str, str], loaded_JSON_latestUpdateTime: str) -> None:
     try:
-        cctv_working, cctv_unresponsive, all_cctv_image_list = prepare_validate_sessionID_workers(loaded_JSON_cctvSessions)
+        cctv_working, cctv_unresponsive = prepare_validate_sessionID_workers(loaded_JSON_cctvSessions)
         get_session, cctv_recheck = sync_cctv_sessions(cctv_working)
 
         if get_session:
             logger.info(f"[MAIN] {len(get_session)} New CCTV available: {get_session}.")
             logger.info(f"Starting to get session IDs")
             cctv_session, cctv_fail = prepare_create_sessionID_workers(get_session)
-            cctv_working_new, cctv_unresponsive_new, all_cctv_image_list = prepare_validate_sessionID_workers(cctv_session)
+            cctv_working_new, cctv_unresponsive_new = prepare_validate_sessionID_workers(cctv_session)
 
             cctv_working.update(cctv_working_new)
             cctv_working = dict(sorted(cctv_working.items(), key=lambda x: sort_key(x[0])))
@@ -189,15 +203,10 @@ def startValidatingSessionID(camDistance: int, loaded_JSON_cctvSessions: Dict[st
         logger.warning("[MAIN] Failed to refresh and prepare all session IDs. Trying to get a new set of CCTV info and session ID.")
         startGettingNewSessionID(camDistance)
 
-
-# Run this one when JSON session ID is unusable
 def startGettingNewSessionID(camDistance: int) -> None:
     logger.info("[MAIN] Starting to get a new set of CCTV info and session ID.")
     cctv_list_bma, cctv_list_db_secondary = update_cctv_database(camDistance)
-
-    table = 'cctv_locations_preprocessing'
-    columns = ['cam_id']
-    cctv_list_db_primary = retrieve_data(table, columns)
+    cctv_list_db_primary = sorted([str(item[0]) for item in retrieve_data('cctv_locations_preprocessing', ['cam_id'])], key=lambda x: sort_key(x[0]))
     
     if not any((cctv_list_db_primary, cctv_list_bma, cctv_list_db_secondary)):
         logger.error("[MAIN] Script will be terminated due to failure of getting CCTV IDs and session IDs.")
@@ -212,27 +221,70 @@ def startGettingNewSessionID(camDistance: int) -> None:
     logger.info(f"[MAIN] '{item_name}' has been selected, containing {len(cctv_list)} CCTV IDs.")
 
     cctv_session, cctv_fail = prepare_create_sessionID_workers(cctv_list)
-    cctv_working, cctv_unresponsive, all_cctv_image_list = prepare_validate_sessionID_workers(cctv_session)
+    cctv_working, cctv_unresponsive = prepare_validate_sessionID_workers(cctv_session)
 
     current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     finalize(cctv_list, cctv_working, cctv_unresponsive, cctv_fail, None, current_time, current_time)
 
     logger.info("[MAIN] All session IDs have been successfully prepared and saved.")
 
+def startQuickRefreshSessionID(loaded_JSON_cctvSessions: Dict[str, str]) -> None:
+    logger.info("[MAIN] Starting quick refresh to keep session IDs alive during new session ID processing.")
+    prepare_quick_refresh_sessionID_workers(loaded_JSON_cctvSessions)
+    logger.info("[MAIN] Quick refresh of session IDs completed.")
+
+if __name__ == "__main__":
+    camDistance = initialize()
+    result = load_latest_cctv_sessions_from_json()
+
+    if result:
+        loaded_JSON_latestRefreshTime, loaded_JSON_latestUpdateTime, loaded_JSON_cctvSessions = result
+        logger.info(f"[INFO] Latest Refresh Time: {loaded_JSON_latestRefreshTime}")
+        logger.info(f"[INFO] Latest Update Time: {loaded_JSON_latestUpdateTime}")
+        logger.info(f"[INFO] CCTV Sessions: {loaded_JSON_cctvSessions}")
+
+        current_time = datetime.now()
+        loaded_JSON_latestUpdateTime_dt = datetime.strptime(loaded_JSON_latestUpdateTime, "%Y-%m-%d %H:%M:%S")
+        timeDiffUpdate = current_time - loaded_JSON_latestUpdateTime_dt
+        total_seconds_timeDiffUpdate = int(timeDiffUpdate.total_seconds())
+        readable_diff_update = readable_time(total_seconds_timeDiffUpdate)
+
+        loaded_JSON_latestRefreshTime_dt = datetime.strptime(loaded_JSON_latestRefreshTime, "%Y-%m-%d %H:%M:%S")
+        timeDiffRefresh = current_time - loaded_JSON_latestRefreshTime_dt
+        total_seconds_timeDiffRefresh = int(timeDiffUpdate.total_seconds())
+        readable_diff_refresh = readable_time(total_seconds_timeDiffRefresh)
 
 
+        max_timeDiffUpdate = timedelta(hours=4, minutes=0)
+        readable_max_timeDiffUpdate = readable_time(max_timeDiffUpdate.total_seconds())
 
-# def run_scraping_tasks():
-#     try:
-#         alive_session, cctv_fail = prepare_create_sessionID_workers()
-#         working_session, unresponsive_session, all_cctv_image_list = prepare_validate_sessionID_workers(alive_session)
-#     except Exception as e:
-#         logger.error(f"An error occurred during scraping: {str(e)}")
-#     finally:
-#         get_progress_gui().quit()
+        max_timeDiffRefresh = timedelta(minutes=17)
+        readable_max_timeDiffRefresh = readable_time(max_timeDiffRefresh.total_seconds())
+
+        if timeDiffUpdate < max_timeDiffUpdate and timeDiffRefresh < max_timeDiffRefresh:
+            logger.info(f"[INFO] The latest update occurred at {loaded_JSON_latestUpdateTime}, which was {readable_diff_update} ago.")
+            logger.info(f"[INFO] The latest refresh occurred at {loaded_JSON_latestRefreshTime}, which was {readable_diff_refresh} ago.")
+            startValidatingSessionID(camDistance, loaded_JSON_cctvSessions, loaded_JSON_latestUpdateTime)
+        elif timeDiffUpdate < max_timeDiffUpdate and timeDiffRefresh >= max_timeDiffRefresh:
+            logger.info(f"[INFO] The latest update occurred at {loaded_JSON_latestUpdateTime}, {readable_diff_update} ago.")
+            logger.info(f"[INFO] The latest refresh occurred at {loaded_JSON_latestRefreshTime}, {readable_diff_refresh} ago, exceeding the maximum allowed time difference of {readable_max_timeDiffUpdate}.")
+            startGettingNewSessionID(camDistance)
+        elif timeDiffUpdate >= max_timeDiffUpdate and timeDiffRefresh <= max_timeDiffRefresh:
+            logger.info(f"[INFO] The latest update occurred at {loaded_JSON_latestUpdateTime}, {readable_diff_update} ago, exceeding the maximum allowed time difference of {readable_max_timeDiffUpdate}.")
+            logger.info(f"[INFO] The latest refresh occurred at {loaded_JSON_latestRefreshTime}, {readable_diff_refresh} ago.")
+            startQuickRefreshSessionID(loaded_JSON_cctvSessions)
+            startGettingNewSessionID(camDistance)
+        else:
+            logger.info(f"[INFO] The latest update occurred at {loaded_JSON_latestUpdateTime}, {readable_diff_update} ago, exceeding the maximum allowed time difference of {readable_max_timeDiffUpdate}.")
+            logger.info(f"[INFO] The latest refresh occurred at {loaded_JSON_latestRefreshTime}, {readable_diff_refresh} ago, exceeding the maximum allowed time difference of {readable_max_timeDiffUpdate}.")
+            startGettingNewSessionID(camDistance)
+    else:
+        logger.warning("[INFO] No JSON file found or failed to load. Fetching all session ID")
+        startGettingNewSessionID(camDistance)
+'''
+1. In case where all session IDs are expried but script try to validate all of them, it will take time around 10 minutes
+2. In case where all max time diff exceeded, it will take time around 10 minutes
+3. In case of validating sesion IDs, it will take around 
+'''
 
 
-# Start the progress GUI and run the scraping tasks
-logger.info("Starting Progress GUI and scraping tasks")
-# get_progress_gui().run(run_scraping_tasks, ())
-logger.info("Completed scraping tasks")

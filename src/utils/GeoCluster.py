@@ -1,9 +1,9 @@
+import pandas as pd
 import numpy as np
 from sklearn.cluster import DBSCAN
 from decimal import Decimal, getcontext
-from log_config import logger
+from utils.log_config import logger
 from typing import List, Tuple
-
 
 # Set the precision for Decimal calculations
 getcontext().prec = 100  # Set precision high enough for required accuracy
@@ -56,3 +56,6 @@ def cluster(meters: int, all_cams_coordinate: List[Tuple[str, float, float]]) ->
 
     logger.info("[CLUSTER] Clustering completed!")
     return clustered_data
+
+
+
