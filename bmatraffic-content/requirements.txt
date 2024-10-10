@@ -1,0 +1,14 @@
+requests
+psycopg2-binary
+psycopg2
+python-dotenv
+pandas
+numpy
+scikit-learn
+geopy
+matplotlib
+Pillow
+beautifulsoup4
+openpyxl
+distance-metrics
+tk

@@ -1,0 +1,192 @@
+<div class="popup-img" id="flipbook">
+  <iframe
+    src="http://www.bmatraffic.com/PlayVideo.aspx?ID=1639"
+    scrolling="no"
+    frameborder="0"
+    style="
+      width: 100%;
+      height: 100%;
+      display: block;
+      padding: 0px;
+      margin-top: 0px;
+    "
+  >
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <meta http-equiv="cache-control" content="no-cache" />
+        <meta http-equiv="expires" content="0" />
+        <meta http-equiv="pragma" content="no-cache" />
+
+        <title> </title>
+      </head>
+      <body style="width: 400px; height: 266px">
+        <form method="post" action="./PlayVideo.aspx?ID=1639" id="form1">
+          <div class="aspNetHidden">
+            <input
+              type="hidden"
+              name="__VIEWSTATE"
+              id="__VIEWSTATE"
+              value="/wEPDwULLTE2MTY2ODcyMjlkZOdB9uV+vy3FC62+BhQJVbJwZWVwWLVx3Pdagshw7A5Z"
+            />
+          </div>
+
+          <div class="aspNetHidden">
+            <input
+              type="hidden"
+              name="__VIEWSTATEGENERATOR"
+              id="__VIEWSTATEGENERATOR"
+              value="17310644"
+            />
+          </div>
+
+          <img
+            id="webcamera"
+            name="webcam"
+            width="400"
+            height="266"
+            alt=""
+            src="http://www.bmatraffic.com/show.aspx?image=1639&amp;&amp;time=1720067459644"
+          />
+
+          <img
+            id="imagequere"
+            name="quere"
+            width="400"
+            height="266"
+            style="margin-top: -266px"
+            src="ShowImageMark.aspx?image=1639&amp;&amp;time=1720067420726"
+          />
+          <script type="text/javascript">
+            function getUrlParameters(parameter, staticURL, decode) {
+              /*
+                     Function: getUrlParameters
+                     Description: Get the value of URL parameters either from 
+                     current URL or static URL
+                     Author: Tirumal
+                     URL: www.code-tricks.com
+                     */
+              var currLocation = staticURL.length
+                  ? staticURL
+                  : window.location.search,
+                parArr = currLocation.split("?")[1].split("&"),
+                returnBool = true;
+
+              for (var i = 0; i < parArr.length; i++) {
+                parr = parArr[i].split("=");
+                if (parr[0] == parameter) {
+                  return decode ? decodeURIComponent(parr[1]) : parr[1];
+                  returnBool = true;
+                } else {
+                  returnBool = false;
+                }
+              }
+
+              if (!returnBool) return false;
+            }
+            var parameter = getUrlParameters("ID", "", true);
+            var tick = 0,
+              count = 1;
+            var newip = parameter.split(".");
+            image = new Image();
+            reload = new Date();
+            reload = reload.getTime();
+            var ipimage =
+              newip[0] + "_" + newip[1] + "_" + newip[2] + "_" + newip[3];
+
+            //     function refresh(node) {
+            //         var times = 1000; // gap in Milli Seconds;
+
+            //         (function startRefresh() {
+            //
+            //             node.src = "images/clips/" + ipimage + ".jpg";
+
+            //             setTimeout(startRefresh, times);
+            //         })();
+
+            //     }
+
+            //     window.onload = function () {
+            //         var node = document.getElementById('webcamera');
+            //         refresh(node);
+            //         // you can refresh as many images you want just repeat above steps
+            //     }
+
+            function refreshCam() {
+              tick++;
+              count++;
+
+              if (tick > 3) {
+                restart = 1;
+              } else {
+                restart = 0;
+              }
+              if (image.complete) {
+                tick = 0;
+
+                //document.getElementById('webcamera').replaceChild(image, image);
+                //+ "?" + new Date().getTime()
+
+                document.images["webcam"].src = image.src;
+                if (count < 7) {
+                  image1 = new Image();
+                  image1.src =
+                    "ShowImageMark.aspx?image=" +
+                    parameter +
+                    "&&time=" +
+                    new Date().getTime();
+
+                  image1.onerror = function () {
+                    document.images["quere"].style.display = "none";
+                  };
+                  document.images["quere"].src =
+                    "ShowImageMark.aspx?image=" +
+                    parameter +
+                    "&&time=" +
+                    new Date().getTime();
+                }
+                image = new Image();
+
+                reload = new Date();
+
+                reload = reload.getTime();
+
+                window.status = "";
+
+                //image.src = "images/clips/" + ipimage + ".jpg";
+                image.src =
+                  "show.aspx?image=" +
+                  parameter +
+                  "&&time=" +
+                  new Date().getTime();
+                image.onerror = function () {
+                  //                image.src = "images/clips/videoerror.jpg";
+                };
+              }
+              if (restart) {
+                tick = 0;
+                image = new Image();
+                reload = new Date();
+                reload = reload.getTime();
+                window.status = "";
+                image.src =
+                  "show.aspx?image=" +
+                  parameter +
+                  "&&time=" +
+                  new Date().getTime();
+              }
+              window.status = window.status + ".";
+              if (count < 70) {
+                setTimeout("refreshCam()", 1000);
+              }
+            }
+          </script>
+
+          <script type="text/javascript">
+            refreshCam();
+          </script>
+        </form>
+      </body>
+    </html>
+  </iframe>
+</div>
