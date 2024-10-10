@@ -1,0 +1,6 @@
+psycopg2
+requests
+python-dotenv
+numpy
+scikit-learn
+readerwriterlock
