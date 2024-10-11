@@ -206,8 +206,8 @@ def startValidatingSessionID(camDistance: int, loaded_JSON_cctvSessions: Dict[st
 def startGettingNewSessionID(camDistance: int) -> None:
     logger.info("[MAIN] Starting to get a new set of CCTV info and session ID.")
     cctv_list_bma, cctv_list_db_secondary = update_cctv_database(camDistance)
-    cctv_list_db_primary = sorted([str(item[0]) for item in retrieve_data('cctv_locations_preprocessing', ('cam_id',))], key=lambda x: sort_key(x[0]))
-    
+    cctv_list_db_primary = sorted(retrieve_data('cctv_locations_preprocessing', ('cam_id',)), key=lambda x: sort_key(x[0]))
+
     if not any((cctv_list_db_primary, cctv_list_bma, cctv_list_db_secondary)):
         logger.error("[MAIN] Script will be terminated due to failure of getting CCTV IDs and session IDs.")
         return

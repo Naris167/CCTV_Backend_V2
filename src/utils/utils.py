@@ -201,4 +201,18 @@ def check_cctv_integrity(cctv_working: Dict[str, str], cctv_unresponsive: Dict[s
     return len(integrity_issues) == 0, integrity_issues
 
 
+def select_images(images: List[bytes], num_select: int) -> List[bytes]:
+    if not 1 <= num_select <= len(images):
+        raise ValueError("Not enough images in the input list.")
 
+    if num_select == 1:
+        return [images[len(images) // 2]]  # Return the middle image
+    
+    selected = []
+    step = (len(images) - 1) / (num_select - 1)
+    
+    for i in range(num_select):
+        index = int(i * step)
+        selected.append(images[index])
+    
+    return selected

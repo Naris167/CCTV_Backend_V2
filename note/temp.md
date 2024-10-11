@@ -51,4 +51,52 @@ columns = ['Cam_ID', 'Stream_Link_1']
 results = retrieve_data(table, columns)
 
 
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+This function only capture one image per call from hls link, but I want it to capture any amount of image based on input. I have to be able specify the interval between each capture as well. It should return a list of image as bytes. Each element in the list should be byte data of each image. Please know that the hls url in this case is the cctv video streaming which mean it have no start or end point. Also if you know, playlist.m3u8 will have a list of video sequence right. So if you try to fetch the same url in a short time, you will always get the same video. So to avoid this, let's say you download one piece of video, it is a piece of video right, so you just slice it into the number of screenshot I want. For the interval, since it is a video, let's say I want an interval of 4 second between each capture and I want 5 images and the video piece in 10 second long. You have to capture 2 screenshot from the first video piece so the first one will happen at first second of the video, the next one will happen in the next 4 second of the video which is around fourth or fifth second of the video, the third screenshot will happen at eigth or nighth second of the video, and after this you will have to wait for the next sequence of video piece, so you can continue the screenshot.
+
+
+```python
+def capture_one_screenshot_from_hls(stream_url):
+    """Captures a single frame from an HLS stream and saves it as an image."""
+
+    try:
+        ffmpeg_cmd = [
+            'ffmpeg', '-i', stream_url, '-vframes', '1',
+            '-f', 'image2pipe', '-vcodec', 'png', '-'
+        ]
+        result = subprocess.run(ffmpeg_cmd, capture_output=True, check=True)
+        return result.stdout
+
+    except subprocess.CalledProcessError as e:
+        raise RuntimeError(f"FFmpeg error: {e.stderr.decode()}")
+    except Exception as e:
+        raise RuntimeError(f"Error capturing screenshot: {str(e)}")
 ```

@@ -5,22 +5,60 @@ from threading import Semaphore
 from datetime import datetime, timedelta
 from typing import Dict, List, Tuple, Union, Optional, Literal
 
-from sessionID import start
 from cctv_operation_BMA.cam_update import update_cctv_database, retrieve_camInfo_BMA
 from utils.log_config import logger, log_setup
 from utils.Database import retrieve_data, update_data
-from utils.json_manager import save_alive_session_to_file, load_latest_cctv_sessions_from_json
-from cctv_operation_BMA.worker import create_sessionID, validate_sessionID, quick_refresh_sessionID
+from utils.json_manager import load_latest_cctv_sessions_from_json
+from cctv_operation_BMA.worker import scrape_image_BMA
 from utils.utils import sort_key, readable_time, create_cctv_status_dict, select_non_empty, check_cctv_integrity
 
 
-def getCCTVList():
-    retrieve_data('cctv_locations_preprocessing',
-                  ('cam_id',),
-                  ('is_online',),
-                  (True,)
-                  )
-    return
+def scraper_factory(BMA_JSON_result: Tuple[str, str, Dict[str, str]], isBMAReady: bool,
+                    HLS_information: Tuple[Tuple[str, str], ...], isHLSReady: bool):
+
+    if isBMAReady:
+        _, _, cctvSessions = BMA_JSON_result
+        BMA_working, BMA_unresponsive, BMA_image_result = prepare_scrape_image_BMA_workers(cctvSessions)
+    
+    if isHLSReady:
+        # HLS_working, HLS_unresponsive, HLS_image_result = prepare_scrape_image_HLS_workers(cctvURL)
+        return
+
+
+
+
+
+
+
+def prepare_scrape_image_BMA_workers(cctvSessions: Dict[str, str]) -> Tuple[Dict[str, str], Dict[str, str], List[Tuple[str, List[bytes], datetime]]]:
+    max_workers = 80
+    semaphore = Semaphore(max_workers)
+    threads = []
+    working_session = {}
+    unresponsive_session = {}
+    image_result = [] # This must be [('001', byte data, time),...]
+    target_image_count = 2
+
+    logger.info("[THREADING-S] Initializing session validation workers.")
+
+    for camera_id, session_id in cctvSessions.items():
+        semaphore.acquire()
+        thread = threading.Thread(target=scrape_image_BMA, args=(camera_id, session_id, semaphore, working_session, unresponsive_session, image_result, target_image_count))
+        thread.start()
+        threads.append(thread)
+
+    for thread in threads:
+        thread.join()
+    
+    working_session = dict(sorted(working_session.items(), key=lambda x: sort_key(x[0])))
+    unresponsive_session = dict(sorted(unresponsive_session.items(), key=lambda x: sort_key(x[0])))
+    image_result = sorted(image_result, key=lambda x: sort_key(x[0]))
+
+    logger.info(f"[THREADING-S] {len(working_session)} sessions are working from CCTV: {list(working_session.keys())}")
+    logger.info(f"[THREADING-S] {len(unresponsive_session)} sessions are unresponsive from CCTV: {unresponsive_session}")
+    logger.info("[THREADING-S] All sessions are validated.")
+
+    return working_session, unresponsive_session, image_result
 
 
 '''
@@ -60,52 +98,73 @@ anyway I have to put the image in numpy array and send directly to model and upd
 
 
 
-if __name__ == "__main__":
-    log_setup("./logs/imageScraper","sessionID")
-    result = load_latest_cctv_sessions_from_json()
 
-    if not result:
-        logger.warning("[INFO] No JSON file found or failed to load. Fetching all session ID")
+def verifyBMA(BMA_JSON_result):
+    latestRefreshTime, latestUpdateTime, cctvSessions = BMA_JSON_result
+    current_time = datetime.now()
+
+    def parse_time_and_diff(time_str):
+        time_dt = datetime.strptime(time_str, "%Y-%m-%d %H:%M:%S")
+        diff = current_time - time_dt
+        return time_dt, diff, readable_time(int(diff.total_seconds()))
+
+    refreshTime, timeDiffRefresh, readable_diff_refresh = parse_time_and_diff(latestRefreshTime)
+    updateTime, timeDiffUpdate, readable_diff_update = parse_time_and_diff(latestUpdateTime)
+
+    # max_timeDiffUpdate = timedelta(hours=4)
+    max_timeDiffRefresh = timedelta(minutes=20)
+
+    logger.info(f"[INFO] Latest Refresh Time: {latestRefreshTime}")
+    logger.info(f"[INFO] Latest Update Time: {latestUpdateTime}")
+    logger.info(f"[INFO] CCTV Sessions: {cctvSessions}")
+    logger.info(f"[INFO] The latest update occurred at {latestUpdateTime}, which was {readable_diff_update} ago.")
+    logger.info(f"[INFO] The latest refresh occurred at {latestRefreshTime}, which was {readable_diff_refresh} ago.")
+
+    if timeDiffRefresh < max_timeDiffRefresh:
+        # Case 1:
+        # Refresh times is within the valid range, so simply do a quick refresh and scraped image.
+        # Do the scrapign now
+        # start_scraping(cctvSessions)
+        return True
         
     else:
-        latestRefreshTime, latestUpdateTime, cctvSessions = result
-        current_time = datetime.now()
+        # Case 2:
+        # This scrip just check for refresh times so it will not redundant with the sessionID.py
+        # This script designed to scrape image, not preparing session ID.
+        # So this condition will just terminate the script as sessionID have expired.
+        logger.info(f"[INFO] Refresh times exceed their maximum allowed time differences.")
+        # exit(0)
+        return False
 
-        def parse_time_and_diff(time_str):
-            time_dt = datetime.strptime(time_str, "%Y-%m-%d %H:%M:%S")
-            diff = current_time - time_dt
-            return time_dt, diff, readable_time(int(diff.total_seconds()))
 
-        refreshTime, timeDiffRefresh, readable_diff_refresh = parse_time_and_diff(latestRefreshTime)
-        updateTime, timeDiffUpdate, readable_diff_update = parse_time_and_diff(latestUpdateTime)
 
-        max_timeDiffUpdate = timedelta(hours=4)
-        max_timeDiffRefresh = timedelta(minutes=17)
 
-        logger.info(f"[INFO] Latest Refresh Time: {latestRefreshTime}")
-        logger.info(f"[INFO] Latest Update Time: {latestUpdateTime}")
-        logger.info(f"[INFO] CCTV Sessions: {cctvSessions}")
-        logger.info(f"[INFO] The latest update occurred at {latestUpdateTime}, which was {readable_diff_update} ago.")
-        logger.info(f"[INFO] The latest refresh occurred at {latestRefreshTime}, which was {readable_diff_refresh} ago.")
 
-        if timeDiffUpdate < max_timeDiffUpdate and timeDiffRefresh < max_timeDiffRefresh:
-            # Case 1: Both the update and refresh times are within the valid range, so simply do a quick refresh and scraped image.
-            # Do the scrapign now
-            print("")
-            
-        elif timeDiffUpdate < max_timeDiffUpdate and timeDiffRefresh >= max_timeDiffRefresh:
-            # Case 2: The update time is still valid, but the refresh time has expired, meaning all sessionIDs have expired. A new sessionID must be obtained.
-            logger.info(f"[INFO] The latest refresh occurred {readable_diff_refresh} ago, exceeding the maximum allowed time difference of {readable_time(max_timeDiffRefresh.total_seconds())}.")
-            # Have to call sessionID.py
+if __name__ == "__main__":
+    log_setup("./logs/imageScraper","sessionID")
+    scrape_BMA = True
+    scrape_HLS = True
+    BMA_JSON_result = load_latest_cctv_sessions_from_json()
+    HLS_information = retrieve_data(
+        'cctv_locations_general',
+        ('Cam_ID', 'Stream_Link_1'),
+        ('Stream_Method',),
+        ('HLS',)
+    )
 
-        elif timeDiffUpdate >= max_timeDiffUpdate and timeDiffRefresh <= max_timeDiffRefresh:
-            # Case 3: It is time to update the sessionID, but before that, a quick refresh is necessary to ensure that all sessionIDs remain usable during the update.
-            logger.info(f"[INFO] The latest update occurred {readable_diff_update} ago, exceeding the maximum allowed time difference of {readable_time(max_timeDiffUpdate.total_seconds())}.")
-            # Have to call sessionID.py
+    if not BMA_JSON_result:
+        logger.warning("[INFO] No JSON file found or failed to load.")
+        scrape_BMA = False
+    else:
+        scrape_BMA = verifyBMA(BMA_JSON_result)
+        
+    if not HLS_information:
+        logger.warning("[INFO] No HLS information found or failed to load.")
+        scrape_HLS = False
+    else:
+        logger.info("[INFO] HLS information ready")
 
-        else:
-            # Case 4: Both the update and refresh times have expired, indicating that all sessionIDs have expired, and a new one must be acquired.
-            logger.info(f"[INFO] Both update and refresh times exceed their maximum allowed time differences.")
-            # Have to call sessionID.py
 
+    scraper_factory(BMA_JSON_result, scrape_BMA,
+                    HLS_information, scrape_HLS)
             
