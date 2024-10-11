@@ -52,28 +52,28 @@ def finalize(cctv_list: Optional[List[str]], cctv_working: Dict[str, str], cctv_
             logger.warning(f"[MAIN] {count} CCTVs are {category}: {items}")
 
     table = 'cctv_locations_preprocessing'
-    columns_to_update = ['is_online']
+    columns_to_update = ('is_online',)
     
     update_data(
         table,
         columns_to_update,
-        [(False,)]
+        (False,)
     )
 
     update_data(
         table,
         columns_to_update,
-        [(True,)],
-        ['cam_id'],
-        [list(cctv_working.keys())]
+        (True,),
+        ('cam_id',),
+        tuple(cctv_working.keys())
     )
 
     update_data(
         table,
         columns_to_update,
-        [(False,)],
-        ['cam_id'],
-        [list(cctv_unresponsive.keys()) + cctv_fail]
+        (False,),
+        ('cam_id',),
+        tuple(list(cctv_unresponsive.keys()) + cctv_fail)
     )
 
     integrity_passed, issues = check_cctv_integrity(cctv_working, cctv_unresponsive, cctv_fail)
@@ -206,7 +206,7 @@ def startValidatingSessionID(camDistance: int, loaded_JSON_cctvSessions: Dict[st
 def startGettingNewSessionID(camDistance: int) -> None:
     logger.info("[MAIN] Starting to get a new set of CCTV info and session ID.")
     cctv_list_bma, cctv_list_db_secondary = update_cctv_database(camDistance)
-    cctv_list_db_primary = sorted([str(item[0]) for item in retrieve_data('cctv_locations_preprocessing', ['cam_id'])], key=lambda x: sort_key(x[0]))
+    cctv_list_db_primary = sorted([str(item[0]) for item in retrieve_data('cctv_locations_preprocessing', ('cam_id',))], key=lambda x: sort_key(x[0]))
     
     if not any((cctv_list_db_primary, cctv_list_bma, cctv_list_db_secondary)):
         logger.error("[MAIN] Script will be terminated due to failure of getting CCTV IDs and session IDs.")
@@ -233,54 +233,56 @@ def startQuickRefreshSessionID(loaded_JSON_cctvSessions: Dict[str, str]) -> None
     prepare_quick_refresh_sessionID_workers(loaded_JSON_cctvSessions)
     logger.info("[MAIN] Quick refresh of session IDs completed.")
 
-if __name__ == "__main__":
+def start():
     camDistance = initialize()
     result = load_latest_cctv_sessions_from_json()
 
-    if result:
-        loaded_JSON_latestRefreshTime, loaded_JSON_latestUpdateTime, loaded_JSON_cctvSessions = result
-        logger.info(f"[INFO] Latest Refresh Time: {loaded_JSON_latestRefreshTime}")
-        logger.info(f"[INFO] Latest Update Time: {loaded_JSON_latestUpdateTime}")
-        logger.info(f"[INFO] CCTV Sessions: {loaded_JSON_cctvSessions}")
-
-        current_time = datetime.now()
-        loaded_JSON_latestUpdateTime_dt = datetime.strptime(loaded_JSON_latestUpdateTime, "%Y-%m-%d %H:%M:%S")
-        timeDiffUpdate = current_time - loaded_JSON_latestUpdateTime_dt
-        total_seconds_timeDiffUpdate = int(timeDiffUpdate.total_seconds())
-        readable_diff_update = readable_time(total_seconds_timeDiffUpdate)
-
-        loaded_JSON_latestRefreshTime_dt = datetime.strptime(loaded_JSON_latestRefreshTime, "%Y-%m-%d %H:%M:%S")
-        timeDiffRefresh = current_time - loaded_JSON_latestRefreshTime_dt
-        total_seconds_timeDiffRefresh = int(timeDiffUpdate.total_seconds())
-        readable_diff_refresh = readable_time(total_seconds_timeDiffRefresh)
-
-
-        max_timeDiffUpdate = timedelta(hours=4, minutes=0)
-        readable_max_timeDiffUpdate = readable_time(max_timeDiffUpdate.total_seconds())
-
-        max_timeDiffRefresh = timedelta(minutes=17)
-        readable_max_timeDiffRefresh = readable_time(max_timeDiffRefresh.total_seconds())
-
-        if timeDiffUpdate < max_timeDiffUpdate and timeDiffRefresh < max_timeDiffRefresh:
-            logger.info(f"[INFO] The latest update occurred at {loaded_JSON_latestUpdateTime}, which was {readable_diff_update} ago.")
-            logger.info(f"[INFO] The latest refresh occurred at {loaded_JSON_latestRefreshTime}, which was {readable_diff_refresh} ago.")
-            startValidatingSessionID(camDistance, loaded_JSON_cctvSessions, loaded_JSON_latestUpdateTime)
-        elif timeDiffUpdate < max_timeDiffUpdate and timeDiffRefresh >= max_timeDiffRefresh:
-            logger.info(f"[INFO] The latest update occurred at {loaded_JSON_latestUpdateTime}, {readable_diff_update} ago.")
-            logger.info(f"[INFO] The latest refresh occurred at {loaded_JSON_latestRefreshTime}, {readable_diff_refresh} ago, exceeding the maximum allowed time difference of {readable_max_timeDiffUpdate}.")
-            startGettingNewSessionID(camDistance)
-        elif timeDiffUpdate >= max_timeDiffUpdate and timeDiffRefresh <= max_timeDiffRefresh:
-            logger.info(f"[INFO] The latest update occurred at {loaded_JSON_latestUpdateTime}, {readable_diff_update} ago, exceeding the maximum allowed time difference of {readable_max_timeDiffUpdate}.")
-            logger.info(f"[INFO] The latest refresh occurred at {loaded_JSON_latestRefreshTime}, {readable_diff_refresh} ago.")
-            startQuickRefreshSessionID(loaded_JSON_cctvSessions)
-            startGettingNewSessionID(camDistance)
-        else:
-            logger.info(f"[INFO] The latest update occurred at {loaded_JSON_latestUpdateTime}, {readable_diff_update} ago, exceeding the maximum allowed time difference of {readable_max_timeDiffUpdate}.")
-            logger.info(f"[INFO] The latest refresh occurred at {loaded_JSON_latestRefreshTime}, {readable_diff_refresh} ago, exceeding the maximum allowed time difference of {readable_max_timeDiffUpdate}.")
-            startGettingNewSessionID(camDistance)
-    else:
+    if not result:
         logger.warning("[INFO] No JSON file found or failed to load. Fetching all session ID")
         startGettingNewSessionID(camDistance)
+    else:
+        latestRefreshTime, latestUpdateTime, cctvSessions = result
+        current_time = datetime.now()
+
+        def parse_time_and_diff(time_str):
+            time_dt = datetime.strptime(time_str, "%Y-%m-%d %H:%M:%S")
+            diff = current_time - time_dt
+            return time_dt, diff, readable_time(int(diff.total_seconds()))
+
+        refreshTime, timeDiffRefresh, readable_diff_refresh = parse_time_and_diff(latestRefreshTime)
+        updateTime, timeDiffUpdate, readable_diff_update = parse_time_and_diff(latestUpdateTime)
+
+        max_timeDiffUpdate = timedelta(hours=4)
+        max_timeDiffRefresh = timedelta(minutes=17)
+
+        logger.info(f"[INFO] Latest Refresh Time: {latestRefreshTime}")
+        logger.info(f"[INFO] Latest Update Time: {latestUpdateTime}")
+        logger.info(f"[INFO] CCTV Sessions: {cctvSessions}")
+        logger.info(f"[INFO] The latest update occurred at {latestUpdateTime}, which was {readable_diff_update} ago.")
+        logger.info(f"[INFO] The latest refresh occurred at {latestRefreshTime}, which was {readable_diff_refresh} ago.")
+
+        if timeDiffUpdate < max_timeDiffUpdate and timeDiffRefresh < max_timeDiffRefresh:
+            # Case 1: Both the update and refresh times are within the valid range, so simply update and verify the sessionID.
+            startValidatingSessionID(camDistance, cctvSessions, latestUpdateTime)
+        elif timeDiffUpdate < max_timeDiffUpdate and timeDiffRefresh >= max_timeDiffRefresh:
+            # Case 2: The update time is still valid, but the refresh time has expired, meaning all sessionIDs have expired. A new sessionID must be obtained.
+            logger.info(f"[INFO] The latest refresh occurred {readable_diff_refresh} ago, exceeding the maximum allowed time difference of {readable_time(max_timeDiffRefresh.total_seconds())}.")
+            startGettingNewSessionID(camDistance)
+        elif timeDiffUpdate >= max_timeDiffUpdate and timeDiffRefresh <= max_timeDiffRefresh:
+            # Case 3: It is time to update the sessionID, but before that, a quick refresh is necessary to ensure that all sessionIDs remain usable during the update.
+            logger.info(f"[INFO] The latest update occurred {readable_diff_update} ago, exceeding the maximum allowed time difference of {readable_time(max_timeDiffUpdate.total_seconds())}.")
+            startQuickRefreshSessionID(cctvSessions)
+            startGettingNewSessionID(camDistance)
+        else:
+            # Case 4: Both the update and refresh times have expired, indicating that all sessionIDs have expired, and a new one must be acquired.
+            logger.info(f"[INFO] Both update and refresh times exceed their maximum allowed time differences.")
+            startGettingNewSessionID(camDistance)
+
+
+if __name__ == "__main__":
+    start()
+
+
 '''
 1. In case where all session IDs are expried but script try to validate all of them, it will take time around 10 minutes
 2. In case where all max time diff exceeded, it will take time around 10 minutes

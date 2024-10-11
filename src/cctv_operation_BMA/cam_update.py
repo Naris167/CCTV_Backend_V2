@@ -55,7 +55,7 @@ def retrieve_camInfo_BMA(url: str = BASE_URL, max_retries: int = 5, delay: int =
     logger.info("[UPDATER] Successfully retrieved camera list.")
     return processed_data
 
-def filter_new_and_all_cams(online_cam_info: List[CamInfo], db_cam_coordinate: List[CamCoordinate]) -> Tuple[List[CamInfo], List[CamCoordinate]]:
+def filter_new_and_all_cams(online_cam_info: Tuple[CamInfo], db_cam_coordinate: List[CamCoordinate]) -> Tuple[Tuple[CamInfo], Tuple[CamCoordinate]]:
     db_cam_ids = {str(cam[0]) for cam in db_cam_coordinate}
     new_cam_info = []
     all_cams_coordinate = set(db_cam_coordinate)
@@ -66,37 +66,37 @@ def filter_new_and_all_cams(online_cam_info: List[CamInfo], db_cam_coordinate: L
             new_cam_info.append(cam)
             all_cams_coordinate.add((cam_id, cam[6], cam[7]))
 
-    return new_cam_info, list(all_cams_coordinate)
+    return tuple(new_cam_info), tuple(all_cams_coordinate)
 
 def update_cctv_database(meters: int) -> Tuple[List[str], List[str]]:
     onlineCamInfo = retrieve_camInfo_BMA()
-    dbCamCoordinate = retrieve_data('cctv_locations_preprocessing', ['cam_id', 'latitude', 'longitude'])
+    dbCamCoordinate = retrieve_data('cctv_locations_preprocessing', ('cam_id', 'latitude', 'longitude'))
     cctv_list_all_db = [cam_id for cam_id, _, _ in dbCamCoordinate]
 
     if not onlineCamInfo:
         logger.warning("[UPDATER] Failed to retrieve camera list from BMA Traffic. Falling back to database.")
-        cctv_list_online_db = retrieve_data('cctv_locations_preprocessing', ['Cam_ID'], {'is_online': True})
+        cctv_list_online_db = retrieve_data('cctv_locations_preprocessing', ('Cam_ID',), ('is_online',), (True,))
         return cctv_list_online_db, cctv_list_all_db
 
     cctv_list_bma = sorted([str(t[0]) for t in onlineCamInfo], key=sort_key)
     new_cams_info, all_cams_coordinate = filter_new_and_all_cams(onlineCamInfo, dbCamCoordinate)
 
     if new_cams_info:
-        logger.info(f"[UPDATER] {len(new_cams_info)} new cameras found: {[cam[0] for cam in new_cams_info]}")
+        logger.info(f"[UPDATER] {len(new_cams_info)} new cameras found: {(cam[0] for cam in new_cams_info)}")
         logger.info("[UPDATER] Initializing clustering...")
         
         clustered_cams_coordinate = cluster(meters, all_cams_coordinate)
         
-        insert_data('cctv_image',
-                    ['cam_id', 'cam_code', 'cam_name', 'cam_name_e', 'cam_location', 'cam_direction', 'latitude', 'longitude', 'ip', 'icon'],
+        insert_data('cctv_locations_preprocessing',
+                    ('cam_id', 'cam_code', 'cam_name', 'cam_name_e', 'cam_location', 'cam_direction', 'latitude', 'longitude', 'ip', 'icon'),
                     new_cams_info
         )
         update_data(
             'cctv_locations_preprocessing',
-            ['cam_group'],
-            [(coord[1],) for coord in clustered_cams_coordinate],
-            ['cam_id'],
-            [coord[0] for coord in clustered_cams_coordinate]
+            ('cam_group'),
+            ((coord[1],) for coord in clustered_cams_coordinate),
+            ('cam_id'),
+            (coord[0] for coord in clustered_cams_coordinate)
         )
         
         logger.info(f"[UPDATER] Added {len(new_cams_info)} new cameras and updated clusters in the database.")

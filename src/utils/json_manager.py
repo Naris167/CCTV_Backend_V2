@@ -3,7 +3,7 @@ import json
 from datetime import datetime
 from typing import Tuple, Dict, Optional
 from pathlib import Path
-from python_config import config
+from script_config import config
 from utils.log_config import isDirExist, logger
 
 JSON_DIRECTORY = Path(config['json_path'])
@@ -35,20 +35,24 @@ def load_latest_cctv_sessions_from_json() -> Optional[Tuple[str, str, Dict[str, 
         return None
 
 def save_alive_session_to_file(cctv_sessions: Dict[str, str], latest_refresh_time: str, latest_update_time: str) -> None:
-    isDirExist(JSON_DIRECTORY)
-    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    filename = JSON_DIRECTORY / f"cctv_sessions_{timestamp}.json"
+    try:
+        isDirExist(JSON_DIRECTORY)
+        timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        filename = JSON_DIRECTORY / f"cctv_sessions_{timestamp}.json"
 
-    data_to_save = {
-        "latestRefreshTime": latest_refresh_time,
-        "latestUpdateTime": latest_update_time,
-        "cctvSessions": cctv_sessions
-    }
+        data_to_save = {
+            "latestRefreshTime": latest_refresh_time,
+            "latestUpdateTime": latest_update_time,
+            "cctvSessions": cctv_sessions
+        }
 
-    with filename.open("w") as json_file:
-        json.dump(data_to_save, json_file, indent=4)
+        with filename.open("w") as json_file:
+            json.dump(data_to_save, json_file, indent=4)
 
-    logger.info(f"[JSON] JSON data has been written to {filename}")
+        logger.info(f"[JSON] JSON data has been written to {filename}")
+    except Exception as e:
+        logger.error(f"Error: {e}")
+    
 
 
 # Example usage

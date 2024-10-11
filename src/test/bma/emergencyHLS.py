@@ -8,6 +8,7 @@ import concurrent.futures
 import datetime
 from typing import List, Tuple
 import threading
+import time
 
 def get_video_resolution(stream_url):
     """Get the resolution (width, height) of the video stream using ffprobe."""
@@ -49,10 +50,12 @@ def capture_one_screenshot_from_hls(stream_url):
         raise RuntimeError(f"Error capturing screenshot: {str(e)}")
 
 def filter_cctv_list(cctv_list: List[Tuple[str, str]]) -> List[Tuple[str, str]]:
-    pattern = re.compile(r'kk\d+\.m3u8$')
+    pattern1 = re.compile(r'kk\d+\.m3u8$')
+    pattern2 = re.compile(r'livecctv/cctvp\d+c\d+\.stream')
+    
     return [
         (cam_id, stream_link) for cam_id, stream_link in cctv_list
-        if pattern.search(stream_link)
+        if pattern1.search(stream_link) or pattern2.search(stream_link)
     ]
 
 def capture_screenshots(cam_id: str, stream_url: str, num_images: int) -> List[Tuple[str, bytes, str]]:
@@ -61,6 +64,7 @@ def capture_screenshots(cam_id: str, stream_url: str, num_images: int) -> List[T
         image_data = capture_one_screenshot_from_hls(stream_url)
         timestamp = datetime.datetime.now().isoformat()
         results.append((cam_id, image_data, timestamp))
+        # time.sleep(60)
     return results
 
 def process_stream(cam_id: str, stream_url: str, num_images: int) -> List[Tuple[str, bytes, str]]:
@@ -71,14 +75,16 @@ if __name__ == "__main__":
     try:
         # Retrieve CCTV locations and stream links from the database
         table = 'cctv_locations_general'
-        columns = ['Cam_ID', 'Stream_Link_1']
+        columns = ('Cam_ID', 'Stream_Link_1')
         cctv_data = retrieve_data(table, columns)
 
         # Filter the CCTV list
         filtered_cctv_data = filter_cctv_list(cctv_data)
+        for item in filtered_cctv_data:
+            print(item)
 
-        num_images_per_cam = 3  # Specify the number of images you want per camera
-        max_workers = min(32, len(filtered_cctv_data))  # Adjust the number of workers as needed
+        num_images_per_cam = 1  # Specify the number of images you want per camera
+        max_workers = len(filtered_cctv_data)  # Adjust the number of workers as needed
 
         all_results = []
 
@@ -86,7 +92,7 @@ if __name__ == "__main__":
             future_to_cam = {executor.submit(process_stream, cam_id, stream_url, num_images_per_cam): cam_id 
                              for cam_id, stream_url in filtered_cctv_data}
             
-            for future in concurrent.futures.as_completed(future_to_cam, timeout=60):
+            for future in concurrent.futures.as_completed(future_to_cam, timeout=120):
                 cam_id = future_to_cam[future]
                 try:
                     results = future.result()
@@ -95,16 +101,16 @@ if __name__ == "__main__":
                     print(f"{cam_id} generated an exception: {exc}")
 
         # Insert all captured data into the database
-        insert_data('cctv_images_general', ['Cam_ID', 'Image_data', 'Captured_at'], all_results)
+        # insert_data('cctv_images_general', ['Cam_ID', 'Image_data', 'Captured_at'], all_results)
         # Save images to disk
-        # output_directory = r"C:\Users\naris\Desktop\TEST"
-        # for cam_id, image_data, timestamp in all_results:
-        #     # Create a unique filename for each image
-        #     filename = f"{cam_id}_{timestamp.replace(':', '-')}.jpg"
-        #     output_path = os.path.join(output_directory, filename)
+        output_directory = r"C:\Users\naris\Desktop\TEST"
+        for cam_id, image_data, timestamp in all_results:
+            # Create a unique filename for each image
+            filename = f"{cam_id}_{timestamp.replace(':', '-')}.jpg"
+            output_path = os.path.join(output_directory, filename)
             
-        #     # Call the binary_to_image function to save the image
-        #     binary_to_image(image_data, output_path)
+            # Call the binary_to_image function to save the image
+            binary_to_image(image_data, output_path)
 
     except Exception as e:
         print(f"An error occurred: {str(e)}")

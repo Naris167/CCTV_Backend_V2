@@ -1,10 +1,11 @@
 import psycopg2
+from psycopg2.extras import RealDictCursor
 import os
 from dotenv import load_dotenv
 from contextlib import contextmanager
 from utils.log_config import logger
 from utils.utils import sort_key
-from typing import List, Tuple, Dict, Optional, Any
+from typing import List, Tuple, Dict, Optional, Any, Union
 
 load_dotenv('.env.local')
 
@@ -22,35 +23,23 @@ def get_db_connection():
     finally:
         conn.close()
 
-'''
-Without parameters:
-query = "SELECT * FROM users"
-results = execute_fetch_query(query)
-
-With tuple parameters:
-query = "SELECT * FROM users WHERE age > %s AND city = %s"
-params = (18, 'New York')
-results = execute_fetch_query(query, params)
-
-With dictionary parameters:
-query = "SELECT * FROM users WHERE age > %(min_age)s AND city = %(city)s"
-params = {'min_age': 18, 'city': 'New York'}
-results = execute_fetch_query(query, params)
-'''
-
-def execute_db_operation(query: str, operation_type: str, params: Optional[Any] = None):
+def execute_db_operation(query: str, operation_type: str, params: Optional[Union[Dict, List, Tuple]] = None, batch_size: int = 1000, fetch_type: str = 'tuple'):
     with get_db_connection() as conn:
         try:
-            with conn.cursor() as cur:
+            cursor_factory = RealDictCursor if fetch_type == 'dict' else None
+            with conn.cursor(cursor_factory=cursor_factory) as cur:
                 match operation_type:
                     case 'fetch':
                         cur.execute(query, params)
                         return cur.fetchall()
                     case 'insert' | 'update' if params:
-                        cur.executemany(query, params)
-                        affected_rows = cur.rowcount
-                        conn.commit()
-                        return affected_rows
+                        if isinstance(params, (list, tuple)) and params and isinstance(params[0], (dict, tuple, list)):
+                            return _execute_batch(cur, query, params, batch_size)
+                        else:
+                            cur.execute(query, params)
+                            affected_rows = cur.rowcount
+                            conn.commit()
+                            return affected_rows
                     case 'delete' if params:
                         cur.execute(query, params)
                         affected_rows = cur.rowcount
@@ -64,38 +53,58 @@ def execute_db_operation(query: str, operation_type: str, params: Optional[Any] 
             logger.error(f"[DATABASE] Error executing {operation_type} operation: {e}")
             raise
 
+def _execute_batch(cur, query: str, params: List[Union[Dict, Tuple]], batch_size: int) -> int:
+    total_affected_rows = 0
+    for i in range(0, len(params), batch_size):
+        batch = params[i:i+batch_size]
+        cur.executemany(query, batch)
+        total_affected_rows += cur.rowcount
+    cur.connection.commit()
+    return total_affected_rows
+
+
 '''
-# Example usage
 table = 'cctv_locations_general'
-columns = ['Cam_ID', 'Location'] # If you want to query for specified clomuns
-all_column = ['*'] # If you want to query for all clomuns
-conditions = {
-    'cam_id': ['CAM001', 'CAM002', 'CAM003'],  # List of CCTV IDs
-    'location': ['New York', 'Los Angeles'],   # List of locations
-    'status': 'active'                         # Single value for status
-}
+columns = ('Cam_ID', 'Location')  # If you want to query for specified columns
+# all_columns = ('*',)  # If you want to query for all columns
+columns_to_check_condition = ('cam_id', 'location', 'status')
+data_to_check_condition = (
+    ('CAM001', 'CAM002', 'CAM003'),  # Tuple of CCTV IDs
+    ('New York', 'Los Angeles'),     # Tuple of locations
+    'active'                         # Single value for status
+)
 
+results = retrieve_data(table, columns, columns_to_check_condition, data_to_check_condition)
 
-results = retrieve_data(table, columns, condition)
+SELECT Cam_ID, Location 
+FROM cctv_locations_general 
+WHERE cam_id IN (%s, %s, %s) 
+  AND location IN (%s, %s) 
+  AND status = %sl
 '''
 
-def retrieve_data(table: str, columns: List[str], conditions: Optional[Dict[str, Any]] = None) -> List[Tuple[Any, ...]]:
+def retrieve_data(
+    table: str,
+    columns: Tuple[str, ...],
+    columns_to_check_condition: Optional[Tuple[str, ...]] = None,
+    data_to_check_condition: Optional[Tuple[Any, ...]] = None
+) -> Tuple[Tuple[Any, ...], ...]:
     try:
         # Construct the base query
         query = f"SELECT {', '.join(columns)} FROM {table}"
         
         # Add WHERE clause if conditions are provided
-        params = {}
-        if conditions:
+        params = ()
+        if columns_to_check_condition and data_to_check_condition:
             where_clauses = []
-            for key, value in conditions.items():
-                if isinstance(value, list):
-                    placeholders = [f"%({key}_{i})s" for i in range(len(value))]
-                    where_clauses.append(f"{key} IN ({', '.join(placeholders)})")
-                    params.update({f"{key}_{i}": v for i, v in enumerate(value)})
+            for col, data in zip(columns_to_check_condition, data_to_check_condition):
+                if isinstance(data, tuple):
+                    placeholders = ', '.join(['%s'] * len(data))
+                    where_clauses.append(f"{col} IN ({placeholders})")
+                    params += data
                 else:
-                    where_clauses.append(f"{key} = %({key})s")
-                    params[key] = value
+                    where_clauses.append(f"{col} = %s")
+                    params += (data,)
             query += " WHERE " + " AND ".join(where_clauses)
 
         # Execute the query
@@ -106,24 +115,25 @@ def retrieve_data(table: str, columns: List[str], conditions: Optional[Dict[str,
 
     except Exception as e:
         logger.error(f"[DATABASE] Error retrieving data from {table}: {e}")
-        return None
-
+        return tuple()
 '''
-# Example usage
 table = 'cctv_locations_general'
-columns = ['Cam_ID', 'Location', 'IsActive']
-data_to_insert = [
+columns = ('Cam_ID', 'Location', 'IsActive')
+data_to_insert = (
     ('CAM001', 'New York', True),
     ('CAM002', 'Los Angeles', False),
     ('CAM003', 'Chicago', True),
     ('CAM004', 'Houston', True),
     ('CAM005', 'Phoenix', False)
-]
+)
 
 insert_data(table, columns, data_to_insert)
+
+INSERT INTO cctv_locations_general (Cam_ID, Location, IsActive) 
+VALUES (%s, %s, %s)
 '''
 
-def insert_data(table: str, columns: List[str], data_to_insert: List[Tuple[Any, ...]]) -> int:
+def insert_data(table: str, columns: Tuple[str, ...], data_to_insert: Tuple[Tuple[Any, ...], ...]) -> int:
     try:
         # Construct the base query
         placeholders = ', '.join(['%s' for _ in columns])
@@ -132,23 +142,31 @@ def insert_data(table: str, columns: List[str], data_to_insert: List[Tuple[Any, 
         # Execute the query
         rows_inserted = execute_db_operation(query, "insert", data_to_insert)
         logger.info(f"[DATABASE] Successfully inserted {rows_inserted} rows to {table}")
-        return
+        return rows_inserted
 
     except Exception as e:
         logger.error(f"[DATABASE] Error inserting data into {table}: {e}")
-        return
+        return 0
 
 
 '''
-# Example usage
 table = 'cctv_locations_general'
-conditions = {'IsActive': True, 'IsFlood': True}
+columns_to_check_condition = ('cam_id', 'location', 'status')
+data_to_check_condition = (
+    ('CAM001', 'CAM002', 'CAM003'),  # Tuple of CCTV IDs
+    ('New York', 'Los Angeles'),     # Tuple of locations
+    'active'                         # Single value for status
+)
 
-delete_data(table, conditions)
+rows_deleted = delete_data(table, columns_to_check_condition, data_to_check_condition)
+
+DELETE FROM cctv_locations_general 
+WHERE cam_id IN (%s, %s, %s) 
+  AND location IN (%s, %s) 
+  AND status = %s
 '''
 
-
-def delete_data(table: str, conditions: Dict[str, Any]) -> int:
+def delete_data(table: str, columns_to_check_condition: Tuple[str, ...], data_to_check_condition: Tuple[Union[Tuple[Any, ...], Any], ...]) -> int:
     try:
         # Construct the base query
         query = f"DELETE FROM {table}"
@@ -156,50 +174,55 @@ def delete_data(table: str, conditions: Dict[str, Any]) -> int:
         # Add WHERE clause
         where_clauses = []
         params = {}
-        for key, value in conditions.items():
-            where_clauses.append(f"{key} = %({key})s")
-            params[key] = value
+        
+        for column, data in zip(columns_to_check_condition, data_to_check_condition):
+            if isinstance(data, tuple):
+                placeholders = [f"%({column}_{i})s" for i in range(len(data))]
+                where_clauses.append(f"{column} IN ({', '.join(placeholders)})")
+                params.update({f"{column}_{i}": value for i, value in enumerate(data)})
+            else:
+                where_clauses.append(f"{column} = %({column})s")
+                params[column] = data
         
         query += " WHERE " + " AND ".join(where_clauses)
 
         rows_deleted = execute_db_operation(query, "delete", params)
                 
         logger.info(f"[DATABASE] Successfully deleted {rows_deleted} rows from {table}")
-        return
+        return rows_deleted
 
     except Exception as e:
         logger.error(f"[DATABASE] Error deleting data from {table}: {e}")
-        return
+        return 0
 
 
 '''
 # Example usage 1: Update all records
 table = 'cctv_locations_preprocessing'
-columns_to_update = ['is_online', 'last_checked']
-data_to_update = [(True, '2023-10-03 12:00:00')]
+columns_to_update = ('is_online', 'last_checked')
+data_to_update = (True, '2023-10-03 12:00:00')
 
+results1 = update_data(table, columns_to_update, data_to_update)
 
-In this case the query will be:
 UPDATE cctv_locations_preprocessing 
-SET is_online = TRUE, last_checked = '2023-10-03 12:00:00'
-
+SET is_online = %s, last_checked = %s
 
 
 # Example usage 2: with multiple columns in WHERE clause
 table = 'cctv_locations_preprocessing'
-columns_to_update = ['is_online', 'last_checked']
-data_to_update = [(True, '2023-10-03 12:00:00')]
-columns_to_check_condition = ['cam_id', 'location', 'status']
-data_to_check_condition = [
-    ['CAM001', 'CAM002', 'CAM003'],  # List of CCTV IDs
-    ['New York', 'Los Angeles'],     # List of locations
+columns_to_update = ('is_online', 'last_checked')
+data_to_update = (True, '2023-10-03 12:00:00')
+columns_to_check_condition = ('cam_id', 'location', 'status')
+data_to_check_condition = (
+    ('CAM001', 'CAM002', 'CAM003'),  # Tuple of CCTV IDs
+    ('New York', 'Los Angeles'),     # Tuple of locations
     'active'                         # Single value for status
-]
+)
 
+results2 = update_data(table, columns_to_update, data_to_update, columns_to_check_condition, data_to_check_condition)
 
-In this case the query will be:
 UPDATE cctv_locations_preprocessing 
-SET is_online = TRUE, last_checked = '2023-10-03 12:00:00'
+SET is_online = %s, last_checked = %s
 WHERE cam_id = ANY(%s::text[]) 
   AND location = ANY(%s::text[]) 
   AND status = %s
@@ -207,40 +230,32 @@ WHERE cam_id = ANY(%s::text[])
 
 def update_data(
     table: str,
-    columns_to_update: List[str],
-    data_to_update: List[Tuple],
-    columns_to_check_condition: Optional[List[str]] = None,
-    data_to_check_condition: Optional[List[Any]] = None
+    columns_to_update: Tuple[str, ...],
+    data_to_update: Tuple[Any, ...],
+    columns_to_check_condition: Optional[Tuple[str, ...]] = None,
+    data_to_check_condition: Optional[Tuple[Any, ...]] = None
 ) -> int:
     try:
         # Construct the base query
         set_clause = ", ".join([f"{col} = %s" for col in columns_to_update])
+        query = f"UPDATE {table} SET {set_clause}"
         
-        # Construct WHERE clause only if conditions are provided
-        where_clause = ""
+        # Prepare the parameters
+        params = data_to_update
+
+        # Construct WHERE clause if conditions are provided
         if columns_to_check_condition and data_to_check_condition:
             where_conditions = []
-            for i, col in enumerate(columns_to_check_condition):
-                if isinstance(data_to_check_condition[i], list):
+            for col, data in zip(columns_to_check_condition, data_to_check_condition):
+                if isinstance(data, tuple):
                     where_conditions.append(f"{col} = ANY(%s::text[])")
+                    params += (list(data),)  # Convert tuple to list for ANY clause
                 else:
                     where_conditions.append(f"{col} = %s")
-            where_clause = "WHERE " + " AND ".join(where_conditions)
-        
-        query = f"UPDATE {table} SET {set_clause} {where_clause}"
+                    params += (data,)
+            query += " WHERE " + " AND ".join(where_conditions)
 
-        # Prepare the parameters
-        params = []
-        for row in data_to_update:
-            param_row = list(row)
-            if data_to_check_condition:
-                for condition in data_to_check_condition:
-                    if isinstance(condition, list):
-                        param_row.append(condition)
-                    else:
-                        param_row.append([condition])  # Convert single values to lists
-            params.append(tuple(param_row))
-
+        # Execute the query
         rows_updated = execute_db_operation(query, "update", params)
 
         logger.info(f"[DATABASE] Successfully updated {rows_updated} records in {table}")
