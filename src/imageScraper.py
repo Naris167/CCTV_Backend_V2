@@ -1,16 +1,17 @@
 
 import sys
+import os
 import threading
 from threading import Semaphore
 from datetime import datetime, timedelta
 from typing import Dict, List, Tuple, Union, Optional, Literal
 
-from cctv_operation_BMA.cam_update import update_cctv_database, retrieve_camInfo_BMA
 from utils.log_config import logger, log_setup
 from utils.Database import retrieve_data, update_data
 from utils.json_manager import load_latest_cctv_sessions_from_json
 from cctv_operation_BMA.worker import scrape_image_BMA
-from utils.utils import sort_key, readable_time, create_cctv_status_dict, select_non_empty, check_cctv_integrity
+from cctv_operation_HLS.worker import check_cctv_status, scrape_image_HLS, get_video_resolution
+from utils.utils import sort_key, readable_time
 
 
 def scraper_factory(BMA_JSON_result: Tuple[str, str, Dict[str, str]], isBMAReady: bool,
@@ -21,16 +22,62 @@ def scraper_factory(BMA_JSON_result: Tuple[str, str, Dict[str, str]], isBMAReady
         BMA_working, BMA_unresponsive, BMA_image_result = prepare_scrape_image_BMA_workers(cctvSessions)
     
     if isHLSReady:
-        # HLS_working, HLS_unresponsive, HLS_image_result = prepare_scrape_image_HLS_workers(cctvURL)
-        return
+        cctvLinks = dict(HLS_information)
+        HLS_working, HLS_unresponsive, HLS_image_result = prepare_scrape_image_HLS_workers(cctvLinks)
+        
+
+
+def prepare_scrape_image_HLS_workers(cctvURL: Dict[str, str]) -> Tuple[Dict[str, str], Dict[str, str], List[Tuple[str, Tuple[bytes], Tuple[datetime]]]]:
+    max_workers = 80
+    semaphore = Semaphore(max_workers)
+    threads = []
+    working_cctv = {}
+    unresponsive_cctv = {}
+    image_result = []
+    interval = 1
+    wait_before_get_image = 10
+    wait_to_get_image = 5
+    target_image_count = 1
+    timeout = 300.0
+    max_retries = 2
+    max_fail = 20
+    resolution = None
+
+    logger.info("[THREADING-S] Initializing HLS workers.")
+
+    for cctv_id, cctv_url in cctvURL.items():
+        thread = threading.Thread(target=check_cctv_status, args=(semaphore, cctv_id, cctv_url, working_cctv, unresponsive_cctv))
+        thread.start()
+        threads.append(thread)
+
+    for thread in threads:
+        thread.join()
+
+
+    for cctv_id, cctv_url in working_cctv.items():
+        thread = threading.Thread(target=scrape_image_HLS, args=(semaphore, cctv_id, cctv_url, image_result, working_cctv, unresponsive_cctv, interval, wait_before_get_image, wait_to_get_image, target_image_count, timeout, max_retries, max_fail, resolution))
+        thread.start()
+        threads.append(thread)
+
+    for thread in threads:
+        thread.join()
+    
+
+
+    working_cctv = dict(sorted(working_cctv.items(), key=lambda x: sort_key(x[0])))
+    unresponsive_cctv = dict(sorted(unresponsive_cctv.items(), key=lambda x: sort_key(x[0])))
+    image_result = sorted(image_result, key=lambda x: sort_key(x[0]))
+
+    logger.info(f"[THREADING-S] {len(working_cctv)} sessions are working from CCTV: {list(working_cctv.keys())}")
+    logger.info(f"[THREADING-S] {len(unresponsive_cctv)} sessions are unresponsive from CCTV: {unresponsive_cctv}")
+    logger.info("[THREADING-S] All sessions are validated.")
+
+    return working_cctv, unresponsive_cctv, image_result
 
 
 
 
-
-
-
-def prepare_scrape_image_BMA_workers(cctvSessions: Dict[str, str]) -> Tuple[Dict[str, str], Dict[str, str], List[Tuple[str, List[bytes], datetime]]]:
+def prepare_scrape_image_BMA_workers(cctvSessions: Dict[str, str]) -> Tuple[Dict[str, str], Dict[str, str], List[Tuple[str, Tuple[bytes], Tuple[datetime]]]]:
     max_workers = 80
     semaphore = Semaphore(max_workers)
     threads = []
@@ -39,7 +86,7 @@ def prepare_scrape_image_BMA_workers(cctvSessions: Dict[str, str]) -> Tuple[Dict
     image_result = [] # This must be [('001', byte data, time),...]
     target_image_count = 2
 
-    logger.info("[THREADING-S] Initializing session validation workers.")
+    logger.info("[THREADING-S] Initializing BMA workers.")
 
     for camera_id, session_id in cctvSessions.items():
         semaphore.acquire()
@@ -136,7 +183,26 @@ def verifyBMA(BMA_JSON_result):
         # exit(0)
         return False
 
-
+def save_cctv_images(data: List[Tuple[str, Tuple[bytes, ...], Tuple[datetime, ...]]], save_path: str):
+    """
+    Save CCTV images to the specified path.
+    
+    :param data: List of tuples containing (cctv_id, images, timestamps)
+    :param save_path: Directory path to save the images
+    """
+    os.makedirs(save_path, exist_ok=True)
+    
+    for cctv_id, images, timestamps in data:
+        for img_data, timestamp in zip(images, timestamps):
+            # Format the filename
+            filename = f"{cctv_id}_{timestamp.strftime('%Y-%m-%d_%H-%M-%S')}.png"
+            full_path = os.path.join(save_path, filename)
+            
+            # Save the image
+            with open(full_path, 'wb') as f:
+                f.write(img_data)
+            
+            print(f"Saved image: {filename}")
 
 
 
@@ -167,4 +233,9 @@ if __name__ == "__main__":
 
     scraper_factory(BMA_JSON_result, scrape_BMA,
                     HLS_information, scrape_HLS)
-            
+
+
+
+
+
+    

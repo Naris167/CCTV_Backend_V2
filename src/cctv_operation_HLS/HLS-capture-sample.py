@@ -25,7 +25,7 @@ def get_video_resolution(stream_url):
 
 
 
-def capture_screenshots_from_hls(stream_url: str, num_images: int, interval: float, resolution: tuple = None, timeout: float = 300.0, max_retries: int = 1) -> List[bytes]:
+def capture_screenshots_from_hls(stream_url: str, num_images: int, interval: float, resolution: tuple = None, timeout: float = 300.0, max_retries: int = 70) -> List[bytes]:
     """
     Captures multiple screenshots from an HLS video stream at specified intervals with retry mechanism.
     
@@ -169,8 +169,9 @@ def save_images(image_list, output_dir):
 
 
 
-stream_url = "http://183.88.214.137:1935/livecctv/cctvp2c003.stream/playlist.m3u8"
-num_images = 30
+# stream_url = "http://183.88.214.137:1935/livecctv/cctvp2c003.stream/playlist.m3u8"
+stream_url = "https://camerai1.iticfoundation.org/pass/180.180.242.207:1935/Phase8/PER_8_013.stream/playlist.m3u8"
+num_images = 3
 interval = 2  # seconds
 
 image_list = capture_screenshots_from_hls(stream_url, num_images, interval)

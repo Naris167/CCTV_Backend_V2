@@ -14,7 +14,7 @@ const CONFIG = {
   CCTV: {
     jsonDirectory: './cctvSessionTemp/',
     jsonMaxAgeHours: 2400000000,
-    updateCamInfoPath: './src/BMATraffic/main.py',
+    updateCamInfoPath: './sessionID.py',
     cctvDistance: 170,
     updateInterval: 10 * 1 * 60 * 1000, // 10 minutes
   },

@@ -2,6 +2,29 @@ import subprocess
 import json
 import os
 from utils.utils import binary_to_image
+from utils.log_config import logger
+
+
+
+def start_ffmpeg_process(stream_url, interval, width, height):
+    try:
+        ffmpeg_cmd = [
+            'ffmpeg',
+            '-i', stream_url,
+            '-vf', f'fps=1/{interval},scale={width}:{height}',
+            '-f', 'rawvideo',
+            '-pix_fmt', 'rgb24',
+            '-'
+        ]
+        logger.info(f"Debug 3: FFmpeg command: {' '.join(ffmpeg_cmd)}")
+        return subprocess.Popen(ffmpeg_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    except subprocess.CalledProcessError as e:
+        logger.info(f"Debug Error 1: FFmpeg error: {e.stderr.decode()}")
+        raise RuntimeError(f"FFmpeg error: {e.stderr.decode()}")
+    except Exception as e:
+        logger.info(f"Debug Error 2: Unexpected error: {str(e)}")
+        raise RuntimeError(f"Error capturing screenshots: {str(e)}")
+
 
 def get_video_resolution(stream_url):
     """Get the resolution (width, height) of the video stream using ffprobe."""

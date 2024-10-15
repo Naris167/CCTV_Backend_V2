@@ -2,6 +2,7 @@ import psycopg2
 import re
 import numpy as np
 from PIL import Image
+from datetime import datetime
 import io
 from typing import List, Dict, Any, Tuple, Union
 from utils.log_config import logger
@@ -201,18 +202,25 @@ def check_cctv_integrity(cctv_working: Dict[str, str], cctv_unresponsive: Dict[s
     return len(integrity_issues) == 0, integrity_issues
 
 
-def select_images(images: List[bytes], num_select: int) -> List[bytes]:
-    if not 1 <= num_select <= len(images):
-        raise ValueError("Not enough images in the input list.")
+def select_images_and_datetimes(
+    images: List[bytes],
+    datetimes: List[datetime],
+    num_select: int
+) -> Tuple[List[bytes], List[datetime]]:
+    if not 1 <= num_select <= len(images) or len(images) != len(datetimes):
+        raise ValueError("Invalid input: Check number of selections or list lengths.")
 
     if num_select == 1:
-        return [images[len(images) // 2]]  # Return the middle image
+        mid = len(images) // 2
+        return [images[mid]], [datetimes[mid]]
     
-    selected = []
+    selected_images = []
+    selected_datetimes = []
     step = (len(images) - 1) / (num_select - 1)
     
     for i in range(num_select):
         index = int(i * step)
-        selected.append(images[index])
+        selected_images.append(images[index])
+        selected_datetimes.append(datetimes[index])
     
-    return selected
+    return selected_images, selected_datetimes

@@ -5,7 +5,7 @@ from typing import List, Dict, Tuple
 from datetime import datetime
 
 from cctv_operation_BMA.getDataBMA import get_cctv_session_id, play_video, get_image
-from utils.utils import detect_movement, select_images
+from utils.utils import detect_movement, select_images_and_datetimes
 from utils.log_config import logger
 
 
@@ -90,7 +90,16 @@ def quick_refresh_sessionID(camera_id: str, session_id: str, semaphore: Semaphor
             semaphore.release()
 
 
-def scrape_image_BMA(camera_id: str, session_id: str, semaphore: Semaphore, working_session: Dict[str, str], unresponsive_session: Dict[str, str], image_result: List[Tuple[str, List[bytes], datetime]], target_image_count: int, max_retries: int = 5, delay: int = 3) -> None:
+def scrape_image_BMA(camera_id: str,
+                     session_id: str,
+                     semaphore: Semaphore,
+                     working_session: Dict[str, str],
+                     unresponsive_session: Dict[str, str],
+                     image_result: List[Tuple[str, Tuple[bytes], Tuple[datetime]]],
+                     target_image_count: int,
+                     max_retries: int = 5,
+                     delay: int = 3
+                     ) -> None:
     with semaphore:
         try:
             for retry in range(max_retries):
@@ -99,6 +108,7 @@ def scrape_image_BMA(camera_id: str, session_id: str, semaphore: Semaphore, work
                     logger.info(f"[SCRAPER] Success Step 1/3: CCTV {camera_id} has image size greater than 5120 bytes.")
                     
                     image_list = [initial_image]
+                    image_capture_time = [datetime.now()]
                     collected_images = 1
                     total_attempts = 1
                     
@@ -110,6 +120,7 @@ def scrape_image_BMA(camera_id: str, session_id: str, semaphore: Semaphore, work
                         new_image = get_image(camera_id, session_id)
                         if new_image and len(new_image) > 5120:
                             image_list.append(new_image)
+                            image_capture_time.append(datetime.now())
                             collected_images += 1
                         logger.info(f"[SCRAPER] Processing Step 2/3: Collected {collected_images}/{min_image_count} images from CCTV {camera_id}.")
                         total_attempts += 1
@@ -119,11 +130,11 @@ def scrape_image_BMA(camera_id: str, session_id: str, semaphore: Semaphore, work
                     if detect_movement(image_list):
                         
                         if target_image_count > min_image_count:
-                            image_list = select_images(image_list, min_image_count)
+                            image_list, image_capture_time = select_images_and_datetimes(image_list, image_capture_time, min_image_count)
 
                         with cctv_working_lock.gen_wlock():
                             working_session[camera_id] = session_id
-                            image_result.append((camera_id, image_list, datetime.now()))
+                            image_result.append((camera_id, tuple(image_list), tuple(image_capture_time)))
                         logger.info(f"[SCRAPER] Success Step 3/3: CCTV {camera_id} has movement.")
                         return
                     else:
