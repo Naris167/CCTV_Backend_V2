@@ -1,8 +1,6 @@
-
 import sys
 import os
-import threading
-from threading import Semaphore
+from threading import Semaphore, Thread
 from datetime import datetime, timedelta
 from typing import Dict, List, Tuple, Union, Optional, Literal
 
@@ -11,7 +9,7 @@ from utils.Database import retrieve_data, update_data
 from utils.json_manager import load_latest_cctv_sessions_from_json
 from cctv_operation_BMA.worker import scrape_image_BMA
 from cctv_operation_HLS.worker import check_cctv_status, scrape_image_HLS, get_video_resolution
-from utils.utils import sort_key, readable_time
+from utils.utils import readable_time, sort_results, run_threaded, save_cctv_images
 
 
 def scraper_factory(BMA_JSON_result: Tuple[str, str, Dict[str, str]], isBMAReady: bool,
@@ -19,93 +17,95 @@ def scraper_factory(BMA_JSON_result: Tuple[str, str, Dict[str, str]], isBMAReady
 
     if isBMAReady:
         _, _, cctvSessions = BMA_JSON_result
-        BMA_working, BMA_unresponsive, BMA_image_result = prepare_scrape_image_BMA_workers(cctvSessions)
+        # BMA_working, BMA_unresponsive, BMA_image_result = prepare_scrape_image_BMA_workers(cctvSessions)
     
     if isHLSReady:
-        cctvLinks = dict(HLS_information)
+        # cctvLinks = dict(HLS_information)
+
+        cctvLinks = {"cctvp2c001": "http://183.88.214.137:1935/livecctv/cctvp2c001.stream/playlist.m3u8",
+                     "cctvp2c003": "http://183.88.214.137:1935/livecctv/cctvp2c003.stream/playlist.m3u8",
+                     "ITICM_BMAMI0133": "https://camerai1.iticfoundation.org/hls/ccs05.m3u8",
+                     "ITICM_BMAMI0272": "https://camerai1.iticfoundation.org/hls/pty71.m3u8", # This one have problem. It take too long to response
+                     "ITICM_BMAMI0237": "https://camerai1.iticfoundation.org/hls/kk24.m3u8",
+                     "ITICM_BMAMI0257": "https://camerai1.iticfoundation.org/hls/pty56.m3u8"
+                     
+                     }
+
         HLS_working, HLS_unresponsive, HLS_image_result = prepare_scrape_image_HLS_workers(cctvLinks)
+    
+
+    save_cctv_images(HLS_image_result, "./data/screenshot", "HLS")
         
 
 
 def prepare_scrape_image_HLS_workers(cctvURL: Dict[str, str]) -> Tuple[Dict[str, str], Dict[str, str], List[Tuple[str, Tuple[bytes], Tuple[datetime]]]]:
-    max_workers = 80
-    semaphore = Semaphore(max_workers)
-    threads = []
-    working_cctv = {}
-    unresponsive_cctv = {}
+    config = {
+        'max_workers': 80,
+        'interval': 1,
+        'wait_before_get_image': 10,
+        'wait_to_get_image': 5,
+        'target_image_count': 1,
+        'timeout': 300.0,
+        'max_retries': 2,
+        'max_fail': 10,
+        'resolution': None
+    }
+
+    semaphore = Semaphore(config['max_workers'])
+    working_cctv, offline_cctv, unresponsive_cctv = {}, {}, {}
     image_result = []
-    interval = 1
-    wait_before_get_image = 10
-    wait_to_get_image = 5
-    target_image_count = 1
-    timeout = 300.0
-    max_retries = 2
-    max_fail = 20
-    resolution = None
 
-    logger.info("[THREADING-S] Initializing HLS workers.")
+    logger.info("[THREADING-S-HLS] Initializing HLS workers.")
+    logger.info("[THREADING-S-HLS] Verifying CCTV status...")
 
-    for cctv_id, cctv_url in cctvURL.items():
-        thread = threading.Thread(target=check_cctv_status, args=(semaphore, cctv_id, cctv_url, working_cctv, unresponsive_cctv))
-        thread.start()
-        threads.append(thread)
+    run_threaded(check_cctv_status, semaphore, *[(camera_id, url, working_cctv, offline_cctv) for camera_id, url in cctvURL.items()])
 
-    for thread in threads:
-        thread.join()
-
-
-    for cctv_id, cctv_url in working_cctv.items():
-        thread = threading.Thread(target=scrape_image_HLS, args=(semaphore, cctv_id, cctv_url, image_result, working_cctv, unresponsive_cctv, interval, wait_before_get_image, wait_to_get_image, target_image_count, timeout, max_retries, max_fail, resolution))
-        thread.start()
-        threads.append(thread)
-
-    for thread in threads:
-        thread.join()
+    logger.info("[THREADING-S-HLS] Verify CCTV status done.")
+    sort_results(working_cctv, offline_cctv)
+    logger.info(f"[THREADING-S-HLS] {len(working_cctv)} CCTVs are online: {list(working_cctv.keys())}")
+    logger.info(f"[THREADING-S-HLS] {len(offline_cctv)} CCTVs are offline: {list(offline_cctv.keys())}")
     
+    logger.info(f"[THREADING-S-HLS] Scraping started, Images: {config['target_image_count']}, Interval: {config['interval']} second")
+    included_keys = ['interval', 'wait_before_get_image', 'wait_to_get_image', 'target_image_count', 'timeout', 'max_retries', 'max_fail', 'resolution']
+    scraper_args = {k: config[k] for k in included_keys if k in config}
+    run_threaded(scrape_image_HLS, semaphore, *[(camera_id, url, image_result, working_cctv, unresponsive_cctv, *scraper_args.values()) 
+                                     for camera_id, url in working_cctv.items()])
+    
+    
+    logger.info("[THREADING-S-HLS] Scraping done.")
 
-
-    working_cctv = dict(sorted(working_cctv.items(), key=lambda x: sort_key(x[0])))
-    unresponsive_cctv = dict(sorted(unresponsive_cctv.items(), key=lambda x: sort_key(x[0])))
-    image_result = sorted(image_result, key=lambda x: sort_key(x[0]))
-
-    logger.info(f"[THREADING-S] {len(working_cctv)} sessions are working from CCTV: {list(working_cctv.keys())}")
-    logger.info(f"[THREADING-S] {len(unresponsive_cctv)} sessions are unresponsive from CCTV: {unresponsive_cctv}")
-    logger.info("[THREADING-S] All sessions are validated.")
+    sort_results(working_cctv, unresponsive_cctv, image_result)
+    logger.info(f"[THREADING-S-HLS] {len(working_cctv)} CCTVs are online: {list(working_cctv.keys())}")
+    logger.info(f"[THREADING-S-HLS] {len(unresponsive_cctv)} CCTVs are offline: {list(unresponsive_cctv.keys())}")
 
     return working_cctv, unresponsive_cctv, image_result
 
 
-
-
 def prepare_scrape_image_BMA_workers(cctvSessions: Dict[str, str]) -> Tuple[Dict[str, str], Dict[str, str], List[Tuple[str, Tuple[bytes], Tuple[datetime]]]]:
-    max_workers = 80
-    semaphore = Semaphore(max_workers)
-    threads = []
-    working_session = {}
-    unresponsive_session = {}
-    image_result = [] # This must be [('001', byte data, time),...]
-    target_image_count = 2
+    config = {
+        'max_workers': 80,
+        'target_image_count': 2
+    }
 
-    logger.info("[THREADING-S] Initializing BMA workers.")
+    semaphore = Semaphore(config['max_workers'])
+    working_session, unresponsive_session = {}, {}
+    image_result = []
 
-    for camera_id, session_id in cctvSessions.items():
-        semaphore.acquire()
-        thread = threading.Thread(target=scrape_image_BMA, args=(camera_id, session_id, semaphore, working_session, unresponsive_session, image_result, target_image_count))
-        thread.start()
-        threads.append(thread)
+    logger.info("[THREADING-S-BMA] Initializing BMA workers.")
+    logger.info("[THREADING-S-BMA] Scraping started.")
 
-    for thread in threads:
-        thread.join()
-    
-    working_session = dict(sorted(working_session.items(), key=lambda x: sort_key(x[0])))
-    unresponsive_session = dict(sorted(unresponsive_session.items(), key=lambda x: sort_key(x[0])))
-    image_result = sorted(image_result, key=lambda x: sort_key(x[0]))
+    run_threaded(scrape_image_BMA, semaphore, *[(camera_id, session_id, image_result, working_session, unresponsive_session, config['target_image_count']) 
+                                     for camera_id, session_id in cctvSessions.items()])
 
-    logger.info(f"[THREADING-S] {len(working_session)} sessions are working from CCTV: {list(working_session.keys())}")
-    logger.info(f"[THREADING-S] {len(unresponsive_session)} sessions are unresponsive from CCTV: {unresponsive_session}")
-    logger.info("[THREADING-S] All sessions are validated.")
+    logger.info("[THREADING-S-BMA] Scraping done.")
+
+    sort_results(working_session, unresponsive_session, image_result)
+    logger.info(f"[THREADING-S-BMA] {len(working_session)} sessions are working from CCTV: {list(working_session.keys())}")
+    logger.info(f"[THREADING-S-BMA] {len(unresponsive_session)} sessions are unresponsive from CCTV: {unresponsive_session}")
 
     return working_session, unresponsive_session, image_result
+
+
 
 
 '''
@@ -142,11 +142,30 @@ but the problem is that other cctv have big file, might not good for database
 anyway I have to put the image in numpy array and send directly to model and update the result
 '''
 
+def getHLSInfo():
+    HLS_information = retrieve_data(
+            'cctv_locations_general',
+            ('Cam_ID', 'Stream_Link_1'),
+            ('Stream_Method',),
+            ('HLS',)
+        )
+    
+    if not HLS_information:
+        logger.warning("[INFO] No HLS link found or failed to load.")
+        logger.warning(f"[INFO] Scraping for HLS will not be initiated because no HLS link is provided.")
+        return False, None
+    
+    return True, HLS_information
 
 
+def getBMAInfo():
+    BMA_JSON_result = load_latest_cctv_sessions_from_json()
 
+    if not BMA_JSON_result:
+        logger.warning("[INFO] No JSON file found or failed to load.")
+        logger.warning(f"[INFO] Scraping for BMA will not be initiated because no session ID is provided.")
+        return False, None
 
-def verifyBMA(BMA_JSON_result):
     latestRefreshTime, latestUpdateTime, cctvSessions = BMA_JSON_result
     current_time = datetime.now()
 
@@ -172,64 +191,29 @@ def verifyBMA(BMA_JSON_result):
         # Refresh times is within the valid range, so simply do a quick refresh and scraped image.
         # Do the scrapign now
         # start_scraping(cctvSessions)
-        return True
+        logger.info(f"[INFO] Session IDs are valid, scraping for BMA will be initiated soon.")
+        return True, BMA_JSON_result
         
     else:
         # Case 2:
         # This scrip just check for refresh times so it will not redundant with the sessionID.py
         # This script designed to scrape image, not preparing session ID.
-        # So this condition will just terminate the script as sessionID have expired.
-        logger.info(f"[INFO] Refresh times exceed their maximum allowed time differences.")
+        # So this condition will just terminate the script as sessionID have been expired.
+        logger.warning(f"[INFO] Scraping for BMA will not be initiated because refresh times exceed their maximum allowed time differences.")
         # exit(0)
-        return False
-
-def save_cctv_images(data: List[Tuple[str, Tuple[bytes, ...], Tuple[datetime, ...]]], save_path: str):
-    """
-    Save CCTV images to the specified path.
-    
-    :param data: List of tuples containing (cctv_id, images, timestamps)
-    :param save_path: Directory path to save the images
-    """
-    os.makedirs(save_path, exist_ok=True)
-    
-    for cctv_id, images, timestamps in data:
-        for img_data, timestamp in zip(images, timestamps):
-            # Format the filename
-            filename = f"{cctv_id}_{timestamp.strftime('%Y-%m-%d_%H-%M-%S')}.png"
-            full_path = os.path.join(save_path, filename)
-            
-            # Save the image
-            with open(full_path, 'wb') as f:
-                f.write(img_data)
-            
-            print(f"Saved image: {filename}")
-
+        return False, None
 
 
 if __name__ == "__main__":
-    log_setup("./logs/imageScraper","sessionID")
-    scrape_BMA = True
-    scrape_HLS = True
-    BMA_JSON_result = load_latest_cctv_sessions_from_json()
-    HLS_information = retrieve_data(
-        'cctv_locations_general',
-        ('Cam_ID', 'Stream_Link_1'),
-        ('Stream_Method',),
-        ('HLS',)
-    )
+    log_setup("./logs/imageScraper","Scraper")
+    # get_video_resolution("ITICM_BMAMI0257", "https://camerai1.iticfoundation.org/hls/pty56.m3u8")
+    # get_video_resolution("ITICM_BMAMI0272", "https://camerai1.iticfoundation.org/hls/pty71.m3u8")
+    # get_video_resolution("ITICM_BMAMI0257", "https://camerai1.iticfoundation.org/hls/pty56.m3u8")
 
-    if not BMA_JSON_result:
-        logger.warning("[INFO] No JSON file found or failed to load.")
-        scrape_BMA = False
-    else:
-        scrape_BMA = verifyBMA(BMA_JSON_result)
-        
-    if not HLS_information:
-        logger.warning("[INFO] No HLS information found or failed to load.")
-        scrape_HLS = False
-    else:
-        logger.info("[INFO] HLS information ready")
 
+
+    scrape_BMA, BMA_JSON_result = getBMAInfo()
+    scrape_HLS, HLS_information = getHLSInfo()
 
     scraper_factory(BMA_JSON_result, scrape_BMA,
                     HLS_information, scrape_HLS)

@@ -13,7 +13,7 @@ from datetime import datetime
 import requests
 
 from utils.utils import detect_movement, select_images_and_datetimes
-from cctv_operation_HLS.getDataHLS import get_video_resolution, start_ffmpeg_process
+from cctv_operation_HLS.getDataHLS import get_video_resolution, start_ffmpeg_process, read_frame_ffmpeg_process
 
 # Locks for thread safety
 # alive_sessions_lock = rwlock.RWLockFair()
@@ -21,22 +21,22 @@ from cctv_operation_HLS.getDataHLS import get_video_resolution, start_ffmpeg_pro
 cctv_working_lock = rwlock.RWLockFair()
 cctv_unresponsive_lock = rwlock.RWLockFair()
 
-def check_cctv_status(semaphore, cctv_id, cctv_url, working_cctv, unresponsive_cctv):
+def check_cctv_status(semaphore, cctv_id, cctv_url, working_cctv, offline_cctv):
     with semaphore:
         try:
             response = requests.get(cctv_url, timeout=10)
             if response.status_code == 200:
                 with cctv_working_lock.gen_wlock():
                     working_cctv[cctv_id] = cctv_url
-                    logger.info(f"[HLS-Verify-1] CCTV {cctv_id} response with {response.status_code}.")
+                    logger.info(f"[HLS-Status] CCTV {cctv_id} response with {response.status_code}.")
             else:
                 with cctv_unresponsive_lock.gen_wlock():
-                    unresponsive_cctv[cctv_id] = cctv_url
-                    logger.error(f"[HLS-Verify-1] CCTV {cctv_id} response with {response.status_code}.")
+                    offline_cctv[cctv_id] = cctv_url
+                    logger.error(f"[HLS-Status] CCTV {cctv_id} response with {response.status_code}.")
         except requests.RequestException as e:
             with cctv_unresponsive_lock.gen_wlock():
-                unresponsive_cctv[cctv_id] = cctv_url
-                logger.error(f"[HLS-Verify-1] CCTV {cctv_id} got response exception {str(e)}.")
+                offline_cctv[cctv_id] = cctv_url
+                logger.error(f"[HLS-Status] CCTV {cctv_id} got response exception {str(e)}.")
         finally:
             semaphore.release()
 
@@ -67,14 +67,14 @@ def scrape_image_HLS(semaphore: Semaphore,
                      ) -> None:
     with semaphore:
         try:
-            logger.info(f"Starting capture. URL: {HLS_Link}, Images: {target_image_count}, Interval: {interval}s")
+            logger.info(f"[SCRAPER-HLS] Starting capturing for CCTV {camera_id}")
             
             # Get resolution
             if resolution is None:
-                width, height = get_video_resolution(HLS_Link)
+                width, height = get_video_resolution(camera_id, HLS_Link)
             else:
                 width, height = map(int, resolution)
-            logger.info(f"Using resolution {width}x{height}")
+                logger.info(f"[SCRAPER-HLS] Manual resolution (W:{width} x H:{height}) is provided for CCTV {camera_id}")
 
             # Capture images
             image_png, image_time = [], []
@@ -84,77 +84,73 @@ def scrape_image_HLS(semaphore: Semaphore,
             read_thread = None
             frame_queue = queue.Queue()
             stop_flag = threading.Event()
-            retry_count = 0
-            fail = 0
+            iteration_count = 1
+            fail_count = 0
 
             while len(image_png) < target_image_count and time.time() - start_time < timeout:
-                if fail >= max_fail:
-                    raise Exception(f"{camera_id} Failed after retry {fail} times")
-
-                if process is None or process.poll() is not None:
-                    if process:
-                        process.terminate()
-                        process.wait(timeout=5)
-                    if read_thread and read_thread.is_alive():
-                        stop_flag.set()
-                        read_thread.join(timeout=5)
-
+                total_wait_time = 0
+                if process is None:
                     # Start FFmpeg process
                     stop_flag.clear()
                     frame_queue = queue.Queue()
-                    process = start_ffmpeg_process(HLS_Link, interval, width, height)
+                    process = start_ffmpeg_process(camera_id, HLS_Link, interval, width, height)
                     read_thread = threading.Thread(
-                        target=read_frame_HLS,
+                        target=read_frame_ffmpeg_process,
                         args=(camera_id, process, frame_size, frame_queue, stop_flag)
                     )
                     read_thread.start()
-                    logger.info("FFmpeg process started")
+                    
                     time.sleep(wait_before_get_image)  # Give some time for the stream to initialize
-
+                    total_wait_time += wait_before_get_image
 
                 try:
+                    total_wait_time += wait_to_get_image
                     frame_data = frame_queue.get(timeout=wait_to_get_image)
                     image_time.append(datetime.now())
-                    logger.info(f"Frame data read for image {len(image_png) + 1}")
+                    logger.info(f"[SCRAPER-HLS] Frame data [{len(image_png) + 1}/{target_image_count}] read for CCTV [{camera_id}][F:{fail_count}][I:{iteration_count}]")
                     
                     image = Image.frombytes('RGB', (width, height), frame_data)
                     img_byte_arr = io.BytesIO()
                     image.save(img_byte_arr, format='PNG')
                     image_png.append(img_byte_arr.getvalue())
 
-                    logger.info(f"Image {len(image_png)} processed and added")
-                    retry_count = 0
+                    logger.info(f"[SCRAPER-HLS] Image [{len(image_png)}/{target_image_count}] processed and added for CCTV [{camera_id}]")
+                    iteration_count = 1
                 except queue.Empty:
-                    logger.info(f"No new frame available after waiting {wait_before_get_image + wait_to_get_image} seconds")
-                    retry_count += 1
-                    fail += 1
-                    if retry_count >= max_retries:
-                        logger.info(f"Debug 5.4: Max retries ({max_retries}) reached. Restarting connection.")
+                    logger.info(f"[SCRAPER-HLS] No new frame available for CCTV [{camera_id}][F:{fail_count}][I:{iteration_count}] after waiting {total_wait_time} seconds (current image count: {len(image_png)}/{target_image_count})")
+                    iteration_count += 1
+                    
+                    if iteration_count > max_retries:
+                        fail_count += 1
+                        logger.warning(f"[SCRAPER-HLS] Max retries reached for CCTV {camera_id}. Incrementing fail count to {fail_count}")
+                        if fail_count >= max_fail:
+                            raise Exception(f"Aborted scraping after {fail_count} fails")
+                        logger.warning(f"[SCRAPER-HLS] Restarting connection for CCTV {camera_id}")
+                        
+                        # Kill the subprocess and reset
+                        if process:
+                            process.terminate()
+                            process.wait(timeout=5)
+                        if read_thread and read_thread.is_alive():
+                            stop_flag.set()
+                            read_thread.join(timeout=5)
+                        
                         process = None  # This will trigger a reconnection in the next iteration
-                        retry_count = 0
+                        iteration_count = 1  # Reset iteration count
+                    
 
 
-
-            logger.info(f"Capture complete. Total images captured: {len(image_png)}")
+            logger.info(f"[SCRAPER-HLS] CCTV {camera_id} capture complete. Total images captured: {len(image_png)}/{target_image_count}")
             with cctv_working_lock.gen_wlock():
                 working_cctv[camera_id] = HLS_Link
                 image_result.append((camera_id, tuple(image_png), tuple(image_time)))
             
         except Exception as e:
-            logger.error(f"Error scraping camera {camera_id}: {str(e)}")
+            logger.error(f"[SCRAPER-HLS] Error scraping camera {camera_id}: {str(e)}")
             with cctv_unresponsive_lock.gen_wlock():
                 unresponsive_cctv[camera_id] = HLS_Link
         finally:
             semaphore.release()
 
 
-def read_frame_HLS(camera_id, process, frame_size, frame_queue, stop_flag):
-    while not stop_flag.is_set():
-        try:
-            frame_data = process.stdout.read(frame_size)
-            if len(frame_data) == frame_size:
-                frame_queue.put(frame_data)
-            else:
-                break  # End of stream or error
-        except Exception as e:
-            raise RuntimeError(f"Error HLS frame reader for camera {camera_id}: {str(e)}")
+

@@ -90,12 +90,12 @@ def quick_refresh_sessionID(camera_id: str, session_id: str, semaphore: Semaphor
             semaphore.release()
 
 
-def scrape_image_BMA(camera_id: str,
+def scrape_image_BMA(semaphore: Semaphore,
+                     camera_id: str,
                      session_id: str,
-                     semaphore: Semaphore,
+                     image_result: List[Tuple[str, Tuple[bytes], Tuple[datetime]]],
                      working_session: Dict[str, str],
                      unresponsive_session: Dict[str, str],
-                     image_result: List[Tuple[str, Tuple[bytes], Tuple[datetime]]],
                      target_image_count: int,
                      max_retries: int = 5,
                      delay: int = 3
@@ -105,7 +105,7 @@ def scrape_image_BMA(camera_id: str,
             for retry in range(max_retries):
                 initial_image = get_image(camera_id, session_id)
                 if initial_image and len(initial_image) > 5120:
-                    logger.info(f"[SCRAPER] Success Step 1/3: CCTV {camera_id} has image size greater than 5120 bytes.")
+                    logger.info(f"[SCRAPER-BMA] Success Step 1/3: CCTV {camera_id} has image size greater than 5120 bytes.")
                     
                     image_list = [initial_image]
                     image_capture_time = [datetime.now()]
@@ -122,10 +122,10 @@ def scrape_image_BMA(camera_id: str,
                             image_list.append(new_image)
                             image_capture_time.append(datetime.now())
                             collected_images += 1
-                        logger.info(f"[SCRAPER] Processing Step 2/3: Collected {collected_images}/{min_image_count} images from CCTV {camera_id}.")
+                        logger.info(f"[SCRAPER-BMA] Processing Step 2/3: Collected {collected_images}/{min_image_count} images from CCTV {camera_id}.")
                         total_attempts += 1
                     
-                    logger.info(f"[SCRAPER] Success Step 2/3: Collected {collected_images} images from CCTV {camera_id}.")
+                    logger.info(f"[SCRAPER-BMA] Success Step 2/3: Collected {collected_images} images from CCTV {camera_id}.")
 
                     if detect_movement(image_list):
                         
@@ -135,19 +135,19 @@ def scrape_image_BMA(camera_id: str,
                         with cctv_working_lock.gen_wlock():
                             working_session[camera_id] = session_id
                             image_result.append((camera_id, tuple(image_list), tuple(image_capture_time)))
-                        logger.info(f"[SCRAPER] Success Step 3/3: CCTV {camera_id} has movement.")
+                        logger.info(f"[SCRAPER-BMA] Success Step 3/3: CCTV {camera_id} has movement.")
                         return
                     else:
-                        logger.warning(f"[SCRAPER] Failed Step 3/3: CCTV {camera_id} has no movement.")
+                        logger.warning(f"[SCRAPER-BMA] Failed Step 3/3: CCTV {camera_id} has no movement.")
                         break
                 else:
-                    logger.warning(f"[SCRAPER] Failed Step 1/3: Failed to retrieve valid image from CCTV {camera_id}. Attempt {retry + 1}/{max_retries}.")
+                    logger.warning(f"[SCRAPER-BMA] Failed Step 1/3: Failed to retrieve valid image from CCTV {camera_id}. Attempt {retry + 1}/{max_retries}.")
                     time.sleep(delay)
 
             with cctv_unresponsive_lock.gen_wlock():
                 unresponsive_session[camera_id] = session_id
-            logger.error(f"[SCRAPER] Marked CCTV {camera_id} as unresponsive after {max_retries} failed attempts.")
+            logger.error(f"[SCRAPER-BMA] Marked CCTV {camera_id} as unresponsive after {max_retries} failed attempts.")
         except Exception as e:
-            logger.error(f"[SCRAPER] Error validating session for camera {camera_id}: {str(e)}")
+            logger.error(f"[SCRAPER-BMA] Error validating session for camera {camera_id}: {str(e)}")
         finally:
             semaphore.release()

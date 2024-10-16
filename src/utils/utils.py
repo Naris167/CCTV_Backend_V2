@@ -4,12 +4,23 @@ import numpy as np
 from PIL import Image
 from datetime import datetime
 import io
+import os
 from typing import List, Dict, Any, Tuple, Union
 from utils.log_config import logger
 from collections import defaultdict
+from threading import Semaphore, Thread
 
 
 BASE_URL = "http://www.bmatraffic.com"
+
+def run_threaded(func, semaphore, *args):
+    threads = []
+    for arg in args:
+        thread = Thread(target=func, args=(semaphore, *arg))
+        thread.start()
+        threads.append(thread)
+    for thread in threads:
+        thread.join()
 
 def image_to_binary(image_input):
     if isinstance(image_input, bytes):
@@ -31,9 +42,57 @@ def binary_to_image(binary_data, output_path):
     except IOError as e:
         raise IOError(f"Error writing image file: {str(e)}")
 
+def save_cctv_images(data: List[Tuple[str, Tuple[bytes, ...], Tuple[datetime, ...]]], base_path: str, subfolder_name: str):
+    """
+    Save CCTV images to the specified path with a new subfolder.
+    
+    :param data: List of tuples containing (cctv_id, images, timestamps)
+    :param base_path: Base directory path to save the images
+    :param subfolder_name: Name of the subfolder to create
+    """
+    # Create the subfolder name with the current date-time
+    current_datetime = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+    subfolder = f"{subfolder_name}_{current_datetime}"
+    
+    # Create the full path for the new subfolder
+    save_path = os.path.join(base_path, subfolder)
+    os.makedirs(save_path, exist_ok=True)
+    
+    success = 0
+    failed = 0
+
+    for cctv_id, images, timestamps in data:
+        try:
+            for img_data, timestamp in zip(images, timestamps):
+                # Format the filename
+                filename = f"{cctv_id}_{timestamp.strftime('%Y-%m-%d_%H-%M-%S')}.png"
+                full_path = os.path.join(save_path, filename)
+                
+                # Save the image
+                binary_to_image(img_data, full_path)
+                
+                logger.info(f"Saved image: {filename} in {save_path}")
+                success += 1
+        except Exception as e:
+            logger.warning(f"An error occur when saving file to '{full_path}' - {str(e)}")
+            failed += 1
+    
+    logger.info(f"{success} Images successfully saved in {save_path}")
+    logger.info(f"{failed} Images failed to saved in {save_path}")
+    
+
 def sort_key(item):
     # Split the string into parts with numeric and non-numeric components
     return [int(part) if part.isdigit() else part.lower() for part in re.split('([0-9]+)', str(item))]
+
+def sort_results(*args: Union[Dict[str, Any], List[Any]]) -> None:
+    for arg in args:
+        if isinstance(arg, dict):
+            arg.update(dict(sorted(arg.items(), key=lambda x: sort_key(x[0]))))
+        elif isinstance(arg, list):
+            arg.sort(key=lambda x: sort_key(x[0]) if isinstance(x, tuple) else sort_key(x))
+        else:
+            logger.warning(f"Unsupported type for sorting: {type(arg)}")
 
 def readable_time(total_seconds: int) -> str:
     units = [
