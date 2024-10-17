@@ -134,3 +134,22 @@ def capture_one_screenshot_from_hls(stream_url):
 }
 
 
+
+
+
+So in this case, can you create a python function that accept the following arguemnts
+1. HLS link
+2. Number of image to capture
+3. Interval between each capture in second
+
+This function should just download the video from HLS link segment by segment and capture the image from it. Each link will have difference length of the video segment. For example, if the segment video have a length of 10 second, and I input the number to capture 8 image with interval of 2 seconds, the function should perform the following action.
+1. it should first download only one segment video
+2. detect theh lenght of this segment
+3. Let's say it detected a length of 10 seconds for this segment piece, it will capture the image from this segment video at the first second.
+4. Then the program should move (or basically skip) to next 2 second of the video segment and do the capture again.
+5. If there is not enough length left to move further, the program should download the next segment from the HLS link and do the same thing from step 1
+6. Make sure the program can keep track of which segment it currently working on and which is the next.
+7. Each capture happen, the program should record the capture time also by putting it in a list
+8. Each captured image, you can put it in the list too. So this mean that every index of every item in a list of image and a list of capture time should be match. Meaning, if there are 10 images in a list, there should be 10 date time object in a list of capture time too. And the first index of capture time list should be the capture time of the first image in the image list.
+9. This function will return both image list and capture time list.
+10. another case to handle is that, let's say if the segment of a video have a length of 10 seconds, and I input the interval for 30 second. In this case, as the capture interval is longer than the length of the segment, the program should download the first segment and capture it at first second. Next, it will wait for 30 seconds before it perform the capture again. However, this can be triggy because we don't actually know when the content in HLS link will be update and even it is already update, if we just only wait 30 seconds and download the other segment after waiting, we might end up capturing the next segment from the last one we just capture. This will result in just 10 seconds interval based on the real video. To aviod this problem, you will still keep track of each following segment after the first one that we captured. If the first segment have a length of 10 seconds, the second one have a length of 8 seconds, the third one have a length of 7 seconds, and the fourth one have a length of 10 seconds. The first capture should happen at the first second of the first segment, and the next one should happen at the fourth segment piece at the fifth second of it. This is because the interval is 30 second, the first capture happen at zero second of the first segment, to know when and where to capture the next image, we will wait for the next segment to come (the program should check and keep track) and sum up the length of each segment. In this case, 10 + 8 + 7 + 10 = 35, so the next capture should happen at the fourth segment piece at the fifth second of it.

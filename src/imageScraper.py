@@ -27,14 +27,13 @@ def scraper_factory(BMA_JSON_result: Tuple[str, str, Dict[str, str]], isBMAReady
                      "ITICM_BMAMI0133": "https://camerai1.iticfoundation.org/hls/ccs05.m3u8",
                      "ITICM_BMAMI0272": "https://camerai1.iticfoundation.org/hls/pty71.m3u8", # This one have problem. It take too long to response
                      "ITICM_BMAMI0237": "https://camerai1.iticfoundation.org/hls/kk24.m3u8",
-                     "ITICM_BMAMI0257": "https://camerai1.iticfoundation.org/hls/pty56.m3u8"
-                     
+                     "ITICM_BMAMI0257": "https://camerai1.iticfoundation.org/hls/pty56.m3u8"   
                      }
 
         HLS_working, HLS_unresponsive, HLS_image_result = prepare_scrape_image_HLS_workers(cctvLinks)
     
 
-    save_cctv_images(HLS_image_result, "./data/screenshot", "HLS")
+    save_cctv_images(HLS_image_result, "./data/screenshot", "TODAY")
         
 
 
@@ -42,8 +41,8 @@ def prepare_scrape_image_HLS_workers(cctvURL: Dict[str, str]) -> Tuple[Dict[str,
     config = {
         'max_workers': 80,
         'interval': 1,
-        'wait_before_get_image': 10,
-        'wait_to_get_image': 5,
+        'wait_before_get_image': 5,
+        'wait_to_get_image': 600,
         'target_image_count': 1,
         'timeout': 300.0,
         'max_retries': 2,
@@ -59,6 +58,16 @@ def prepare_scrape_image_HLS_workers(cctvURL: Dict[str, str]) -> Tuple[Dict[str,
     logger.info("[THREADING-S-HLS] Verifying CCTV status...")
 
     run_threaded(check_cctv_status, semaphore, *[(camera_id, url, working_cctv, offline_cctv) for camera_id, url in cctvURL.items()])
+
+    # update_data(
+    #     'cctv_locations_general',
+    #     ('is_online',),
+    #     (False,),
+    #     ('cam_id',),
+    #     (tuple(offline_cctv.keys()),)
+    # )
+
+    # print(tuple(offline_cctv.keys()))
 
     logger.info("[THREADING-S-HLS] Verify CCTV status done.")
     sort_results(working_cctv, offline_cctv)

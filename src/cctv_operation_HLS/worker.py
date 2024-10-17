@@ -43,13 +43,6 @@ def check_cctv_status(semaphore, cctv_id, cctv_url, working_cctv, offline_cctv):
 
 
 
-
-
-
-
-
-
-
 def scrape_image_HLS(semaphore: Semaphore,
                      camera_id: str,
                      HLS_Link: str,
@@ -88,7 +81,6 @@ def scrape_image_HLS(semaphore: Semaphore,
             fail_count = 0
 
             while len(image_png) < target_image_count and time.time() - start_time < timeout:
-                total_wait_time = 0
                 if process is None:
                     # Start FFmpeg process
                     stop_flag.clear()
@@ -101,10 +93,8 @@ def scrape_image_HLS(semaphore: Semaphore,
                     read_thread.start()
                     
                     time.sleep(wait_before_get_image)  # Give some time for the stream to initialize
-                    total_wait_time += wait_before_get_image
 
                 try:
-                    total_wait_time += wait_to_get_image
                     frame_data = frame_queue.get(timeout=wait_to_get_image)
                     image_time.append(datetime.now())
                     logger.info(f"[SCRAPER-HLS] Frame data [{len(image_png) + 1}/{target_image_count}] read for CCTV [{camera_id}][F:{fail_count}][I:{iteration_count}]")
@@ -117,7 +107,8 @@ def scrape_image_HLS(semaphore: Semaphore,
                     logger.info(f"[SCRAPER-HLS] Image [{len(image_png)}/{target_image_count}] processed and added for CCTV [{camera_id}]")
                     iteration_count = 1
                 except queue.Empty:
-                    logger.info(f"[SCRAPER-HLS] No new frame available for CCTV [{camera_id}][F:{fail_count}][I:{iteration_count}] after waiting {total_wait_time} seconds (current image count: {len(image_png)}/{target_image_count})")
+                    end_time = time.time()
+                    logger.info(f"[SCRAPER-HLS] No new frame available for CCTV [{camera_id}][F:{fail_count}][I:{iteration_count}] after waiting {end_time - start_time} seconds (current image count: {len(image_png)}/{target_image_count})")
                     iteration_count += 1
                     
                     if iteration_count > max_retries:
@@ -139,7 +130,7 @@ def scrape_image_HLS(semaphore: Semaphore,
                         iteration_count = 1  # Reset iteration count
                     
 
-
+            # If it is timeout, it should not fall here
             logger.info(f"[SCRAPER-HLS] CCTV {camera_id} capture complete. Total images captured: {len(image_png)}/{target_image_count}")
             with cctv_working_lock.gen_wlock():
                 working_cctv[camera_id] = HLS_Link
