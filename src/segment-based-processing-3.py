@@ -1,12 +1,7 @@
 import cv2
 import time
-import os
-from datetime import datetime, timedelta
-from utils.utils import save_cctv_images
-
-import cv2
-import time
 from datetime import datetime
+from utils.utils import save_cctv_images
 
 def capture_screenshots(name, url, num_images=5, interval=10):
     print(f"Connecting to {name}...")
@@ -46,7 +41,7 @@ def capture_screenshots(name, url, num_images=5, interval=10):
                     continue
 
                 # Convert frame to bytes
-                _, buffer = cv2.imencode('.jpg', frame)
+                _, buffer = cv2.imencode('.png', frame)
                 image_bytes = buffer.tobytes()
                 
                 # Store image bytes and capture time
@@ -74,8 +69,8 @@ def capture_screenshots(name, url, num_images=5, interval=10):
 
 
 # Example usage
-image_data, capture_times = capture_screenshots("pty71", "https://camerai1.iticfoundation.org/hls/pty71.m3u8", num_images=10, interval=1)
-save_cctv_images([("pty71", image_data, capture_times)], "./data/screenshot", "TODAY")
+image_data, capture_times = capture_screenshots("cctvp2c003", "http://183.88.214.137:1935/livecctv/cctvp2c003.stream/playlist.m3u8", num_images=10, interval=1)
+save_cctv_images([("cctvp2c003", image_data, capture_times)], "./data/screenshot", "TODAY")
 
 
 # cctvLinks = {

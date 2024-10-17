@@ -1,88 +1,101 @@
-import subprocess
-import json
-import os
-from utils.utils import binary_to_image
+import cv2
+import time
+from datetime import datetime
 from utils.log_config import logger
-
-def get_video_resolution(camera_id, stream_url):
-    """Get the resolution (width, height) of the video stream using ffprobe."""
-    ffprobe_cmd = [
-        'ffprobe', '-v', 'error', '-select_streams', 'v:0',
-        '-show_entries', 'stream=width,height', '-of', 'json', stream_url
-    ]
-    try:
-        result = subprocess.run(ffprobe_cmd, capture_output=True, text=True, check=True)
-        probe_data = json.loads(result.stdout)
-        width = probe_data['streams'][0]['width']
-        height = probe_data['streams'][0]['height']
-        
-        logger.info(f"[{camera_id}] Detected CCTV resolution of W:{width} x H:{height}")
-        
-        return width, height
-    except (subprocess.CalledProcessError, json.JSONDecodeError, KeyError, IndexError) as e:
-        raise RuntimeError(f"[{camera_id}] Failed to get CCTV resolution: {str(e)}")
+from typing import Tuple, List, Optional
 
 
-def start_ffmpeg_process(camera_id, stream_url, interval, width, height):
-    try:
-        ffmpeg_cmd = [
-            'ffmpeg',
-            '-i', stream_url,
-            '-vf', f'fps=1/{interval},scale={width}:{height}',
-            '-f', 'rawvideo',
-            '-pix_fmt', 'rgb24',
-            '-'
-        ]
+def capture_screenshots(
+    camera_id: str,
+    stream_url: str,
+    num_images: int = 1,
+    interval: float = 1,
+    max_retries: int = 3,
+    timeout: float = 30
+) -> Tuple[Tuple[bytes, ...], Tuple[datetime, ...]]:
+    
+    logger.info(f"[{camera_id}] Connecting...")
 
-        logger.info(f"[{camera_id}] Started FFmpeg sub process")
-        
-        return subprocess.Popen(ffmpeg_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    except subprocess.CalledProcessError as e:
-        raise RuntimeError(f"[{camera_id}] FFmpeg error: {e.stderr.decode()}")
-    except Exception as e:
-        raise RuntimeError(f"[{camera_id}] Error capturing screenshots: {str(e)}")
-
-
-def read_frame_ffmpeg_process(camera_id, process, frame_size, frame_queue, stop_flag):
-    while not stop_flag.is_set():
-        logger.info(f"[{camera_id}] HLS frame reader started")
+    last_capture_time: Optional[float] = None
+    image_data: List[bytes] = []
+    capture_times: List[datetime] = []
+    retries: int = 0
+    
+    while len(image_data) < num_images and retries < max_retries + num_images:
         try:
-            frame_data = process.stdout.read(frame_size)
-            if len(frame_data) == frame_size:
-                frame_queue.put(frame_data)
+            cap = cv2.VideoCapture(stream_url)
+            if not cap.isOpened():
+                raise Exception(f"Unable to open video stream")
+
+            fps = cap.get(cv2.CAP_PROP_FPS)
+            if fps <= 0:
+                fps = 30
+                logger.warning(f"[{camera_id}] Unable to determine stream FPS, using {fps} as default")
+            
+            start_time = time.time()
+
+            while len(image_data) < num_images:
+                current_time = time.time()
+                
+                if current_time - start_time > timeout:
+                    logger.warning(f"[{camera_id}] Timeout reached. Reconnecting...")
+                    break
+
+                # Check if enough time has passed since the last capture
+                if last_capture_time is None or (current_time - last_capture_time) >= interval:
+                    # Skip frames to reach the desired interval
+                    frames_to_skip = int(fps * interval)
+                    for _ in range(frames_to_skip):
+                        cap.grab()
+
+                    ret, frame = cap.read()
+                    if not ret:
+                        logger.warning(f"[{camera_id}] Error reading frame, reconnecting...")
+                        break
+                    
+                    # Convert frame to bytes
+                    _, buffer = cv2.imencode('.png', frame)
+                    image_bytes = buffer.tobytes()
+
+                    # Check image validity
+                    if len(image_bytes) <= 10000:
+                        logger.warning(f"[{camera_id}] Image size less than 10 Kb, retrying...")
+                        break
+                    
+                    # Store image bytes and capture time
+                    image_data.append(image_bytes)
+                    capture_times.append(datetime.now())
+                    
+                    last_capture_time = current_time
+                    logger.info(f"[{camera_id}] Screenshot {len(image_data)}/{num_images} captured")
+                else:
+                    # Wait for the remaining interval
+                    wait_time = interval - (current_time - last_capture_time)
+                    if wait_time > 0:
+                        time.sleep(min(wait_time, timeout - (current_time - start_time)))
+
+            cap.release()
+
+            if len(image_data) == num_images:
+                break
             else:
-                break  # End of stream or error
+                retries += 1
+                logger.warning(f"[{camera_id}] Retry {retries}/{max_retries}")
+                time.sleep(1)
+
         except Exception as e:
-            raise RuntimeError(f"[{camera_id}] Error HLS frame reader: {str(e)}")
+            logger.error(f"[{camera_id}] Error occurred - {str(e)}")
+            retries += 1
+            logger.warning(f"[{camera_id}] Retry {retries}/{max_retries}")
+            time.sleep(1)
 
+    if len(image_data) <= 0:
+        raise Exception(f"Unable to capture any screenshots after {max_retries} retries")
 
-
-
-# def capture_one_screenshot_from_hls(stream_url):
-#     """Captures a single frame from an HLS stream and saves it as an image."""
-
-#     try:
-#         width, height = get_video_resolution(stream_url)
-#         print(f"Detected video resolution: {width}x{height}")
-
-#         ffmpeg_cmd = [
-#             'ffmpeg', '-i', stream_url, '-vframes', '1',
-#             '-f', 'image2pipe', '-vcodec', 'png', '-'
-#         ]
-#         result = subprocess.run(ffmpeg_cmd, capture_output=True, check=True)
-#         return result.stdout
-
-#     except subprocess.CalledProcessError as e:
-#         raise RuntimeError(f"FFmpeg error: {e.stderr.decode()}")
-#     except Exception as e:
-#         raise RuntimeError(f"Error capturing screenshot: {str(e)}")
-
-# if __name__ == "__main__":
-#     stream_url = "https://camera1.iticfoundation.org/hls/10.8.0.17_8002.m3u8"
-#     output_dir = './captured_screenshot'
-#     try:
-#         image = capture_one_screenshot_from_hls(stream_url, output_dir)
-#         frame_filename = os.path.join(output_dir, 'screenshot.png')
-#         binary_to_image(image, frame_filename)
-#     except Exception as e:
-#         print(f"An error occurred: {str(e)}")
+    if len(image_data) < num_images:
+        logger.warning(f"[{camera_id}] Captured only {len(image_data)}/{num_images} screenshots after {max_retries} retries")
+    
+    if len(image_data) >= num_images:
+        logger.info(f"[{camera_id}] Captured {len(image_data)}/{num_images} screenshots")
+    
+    return tuple(image_data), tuple(capture_times)

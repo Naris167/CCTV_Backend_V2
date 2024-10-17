@@ -93,7 +93,7 @@ def quick_refresh_sessionID(camera_id: str, session_id: str, semaphore: Semaphor
 def scrape_image_BMA(semaphore: Semaphore,
                      camera_id: str,
                      session_id: str,
-                     image_result: List[Tuple[str, Tuple[bytes], Tuple[datetime]]],
+                     image_result: List[Tuple[str, Tuple[bytes, ...], Tuple[datetime, ...]]],
                      working_session: Dict[str, str],
                      unresponsive_session: Dict[str, str],
                      target_image_count: int,
@@ -129,8 +129,8 @@ def scrape_image_BMA(semaphore: Semaphore,
 
                     if detect_movement(image_list):
                         
-                        if target_image_count > min_image_count:
-                            image_list, image_capture_time = select_images_and_datetimes(image_list, image_capture_time, min_image_count)
+                        if target_image_count < min_image_count:
+                            image_list, image_capture_time = select_images_and_datetimes(image_list, image_capture_time, target_image_count)
 
                         with cctv_working_lock.gen_wlock():
                             working_session[camera_id] = session_id
