@@ -21,7 +21,7 @@ def capture_screenshots(
     capture_times: List[datetime] = []
     retries: int = 0
     
-    while len(image_data) < num_images and retries < max_retries + num_images:
+    while len(image_data) < num_images and retries < max_retries:
         try:
             cap = cv2.VideoCapture(stream_url)
             if not cap.isOpened():

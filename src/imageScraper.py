@@ -10,6 +10,7 @@ from utils.json_manager import load_latest_cctv_sessions_from_json
 from cctv_operation_BMA.worker import scrape_image_BMA
 from cctv_operation_HLS.worker import check_cctv_status, scrape_image_HLS
 from utils.utils import readable_time, sort_results, run_threaded, save_cctv_images
+from utils.json_manager import save_alive_session_to_file
 
 
 def scraper_factory(BMA_JSON_result: Tuple[str, str, Dict[str, str]], isBMAReady: bool,
@@ -33,7 +34,8 @@ def scraper_factory(BMA_JSON_result: Tuple[str, str, Dict[str, str]], isBMAReady
 
         HLS_working, HLS_unresponsive, offline_cctv, HLS_image_result = prepare_scrape_image_HLS_workers(cctvLinks)
 
-    print(HLS_working)
+
+    save_alive_session_to_file(HLS_working, "test", "test")
     
     # update_data(
     #     'cctv_locations_general',
