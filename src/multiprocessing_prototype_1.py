@@ -1,17 +1,10 @@
-import concurrent.futures
 from typing import Callable, List, Tuple, Dict, Any, Optional
 from datetime import datetime
 import time
-import random
-import math
-
-# from utils.Database import retrieve_data
-# from cctv_operation_HLS.getDataHLS import capture_screenshots
 from utils.log_config import logger, log_setup
-import logging
 
 
-from multiprocessing_prototype_2 import MultiprocessingImageScraper, scrape_image_HLS
+from cctv_operation_HLS.worker import MultiprocessingImageScraper, scrape_image_HLS
 from utils.utils import save_cctv_images
 from logging.handlers import QueueHandler
 
