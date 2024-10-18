@@ -11,6 +11,7 @@ from cctv_operation_BMA.worker import scrape_image_BMA
 from cctv_operation_HLS.worker import check_cctv_status, scrape_image_HLS
 from utils.utils import readable_time, sort_results, run_threaded, save_cctv_images
 from utils.json_manager import save_alive_session_to_file
+from utils.utils import sort_key
 
 
 def scraper_factory(BMA_JSON_result: Tuple[str, str, Dict[str, str]], isBMAReady: bool,
@@ -33,10 +34,9 @@ def scraper_factory(BMA_JSON_result: Tuple[str, str, Dict[str, str]], isBMAReady
         #              }
 
         HLS_working, HLS_unresponsive, offline_cctv, HLS_image_result = prepare_scrape_image_HLS_workers(cctvLinks)
-
-
-    save_alive_session_to_file(HLS_working, "test", "test")
     
+    save_alive_session_to_file(HLS_working, "test", "test")
+
     # update_data(
     #     'cctv_locations_general',
     #     ('is_online', 'stream_method'),
@@ -90,11 +90,22 @@ def prepare_scrape_image_HLS_workers(cctvURL: Dict[str, str]) -> Tuple[Dict[str,
     logger.info(f"[THREADING-S-HLS] {len(working_cctv)} CCTVs are online: {list(working_cctv.keys())}")
     logger.info(f"[THREADING-S-HLS] {len(offline_cctv)} CCTVs are offline: {list(offline_cctv.keys())}")
     
-    # logger.info(f"[THREADING-S-HLS] Scraping started, Images: {config['target_image_count']}, Interval: {config['interval']} second")
+    logger.info(f"[THREADING-S-HLS] Scraping started, Images: {config['target_image_count']}, Interval: {config['interval']} second")
+
+
+
+
+
     # included_keys = ['interval', 'target_image_count', 'timeout', 'max_retries']
     # scraper_args = {k: config[k] for k in included_keys if k in config}
     # run_threaded(scrape_image_HLS, semaphore_2, *[(camera_id, url, image_result, working_cctv, unresponsive_cctv, *scraper_args.values()) 
     #                                  for camera_id, url in working_cctv.items()])
+    
+
+
+
+
+
     
     # logger.info("[THREADING-S-HLS] Scraping done.")
 

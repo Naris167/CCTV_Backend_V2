@@ -95,9 +95,11 @@ def sort_key(item):
     return [int(part) if part.isdigit() else part.lower() for part in re.split('([0-9]+)', str(item))]
 
 def sort_results(*args: Union[Dict[str, Any], List[Any]]) -> None:
-    for arg in args:
+    for i, arg in enumerate(args):
         if isinstance(arg, dict):
-            arg.update(dict(sorted(arg.items(), key=lambda x: sort_key(x[0]))))
+            sorted_items = sorted(arg.items(), key=lambda x: sort_key(x[0]))
+            arg.clear()
+            arg.update(sorted_items)
         elif isinstance(arg, list):
             arg.sort(key=lambda x: sort_key(x[0]) if isinstance(x, tuple) else sort_key(x))
         else:

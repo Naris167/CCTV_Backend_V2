@@ -231,3 +231,242 @@ Also, make this function to be able to work with the shared resource. In this ca
 3. unresponsive_cctv: Dict[str, str]
 
 
+
+
+
+Can you conver this chunk of code into class. This class should be about multiprocessing. This class should accept "logger" which is the custom one that has been setup and define outside this class. It also have to accept a function `capture_screenshots` and `scrape_image_HLS` which will be used to run by multiprocessing. I have no idea how this class should be, but it should be easy to use, I can just call it, input a function and arguments and it should work and return the result like this. Btw, it is VERY IMPORTANT that you keep the import machanism of cv2 the same. This is the part that you cannot change. If you want to change it, you have to make sure that the import will only be call in the fork process, not the main one 
+
+```py
+import concurrent.futures
+from typing import Callable, List, Tuple, Dict, Any, Optional
+from datetime import datetime
+import time
+import random
+import math
+
+from utils.log_config import logger, log_setup
+
+# Global variable to hold the cv2 module
+cv2 = None
+
+def safe_import_cv2():
+    global cv2
+    if cv2 is None:
+        import cv2 as cv2_imported
+        cv2 = cv2_imported
+
+
+# Ensure cv2 is not imported in the main process
+def scrape_image_HLS(camera_id: str, HLS_Link: str, 
+                    interval: float, target_image_count: int, 
+                    timeout: float, max_retries: int) -> Tuple[str, Tuple[bytes, ...], Tuple[datetime, ...]] | None:
+
+    # Import cv2 here
+    safe_import_cv2()
+    def capture_screenshots(
+        camera_id: str,
+        stream_url: str,
+        num_images: int = 1,
+        interval: float = 1,
+        max_retries: int = 3,
+        timeout: float = 30
+    ) -> Tuple[Tuple[bytes, ...], Tuple[datetime, ...]]:
+        
+        logger.info(f"[{camera_id}] Connecting...")
+
+        last_capture_time: Optional[float] = None
+        image_data: List[bytes] = []
+        capture_times: List[datetime] = []
+        retries: int = 0
+        
+        while len(image_data) < num_images and retries < max_retries:
+            try:
+                cap = cv2.VideoCapture(stream_url)
+                if not cap.isOpened():
+                    raise Exception(f"Unable to open video stream")
+
+                fps = cap.get(cv2.CAP_PROP_FPS)
+                if fps <= 0:
+                    fps = 30
+                    logger.warning(f"[{camera_id}] Unable to determine stream FPS, using {fps} as default")
+                
+                start_time = time.time()
+
+                while len(image_data) < num_images:
+                    current_time = time.time()
+                    
+                    if current_time - start_time > timeout:
+                        logger.warning(f"[{camera_id}] Timeout reached. Reconnecting...")
+                        break
+
+                    # Check if enough time has passed since the last capture
+                    if last_capture_time is None or (current_time - last_capture_time) >= interval:
+                        # Skip frames to reach the desired interval
+                        frames_to_skip = int(fps * interval)
+                        for _ in range(frames_to_skip):
+                            cap.grab()
+
+                        ret, frame = cap.read()
+                        if not ret:
+                            logger.warning(f"[{camera_id}] Error reading frame, reconnecting...")
+                            break
+                        
+                        # Convert frame to bytes
+                        _, buffer = cv2.imencode('.png', frame)
+                        image_bytes = buffer.tobytes()
+
+                        # Check image validity
+                        if len(image_bytes) <= 10000:
+                            logger.warning(f"[{camera_id}] Image size less than 10 Kb, retrying...")
+                            break
+                        
+                        # Store image bytes and capture time
+                        image_data.append(image_bytes)
+                        capture_times.append(datetime.now())
+                        
+                        last_capture_time = current_time
+                        print(f"[{camera_id}] Screenshot {len(image_data)}/{num_images} captured")
+                    else:
+                        # Wait for the remaining interval
+                        wait_time = interval - (current_time - last_capture_time)
+                        if wait_time > 0:
+                            time.sleep(min(wait_time, timeout - (current_time - start_time)))
+
+                cap.release()
+
+                if len(image_data) == num_images:
+                    break
+                else:
+                    retries += 1
+                    logger.warning(f"[{camera_id}] Retry {retries}/{max_retries}")
+                    time.sleep(1)
+
+            except Exception as e:
+                logger.error(f"[{camera_id}] Error occurred - {str(e)}")
+                retries += 1
+                logger.warning(f"[{camera_id}] Retry {retries}/{max_retries}")
+                time.sleep(1)
+
+        if len(image_data) <= 0:
+            raise Exception(f"Unable to capture any screenshots after {max_retries} retries")
+
+        if len(image_data) < num_images:
+            logger.warning(f"[{camera_id}] Captured only {len(image_data)}/{num_images} screenshots after {max_retries} retries")
+        
+        if len(image_data) >= num_images:
+            logger.info(f"[{camera_id}] Captured {len(image_data)}/{num_images} screenshots")
+        
+        return tuple(image_data), tuple(capture_times)
+    try:
+        # Return a tuple of (camera_id, image_data, timestamps)
+        logger.info(f"[SCRAPER-HLS] Starting capturing for CCTV {camera_id}")
+            
+        image_png, image_time = capture_screenshots(camera_id, HLS_Link, target_image_count, interval, max_retries, timeout)
+                
+        logger.info(f"[SCRAPER-HLS] CCTV {camera_id} capture complete. Total images captured: {len(image_png)}/{target_image_count}")
+        return camera_id, image_png, image_time
+    except Exception as e:
+        # Return None to indicate failure
+        logger.error(f"[SCRAPER-HLS] Error scraping camera {camera_id}: {str(e)}")
+        return None
+
+
+
+def worker_func(func: Callable, camera_id: str, url: str, kwargs: Dict[str, Any]) -> Tuple[str, Any]:
+    # Import cv2 here, after the process has been forked
+    safe_import_cv2()
+    result = func(camera_id, url, **kwargs)
+    return camera_id, result
+
+def run_multiprocessing(func: Callable, 
+                        max_concurrent: int,
+                        working_cctv: Dict[str, str],
+                        **kwargs: Any) -> Dict[str, Any]:
+    
+    # Determine the number of pools and workers per pool
+    num_pools = math.ceil(max_concurrent / 60)  # 60 workers per pool to stay within Windows limits
+    workers_per_pool = min(60, max(1, max_concurrent // num_pools))
+    
+    # Create process pools
+    pools = [concurrent.futures.ProcessPoolExecutor(max_workers=workers_per_pool) for _ in range(num_pools)]
+    
+    # Distribute work among pools
+    futures = []
+    for i, (camera_id, url) in enumerate(working_cctv.items()):
+        pool = pools[i % num_pools]
+        futures.append(pool.submit(worker_func, func, camera_id, url, kwargs))
+    
+    # Collect results
+    all_results = []
+    for future in concurrent.futures.as_completed(futures):
+        try:
+            all_results.append(future.result())
+        except Exception as e:
+            print(f"An error occurred: {str(e)}")
+    
+    # Process results
+    image_result = []
+    updated_working_cctv = {}
+    unresponsive_cctv = {}
+
+    for camera_id, result in all_results:
+        if result is not None:
+            image_result.append(result)
+            updated_working_cctv[camera_id] = working_cctv[camera_id]
+        else:
+            unresponsive_cctv[camera_id] = working_cctv[camera_id]
+
+    # Shutdown all pools
+    for pool in pools:
+        pool.shutdown()
+
+    return {
+        "image_result": image_result,
+        "working_cctv": updated_working_cctv,
+        "unresponsive_cctv": unresponsive_cctv
+    }
+```
+
+This is how I use it right now. Just so you have understanding about it.
+```py
+if __name__ == "__main__":
+    # Configuration and setup
+    log_setup("./logs/imageScraper","TestMultiprocessor")
+    config = {
+        'interval': 1.0,
+        'target_image_count': 5,  # Reduced for faster testing
+        'timeout': 30.0,
+        'max_retries': 3
+    }
+
+    working_cctv: Dict[str, str] = {
+        "DOH-PER-9-004": "https://camerai1.iticfoundation.org/pass/180.180.242.207:1935/Phase9/PER_9_004.stream/playlist.m3u8",
+        "ITICM_BMAMI0277": "https://camerai1.iticfoundation.org/hls/pty76.m3u8"
+    }
+
+    print(f"Starting scraping for {len(working_cctv)} CCTVs...")
+    start_time = time.time()
+
+    # Run the multiprocessing function
+    results = run_multiprocessing(
+        scrape_image_HLS,
+        80,  # Desired number of concurrent processes
+        working_cctv,
+        **config
+    )
+
+    end_time = time.time()
+    total_time = end_time - start_time
+
+    # Process the results
+    print(f"\nScraping completed in {total_time:.2f} seconds")
+    print(f"Successfully scraped {len(results['image_result'])} cameras")
+    print(f"Working CCTV: {len(results['working_cctv'])}")
+    print(f"Unresponsive CCTV: {len(results['unresponsive_cctv'])}")
+
+    # Calculate and print statistics
+    success_rate = len(results['working_cctv']) / len(working_cctv) * 100
+    print(f"\nSuccess rate: {success_rate:.2f}%")
+    print(f"Average time per camera: {total_time / len(working_cctv):.4f} seconds")
+
+```
