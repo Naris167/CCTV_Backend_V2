@@ -17,7 +17,7 @@ def scraper_factory(BMA_JSON_result: Tuple[str, str, Dict[str, str]], isBMAReady
 
     if isBMAReady:
         _, _, cctvSessions = BMA_JSON_result
-        BMA_working, BMA_unresponsive, BMA_image_result = prepare_scrape_image_BMA_workers(cctvSessions)
+        # BMA_working, BMA_unresponsive, BMA_image_result = prepare_scrape_image_BMA_workers(cctvSessions)
     
     if isHLSReady:
         cctvLinks = dict(HLS_information)
@@ -32,30 +32,32 @@ def scraper_factory(BMA_JSON_result: Tuple[str, str, Dict[str, str]], isBMAReady
         #              }
 
         HLS_working, HLS_unresponsive, offline_cctv, HLS_image_result = prepare_scrape_image_HLS_workers(cctvLinks)
-    
-    update_data(
-        'cctv_locations_general',
-        ('is_online', 'stream_method'),
-        (True, 'HLS')
-    )
-    
-    update_data(
-        'cctv_locations_general',
-        ('is_online',),
-        (False,),
-        ('cam_id', 'stream_method'),
-        (tuple(offline_cctv.keys()), 'HLS')
-    )
 
-    update_data(
-        'cctv_locations_general',
-        ('is_online',),
-        (False,),
-        ('cam_id', 'stream_method'),
-        (tuple(HLS_unresponsive.keys()), 'HLS')
-    )
+    print(HLS_working)
+    
+    # update_data(
+    #     'cctv_locations_general',
+    #     ('is_online', 'stream_method'),
+    #     (True, 'HLS')
+    # )
+    
+    # update_data(
+    #     'cctv_locations_general',
+    #     ('is_online',),
+    #     (False,),
+    #     ('cam_id', 'stream_method'),
+    #     (tuple(offline_cctv.keys()), 'HLS')
+    # )
 
-    save_cctv_images(HLS_image_result + BMA_image_result, "./data/screenshot", "TODAY")
+    # update_data(
+    #     'cctv_locations_general',
+    #     ('is_online',),
+    #     (False,),
+    #     ('cam_id', 'stream_method'),
+    #     (tuple(HLS_unresponsive.keys()), 'HLS')
+    # )
+
+    # save_cctv_images(HLS_image_result, "./data/screenshot", "TODAY")
         
 
 
@@ -86,17 +88,17 @@ def prepare_scrape_image_HLS_workers(cctvURL: Dict[str, str]) -> Tuple[Dict[str,
     logger.info(f"[THREADING-S-HLS] {len(working_cctv)} CCTVs are online: {list(working_cctv.keys())}")
     logger.info(f"[THREADING-S-HLS] {len(offline_cctv)} CCTVs are offline: {list(offline_cctv.keys())}")
     
-    logger.info(f"[THREADING-S-HLS] Scraping started, Images: {config['target_image_count']}, Interval: {config['interval']} second")
-    included_keys = ['interval', 'wait_before_get_image', 'wait_to_get_image', 'target_image_count', 'timeout', 'max_retries', 'max_fail', 'resolution']
-    scraper_args = {k: config[k] for k in included_keys if k in config}
-    run_threaded(scrape_image_HLS, semaphore_2, *[(camera_id, url, image_result, working_cctv, unresponsive_cctv, *scraper_args.values()) 
-                                     for camera_id, url in working_cctv.items()])
+    # logger.info(f"[THREADING-S-HLS] Scraping started, Images: {config['target_image_count']}, Interval: {config['interval']} second")
+    # included_keys = ['interval', 'target_image_count', 'timeout', 'max_retries']
+    # scraper_args = {k: config[k] for k in included_keys if k in config}
+    # run_threaded(scrape_image_HLS, semaphore_2, *[(camera_id, url, image_result, working_cctv, unresponsive_cctv, *scraper_args.values()) 
+    #                                  for camera_id, url in working_cctv.items()])
     
-    logger.info("[THREADING-S-HLS] Scraping done.")
+    # logger.info("[THREADING-S-HLS] Scraping done.")
 
-    sort_results(working_cctv, unresponsive_cctv, image_result)
-    logger.info(f"[THREADING-S-HLS] {len(working_cctv)} CCTVs are successfully captured: {list(working_cctv.keys())}")
-    logger.info(f"[THREADING-S-HLS] {len(unresponsive_cctv)} CCTVs are unresponsive: {list(unresponsive_cctv.keys())}")
+    # sort_results(working_cctv, unresponsive_cctv, image_result)
+    # logger.info(f"[THREADING-S-HLS] {len(working_cctv)} CCTVs are successfully captured: {list(working_cctv.keys())}")
+    # logger.info(f"[THREADING-S-HLS] {len(unresponsive_cctv)} CCTVs are unresponsive: {list(unresponsive_cctv.keys())}")
 
     return working_cctv, unresponsive_cctv, offline_cctv, image_result
 

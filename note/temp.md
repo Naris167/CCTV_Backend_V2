@@ -153,3 +153,81 @@ This function should just download the video from HLS link segment by segment an
 8. Each captured image, you can put it in the list too. So this mean that every index of every item in a list of image and a list of capture time should be match. Meaning, if there are 10 images in a list, there should be 10 date time object in a list of capture time too. And the first index of capture time list should be the capture time of the first image in the image list.
 9. This function will return both image list and capture time list.
 10. another case to handle is that, let's say if the segment of a video have a length of 10 seconds, and I input the interval for 30 second. In this case, as the capture interval is longer than the length of the segment, the program should download the first segment and capture it at first second. Next, it will wait for 30 seconds before it perform the capture again. However, this can be triggy because we don't actually know when the content in HLS link will be update and even it is already update, if we just only wait 30 seconds and download the other segment after waiting, we might end up capturing the next segment from the last one we just capture. This will result in just 10 seconds interval based on the real video. To aviod this problem, you will still keep track of each following segment after the first one that we captured. If the first segment have a length of 10 seconds, the second one have a length of 8 seconds, the third one have a length of 7 seconds, and the fourth one have a length of 10 seconds. The first capture should happen at the first second of the first segment, and the next one should happen at the fourth segment piece at the fifth second of it. This is because the interval is 30 second, the first capture happen at zero second of the first segment, to know when and where to capture the next image, we will wait for the next segment to come (the program should check and keep track) and sum up the length of each segment. In this case, 10 + 8 + 7 + 10 = 35, so the next capture should happen at the fourth segment piece at the fifth second of it.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Now I am using the function from threading module to create multiple thread. They looks something like this. Can you do the same thing for Multiprocessing module? 
+
+```py
+semaphore = Semaphore(80)
+run_threaded(scrape_image_HLS, semaphore, ...)
+
+def run_threaded(func, semaphore, *args):
+    threads = []
+    for arg in args:
+        thread = Thread(target=func, args=(semaphore, *arg))
+        thread.start()
+        threads.append(thread)
+    for thread in threads:
+        thread.join()
+```
+
+
+Can you create a function that take another function as argument, and any amount of other args in python? This function should run the given function using Multiprocessing module in python and it also need to input the value from paremeter into the given function.
+
+Here is the I have this function that accept the following argument. I want to run this using Multiprocessing module.
+```py
+def scrape_image_HLS(semaphore: Semaphore,
+                     camera_id: str,
+                     HLS_Link: str,
+                     image_result: List[Tuple[str, Tuple[bytes, ...], Tuple[datetime, ...]]],
+                     working_cctv: Dict[str, str],
+                     unresponsive_cctv: Dict[str, str],
+                     interval: float,
+                     target_image_count: int,
+                     timeout: float,
+                     max_retries: int
+                     ) -> None:
+    with semaphore:
+        try:
+            logger.info(f"[SCRAPER-HLS] Starting capturing for CCTV {camera_id}")
+            
+            image_png, image_time = capture_screenshots(camera_id, HLS_Link, target_image_count, interval, max_retries, timeout)
+                    
+            logger.info(f"[SCRAPER-HLS] CCTV {camera_id} capture complete. Total images captured: {len(image_png)}/{target_image_count}")
+            with cctv_working_lock.gen_wlock():
+                working_cctv[camera_id] = HLS_Link
+                image_result.append((camera_id, image_png, image_time))
+            
+        except Exception as e:
+            logger.error(f"[SCRAPER-HLS] Error scraping camera {camera_id}: {str(e)}")
+            with cctv_unresponsive_lock.gen_wlock():
+                unresponsive_cctv[camera_id] = HLS_Link
+        finally:
+            semaphore.release()
+```
+
+
+The function that I want you to create might looks something like this
+```py
+def run_multiprocessing(func, *args)
+```
+
+Also, make this function to be able to work with the shared resource. In this case, there are 3 shared resources:
+1. image_result: List[Tuple[str, Tuple[bytes, ...], Tuple[datetime, ...]]]
+2. working_cctv: Dict[str, str]
+3. unresponsive_cctv: Dict[str, str]
+
+

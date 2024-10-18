@@ -9,6 +9,8 @@ from typing import List, Dict, Any, Tuple, Union
 from utils.log_config import logger
 from collections import defaultdict
 from threading import Semaphore, Thread
+from multiprocessing import Pool, Manager
+from functools import partial
 
 
 BASE_URL = "http://www.bmatraffic.com"
@@ -21,6 +23,13 @@ def run_threaded(func, semaphore, *args):
         threads.append(thread)
     for thread in threads:
         thread.join()
+
+# def run_multiprocessing(func, max_processes, *args):
+#     with Manager() as manager:
+#         semaphore = manager.Semaphore(80)
+#         with Pool(processes=max_processes) as pool:
+#             func_with_semaphore = partial(func, semaphore)
+#             pool.map(func_with_semaphore, args)
 
 def image_to_binary(image_input):
     if isinstance(image_input, bytes):
