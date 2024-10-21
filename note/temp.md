@@ -470,3 +470,168 @@ if __name__ == "__main__":
     print(f"Average time per camera: {total_time / len(working_cctv):.4f} seconds")
 
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+So actually the logging that I just asked you about this this classes. This is the improved version of MultiprocessingImageScraper that also have ability to send logggin information from each process back to the main process for centralized logging. The logging machanism in this code work well. However, there are a lot of error when this code run under high concurrency because the manual multiprocessing implementation is not that good.
+```python
+class LoggingProcess(multiprocessing.Process):
+    def __init__(self, log_queue):
+        super().__init__()
+        self.log_queue = log_queue
+
+    def run(self):
+        root_logger = logging.getLogger()
+        root_logger.handlers = []
+        handler = QueueHandler(self.log_queue)
+        root_logger.addHandler(handler)
+        root_logger.setLevel(logging.DEBUG)
+        self.run_process()
+
+    def run_process(self):
+        pass
+
+class MultiprocessingImageScraper:
+    def __init__(self, logger):
+        self.logger = logger
+        self.log_queue = multiprocessing.Queue()
+        self.queue_listener = QueueListener(self.log_queue, *logger.handlers)
+
+    def start_logging(self):
+        self.queue_listener.start()
+
+    def stop_logging(self):
+        self.queue_listener.stop()
+
+    class WorkerProcess(LoggingProcess):
+        def __init__(self, log_queue, func, camera_id, url, kwargs):
+            super().__init__(log_queue)
+            self.func = func
+            self.camera_id = camera_id
+            self.url = url
+            self.kwargs = kwargs
+            self.result = None
+
+        def run_process(self):
+            safe_import_cv2()
+            self.result = self.func(self.camera_id, self.url, **self.kwargs)
+
+    def run_multiprocessing(self, func: Callable, 
+                            max_concurrent: int,
+                            working_cctv: Dict[str, str],
+                            **kwargs: Any) -> Dict[str, Any]:
+        
+        self.start_logging()
+
+        all_results = []
+        processes = []
+
+        for camera_id, url in working_cctv.items():
+            process = self.WorkerProcess(self.log_queue, func, camera_id, url, kwargs)
+            processes.append(process)
+            process.start()
+
+            if len(processes) >= max_concurrent:
+                for p in processes:
+                    p.join()
+                    if p.result is not None:
+                        all_results.append((p.camera_id, p.result))
+                processes = []
+
+        # Handle any remaining processes
+        for p in processes:
+            p.join()
+            if p.result is not None:
+                all_results.append((p.camera_id, p.result))
+
+        image_result = []
+        updated_working_cctv = {}
+        unresponsive_cctv = {}
+
+        for camera_id, result in all_results:
+            if result is not None:
+                image_result.append(result)
+                updated_working_cctv[camera_id] = working_cctv[camera_id]
+            else:
+                unresponsive_cctv[camera_id] = working_cctv[camera_id]
+
+        self.stop_logging()
+
+        return {
+            "image_result": image_result,
+            "working_cctv": updated_working_cctv,
+            "unresponsive_cctv": unresponsive_cctv
+        }
+```
+
+
+But in this older version, the code work very well under high concurrency because I used `concurrent.futures.ProcessPoolExecutor`. However, it don't have ability to keep track of any logging like the new one I showed you above. I want you to use the below code as a base. You may change some part in it. and you have to implement logging like the code I showed you above. You might have to make the class `MultiprocessingImageScraper` inherit from `LoggingProcess` and `LoggingProcess` might have to inherit from, i don't know, may be things like concurrent.futures or ProcessPoolExecutor. Can you help me with this? My idea on how to implement it might not correct so can you please help me correct it before you implement this?
+
+```python
+class MultiprocessingImageScraper:
+    def __init__(self, logger):
+        self.logger = logger
+
+    def worker_func(self, func: Callable, camera_id: str, url: str, kwargs: Dict[str, Any]) -> Tuple[str, Any]:
+        safe_import_cv2()
+        result = func(camera_id, url, **kwargs)
+        return camera_id, result
+
+    def run_multiprocessing(self, func: Callable, 
+                            max_concurrent: int,
+                            working_cctv: Dict[str, str],
+                            **kwargs: Any) -> Dict[str, Any]:
+        
+        num_pools = math.ceil(max_concurrent / 60)
+        workers_per_pool = min(60, max(1, max_concurrent // num_pools))
+        
+        pools = [concurrent.futures.ProcessPoolExecutor(max_workers=workers_per_pool) for _ in range(num_pools)]
+        
+        futures = []
+        for i, (camera_id, url) in enumerate(working_cctv.items()):
+            pool = pools[i % num_pools]
+            futures.append(pool.submit(self.worker_func, func, camera_id, url, kwargs))
+        
+        all_results = []
+        for future in concurrent.futures.as_completed(futures):
+            try:
+                all_results.append(future.result())
+            except Exception as e:
+                self.logger.error(f"An error occurred: {str(e)}")
+        
+        image_result = []
+        updated_working_cctv = {}
+        unresponsive_cctv = {}
+
+        for camera_id, result in all_results:
+            if result is not None:
+                image_result.append(result)
+                updated_working_cctv[camera_id] = working_cctv[camera_id]
+            else:
+                unresponsive_cctv[camera_id] = working_cctv[camera_id]
+
+        for pool in pools:
+            pool.shutdown()
+
+        return {
+            "image_result": image_result,
+            "working_cctv": updated_working_cctv,
+            "unresponsive_cctv": unresponsive_cctv
+        }
+```

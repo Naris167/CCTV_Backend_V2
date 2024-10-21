@@ -4,7 +4,6 @@ import os
 from dotenv import load_dotenv
 from contextlib import contextmanager
 from utils.log_config import logger
-from utils.utils import sort_key
 from typing import List, Tuple, Dict, Optional, Any, Union
 
 load_dotenv('.env.local')

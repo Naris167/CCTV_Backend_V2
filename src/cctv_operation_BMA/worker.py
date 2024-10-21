@@ -5,7 +5,7 @@ from typing import List, Dict, Tuple
 from datetime import datetime
 
 from cctv_operation_BMA.getDataBMA import get_cctv_session_id, play_video, get_image
-from utils.utils import detect_movement, select_images_and_datetimes
+from utils.utils import CCTVUtils, ImageUtils
 from utils.log_config import logger
 
 
@@ -59,7 +59,7 @@ def validate_sessionID(camera_id: str, session_id: str, semaphore: Semaphore, wo
                     
                     logger.info(f"[REFRESHER] Success Step 2/3: Collected {len(image_list)} images from CCTV {camera_id}.")
 
-                    if detect_movement(image_list):
+                    if CCTVUtils.detect_movement(image_list):
                         with cctv_working_lock.gen_wlock():
                             working_session[camera_id] = session_id
                         logger.info(f"[REFRESHER] Success Step 3/3: CCTV {camera_id} has movement.")
@@ -127,10 +127,10 @@ def scrape_image_BMA(semaphore: Semaphore,
                     
                     logger.info(f"[SCRAPER-BMA] Success Step 2/3: Collected {collected_images} images from CCTV {camera_id}.")
 
-                    if detect_movement(image_list):
+                    if CCTVUtils.detect_movement(image_list):
                         
                         if target_image_count < min_image_count:
-                            image_list, image_capture_time = select_images_and_datetimes(image_list, image_capture_time, target_image_count)
+                            image_list, image_capture_time = ImageUtils.select_images_and_datetimes(image_list, image_capture_time, target_image_count)
 
                         with cctv_working_lock.gen_wlock():
                             working_session[camera_id] = session_id

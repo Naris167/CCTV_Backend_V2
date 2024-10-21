@@ -1,23 +1,13 @@
 from utils.log_config import logger
 from readerwriterlock import rwlock
-from threading import Semaphore
-import threading
 import time
-import queue
-from PIL import Image
-import json
-import subprocess
-import io
-from typing import List, Dict, Tuple, Optional, Union
+from typing import Callable, List, Tuple, Dict, Any, Optional
 from datetime import datetime
 import requests
-
-from utils.utils import detect_movement, select_images_and_datetimes
-# from cctv_operation_HLS.getDataHLS import capture_screenshots
+import concurrent.futures
+import math
 
 # Locks for thread safety
-# alive_sessions_lock = rwlock.RWLockFair()
-# cctv_fail_lock = rwlock.RWLockFair()
 cctv_working_lock = rwlock.RWLockFair()
 cctv_unresponsive_lock = rwlock.RWLockFair()
 
@@ -40,46 +30,6 @@ def check_cctv_status(semaphore, cctv_id, cctv_url, working_cctv, offline_cctv):
         finally:
             semaphore.release()
 
-'''
-Disable for now as this function moved to multiprocessing module
-'''
-# def scrape_image_HLS(semaphore: Semaphore,
-#                      camera_id: str,
-#                      HLS_Link: str,
-#                      image_result: List[Tuple[str, Tuple[bytes, ...], Tuple[datetime, ...]]],
-#                      working_cctv: Dict[str, str],
-#                      unresponsive_cctv: Dict[str, str],
-#                      interval: float,
-#                      target_image_count: int,
-#                      timeout: float,
-#                      max_retries: int
-#                      ) -> None:
-#     with semaphore:
-#         try:
-#             logger.info(f"[SCRAPER-HLS] Starting capturing for CCTV {camera_id}")
-            
-#             image_png, image_time = capture_screenshots(camera_id, HLS_Link, target_image_count, interval, max_retries, timeout)
-                    
-#             logger.info(f"[SCRAPER-HLS] CCTV {camera_id} capture complete. Total images captured: {len(image_png)}/{target_image_count}")
-#             with cctv_working_lock.gen_wlock():
-#                 working_cctv[camera_id] = HLS_Link
-#                 image_result.append((camera_id, image_png, image_time))
-            
-#         except Exception as e:
-#             logger.error(f"[SCRAPER-HLS] Error scraping camera {camera_id}: {str(e)}")
-#             with cctv_unresponsive_lock.gen_wlock():
-#                 unresponsive_cctv[camera_id] = HLS_Link
-#         finally:
-#             semaphore.release()
-
-
-
-import concurrent.futures
-from typing import Callable, List, Tuple, Dict, Any, Optional
-from datetime import datetime
-import time
-import random
-import math
 
 # Global variable to hold the cv2 module
 cv2 = None
@@ -91,6 +41,7 @@ def safe_import_cv2():
         cv2 = cv2_imported
 
 class MultiprocessingImageScraper:
+    # DO NOT call `sklearn.cluster import DBSCAN` during this code is running. It will break the code.
     def __init__(self, logger):
         self.logger = logger
 
@@ -246,3 +197,141 @@ def scrape_image_HLS(camera_id: str, HLS_Link: str,
     except Exception as e:
         logger.error(f"[SCRAPER-HLS] Error scraping camera {camera_id}: {str(e)}")
         return None
+    
+
+
+'''
+Disable for now as these functions moved to multiprocessing module
+When multiprocessing module does not work, you can uncomment this and use it
+'''
+# from utils.utils import CCTVUtils, ImageUtils
+# def scrape_image_HLS(semaphore: Semaphore,
+#                      camera_id: str,
+#                      HLS_Link: str,
+#                      image_result: List[Tuple[str, Tuple[bytes, ...], Tuple[datetime, ...]]],
+#                      working_cctv: Dict[str, str],
+#                      unresponsive_cctv: Dict[str, str],
+#                      interval: float,
+#                      target_image_count: int,
+#                      timeout: float,
+#                      max_retries: int
+#                      ) -> None:
+#     with semaphore:
+#         try:
+#             logger.info(f"[SCRAPER-HLS] Starting capturing for CCTV {camera_id}")
+            
+#             image_png, image_time = capture_screenshots(camera_id, HLS_Link, target_image_count, interval, max_retries, timeout)
+                    
+#             logger.info(f"[SCRAPER-HLS] CCTV {camera_id} capture complete. Total images captured: {len(image_png)}/{target_image_count}")
+#             with cctv_working_lock.gen_wlock():
+#                 working_cctv[camera_id] = HLS_Link
+#                 image_result.append((camera_id, image_png, image_time))
+            
+#         except Exception as e:
+#             logger.error(f"[SCRAPER-HLS] Error scraping camera {camera_id}: {str(e)}")
+#             with cctv_unresponsive_lock.gen_wlock():
+#                 unresponsive_cctv[camera_id] = HLS_Link
+#         finally:
+#             semaphore.release()
+
+
+# import cv2
+# import time
+# from datetime import datetime
+# from utils.log_config import logger
+# from typing import Tuple, List, Optional
+
+# def capture_screenshots(
+#     camera_id: str,
+#     stream_url: str,
+#     num_images: int = 1,
+#     interval: float = 1,
+#     max_retries: int = 3,
+#     timeout: float = 30
+# ) -> Tuple[Tuple[bytes, ...], Tuple[datetime, ...]]:
+    
+#     logger.info(f"[{camera_id}] Connecting...")
+
+#     last_capture_time: Optional[float] = None
+#     image_data: List[bytes] = []
+#     capture_times: List[datetime] = []
+#     retries: int = 0
+    
+#     while len(image_data) < num_images and retries < max_retries:
+#         try:
+#             cap = cv2.VideoCapture(stream_url)
+#             if not cap.isOpened():
+#                 raise Exception(f"Unable to open video stream")
+
+#             fps = cap.get(cv2.CAP_PROP_FPS)
+#             if fps <= 0:
+#                 fps = 30
+#                 logger.warning(f"[{camera_id}] Unable to determine stream FPS, using {fps} as default")
+            
+#             start_time = time.time()
+
+#             while len(image_data) < num_images:
+#                 current_time = time.time()
+                
+#                 if current_time - start_time > timeout:
+#                     logger.warning(f"[{camera_id}] Timeout reached. Reconnecting...")
+#                     break
+
+#                 # Check if enough time has passed since the last capture
+#                 if last_capture_time is None or (current_time - last_capture_time) >= interval:
+#                     # Skip frames to reach the desired interval
+#                     frames_to_skip = int(fps * interval)
+#                     for _ in range(frames_to_skip):
+#                         cap.grab()
+
+#                     ret, frame = cap.read()
+#                     if not ret:
+#                         logger.warning(f"[{camera_id}] Error reading frame, reconnecting...")
+#                         break
+                    
+#                     # Convert frame to bytes
+#                     _, buffer = cv2.imencode('.png', frame)
+#                     image_bytes = buffer.tobytes()
+
+#                     # Check image validity
+#                     if len(image_bytes) <= 10000:
+#                         logger.warning(f"[{camera_id}] Image size less than 10 Kb, retrying...")
+#                         break
+                    
+#                     # Store image bytes and capture time
+#                     image_data.append(image_bytes)
+#                     capture_times.append(datetime.now())
+                    
+#                     last_capture_time = current_time
+#                     logger.info(f"[{camera_id}] Screenshot {len(image_data)}/{num_images} captured")
+#                 else:
+#                     # Wait for the remaining interval
+#                     wait_time = interval - (current_time - last_capture_time)
+#                     if wait_time > 0:
+#                         time.sleep(min(wait_time, timeout - (current_time - start_time)))
+
+#             cap.release()
+
+#             if len(image_data) == num_images:
+#                 break
+#             else:
+#                 retries += 1
+#                 logger.warning(f"[{camera_id}] Retry {retries}/{max_retries}")
+#                 time.sleep(1)
+
+#         except Exception as e:
+#             logger.error(f"[{camera_id}] Error occurred - {str(e)}")
+#             retries += 1
+#             logger.warning(f"[{camera_id}] Retry {retries}/{max_retries}")
+#             time.sleep(1)
+
+#     if len(image_data) <= 0:
+#         raise Exception(f"Unable to capture any screenshots after {max_retries} retries")
+
+#     if len(image_data) < num_images:
+#         logger.warning(f"[{camera_id}] Captured only {len(image_data)}/{num_images} screenshots after {max_retries} retries")
+    
+#     if len(image_data) >= num_images:
+#         logger.info(f"[{camera_id}] Captured {len(image_data)}/{num_images} screenshots")
+    
+#     return tuple(image_data), tuple(capture_times)

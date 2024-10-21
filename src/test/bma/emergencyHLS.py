@@ -2,8 +2,8 @@ import subprocess
 import json
 import os
 import re
-from utils.utils import binary_to_image
-from utils.Database import insert_data, retrieve_data
+from utils.utils import ImageUtils
+from utils.database import insert_data, retrieve_data
 import concurrent.futures
 import datetime
 from typing import List, Tuple
@@ -110,7 +110,7 @@ if __name__ == "__main__":
             output_path = os.path.join(output_directory, filename)
             
             # Call the binary_to_image function to save the image
-            binary_to_image(image_data, output_path)
+            ImageUtils.binary_to_image(image_data, output_path)
 
     except Exception as e:
         print(f"An error occurred: {str(e)}")

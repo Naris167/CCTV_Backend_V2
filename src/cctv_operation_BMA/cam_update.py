@@ -4,11 +4,9 @@ import requests
 import time
 from typing import List, Tuple, Union, Literal, Dict
 
-from utils.Database import retrieve_data, update_data, insert_data
-from utils.utils import sort_key
-from utils.GeoCluster import cluster
+from utils.database import retrieve_data, update_data, insert_data
 from utils.log_config import logger
-from utils.utils import BASE_URL 
+from utils.utils import BASE_URL, SortingUtils, ClusteringUtils
 
 CamInfo = Tuple[str, Union[str, None], Union[str, None], Union[str, None], Union[str, None], Union[str, None], Union[float, None], Union[float, None], Union[str, None], Union[str, None]]
 CamCoordinate = Tuple[str, float, float]
@@ -78,14 +76,14 @@ def update_cctv_database(meters: int) -> Tuple[List[str], List[str]]:
         cctv_list_online_db = retrieve_data('cctv_locations_preprocessing', ('Cam_ID',), ('is_online',), (True,))
         return cctv_list_online_db, cctv_list_all_db
 
-    cctv_list_bma = sorted([str(t[0]) for t in onlineCamInfo], key=sort_key)
+    cctv_list_bma = sorted([str(t[0]) for t in onlineCamInfo], key=SortingUtils.sort_key)
     new_cams_info, all_cams_coordinate = filter_new_and_all_cams(onlineCamInfo, dbCamCoordinate)
 
     if new_cams_info:
         logger.info(f"[UPDATER] {len(new_cams_info)} new cameras found: {(cam[0] for cam in new_cams_info)}")
         logger.info("[UPDATER] Initializing clustering...")
         
-        clustered_cams_coordinate = cluster(meters, all_cams_coordinate)
+        clustered_cams_coordinate = ClusteringUtils.cluster(meters, all_cams_coordinate)
         
         insert_data('cctv_locations_preprocessing',
                     ('cam_id', 'cam_code', 'cam_name', 'cam_name_e', 'cam_location', 'cam_direction', 'latitude', 'longitude', 'ip', 'icon'),

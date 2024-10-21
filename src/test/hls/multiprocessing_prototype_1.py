@@ -5,12 +5,13 @@ from utils.log_config import logger, log_setup
 
 
 from cctv_operation_HLS.worker import MultiprocessingImageScraper, scrape_image_HLS
-from utils.utils import save_cctv_images
+# from multiprocessing_prototype_3 import MultiprocessingImageScraper, scrape_image_HLS
+from utils.utils import ImageUtils
 from logging.handlers import QueueHandler
 
 if __name__ == "__main__":
     # Configuration and setup
-    log_setup("./logs/imageScraper","TestMultiprocessor")
+    log_setup("./logs/imageScraper2","TestMultiprocessor")
     config = {
         'interval': 1.0,
         'target_image_count': 1,
@@ -387,7 +388,7 @@ if __name__ == "__main__":
 
     logger.info("\n\nworking cctv\n\n")
     logger.info(results['working_cctv'])
-    logger.info("\n\nunresponsive cctv\n\n")
+    logger.info("unresponsive cctv\n\n")
     logger.info(results['unresponsive_cctv'])
-    logger.info("\n\nsaving images\n\n")
-    save_cctv_images(results['image_result'], "./data/screenshot", "TODAY-multiprocessor")
+    logger.info("saving images\n\n")
+    ImageUtils.save_cctv_images(results['image_result'], "./data/screenshot", "TODAY-multiprocessor")

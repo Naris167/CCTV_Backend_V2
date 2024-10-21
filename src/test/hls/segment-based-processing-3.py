@@ -1,7 +1,7 @@
 import cv2
 import time
 from datetime import datetime
-from utils.utils import save_cctv_images
+from utils.utils import ImageUtils
 
 def capture_screenshots(name, url, num_images=5, interval=10):
     print(f"Connecting to {name}...")
@@ -70,7 +70,7 @@ def capture_screenshots(name, url, num_images=5, interval=10):
 
 # Example usage
 image_data, capture_times = capture_screenshots("cctvp2c003", "http://183.88.214.137:1935/livecctv/cctvp2c003.stream/playlist.m3u8", num_images=10, interval=1)
-save_cctv_images([("cctvp2c003", image_data, capture_times)], "./data/screenshot", "TODAY")
+ImageUtils.save_cctv_images([("cctvp2c003", image_data, capture_times)], "./data/screenshot", "TODAY")
 
 
 # cctvLinks = {
