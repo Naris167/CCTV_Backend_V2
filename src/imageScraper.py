@@ -9,12 +9,14 @@ from utils.log_config import logger, log_setup
 from utils.database import retrieve_data, update_data
 from cctv_operation_BMA.worker import scrape_image_BMA
 from cctv_operation_HLS.worker import check_cctv_status, MultiprocessingImageScraper, scrape_image_HLS
-from utils.utils import SortingUtils, TimeUtils, ThreadingUtils, ImageUtils, JSONUtils
+from utils.utils import SortingUtils, TimeUtils, ThreadingUtils, ImageUtils, JSONUtils, FinalizeUtils
 
 
 def scraper_factory(BMA_JSON_result: Tuple[str, str, Dict[str, str]], isBMAReady: bool,
                     HLS_information: Tuple[Tuple[str, str], ...], isHLSReady: bool):
 
+    BMA_image_result, HLS_image_result = [], []
+    
     if isBMAReady:
         _, _, cctvSessions = BMA_JSON_result
         BMA_working, BMA_unresponsive, BMA_image_result = prepare_scrape_image_BMA_workers(cctvSessions)
@@ -46,6 +48,13 @@ def scraper_factory(BMA_JSON_result: Tuple[str, str, Dict[str, str]], isBMAReady
         (tuple(HLS_unresponsive.keys()), 'HLS')
     )
 
+    '''
+    then save it to file or database
+    but the problem is that other cctv have big file, might not good for database
+
+    anyway I have to put the image in numpy array and send directly to model and update the result
+    '''
+
     ImageUtils.save_cctv_images(HLS_image_result + BMA_image_result, "./data/screenshot", "TODAY999")
         
 
@@ -59,8 +68,9 @@ def prepare_scrape_image_HLS_workers(cctvURL: Dict[str, str]) -> Tuple[Dict[str,
         'logger': logger
     }
 
+    start_time = time.time()
     semaphore_1 = Semaphore(80)
-    working_cctv, offline_cctv, unresponsive_cctv = {}, {}, {}
+    working_cctv, offline_cctv = {}, {}
     image_result: List[Tuple[str, Tuple[bytes, ...], Tuple[datetime, ...]]] = []
 
     logger.info(f"[THREADING-S-HLS] CCTV List count = {len(cctvURL)}: {list(cctvURL.keys())}")
@@ -72,18 +82,15 @@ def prepare_scrape_image_HLS_workers(cctvURL: Dict[str, str]) -> Tuple[Dict[str,
     ThreadingUtils.run_threaded(check_cctv_status, semaphore_1, *[(camera_id, url, working_cctv, offline_cctv) for camera_id, url in cctvURL.items()])
     
     logger.info("[THREADING-S-HLS] Verify CCTV status done.")
-    SortingUtils.sort_results(working_cctv, offline_cctv)
-    logger.info(f"[THREADING-S-HLS] {len(working_cctv)} CCTVs are online: {list(working_cctv.keys())}")
-    logger.info(f"[THREADING-S-HLS] {len(offline_cctv)} CCTVs are offline: {list(offline_cctv.keys())}")
+    logger.info(f"[THREADING-S-HLS] {len(working_cctv)} CCTVs are online")
+    logger.info(f"[THREADING-S-HLS] {len(offline_cctv)} CCTVs are offline")
     
     logger.info(f"[THREADING-S-HLS] Scraping started, Images: {config['target_image_count']}, Interval: {config['interval']} second")
 
-
-    logger.info(f"Starting scraping for {len(working_cctv)} CCTVs...")
-    start_time = time.time()
+    logger.info(f"[THREADING-S-HLS] Starting scraping for {len(working_cctv)} CCTVs...")
  
     scraper = MultiprocessingImageScraper(logger)
-    results = scraper.run_multiprocessing(
+    image_result, updated_working_cctv, unresponsive_cctv = scraper.run_multiprocessing(
         scrape_image_HLS,
         80,  # Number of concurrent processes
         working_cctv,
@@ -92,26 +99,36 @@ def prepare_scrape_image_HLS_workers(cctvURL: Dict[str, str]) -> Tuple[Dict[str,
 
     end_time = time.time()
     total_time = end_time - start_time
+    SortingUtils.sort_results(working_cctv, offline_cctv, image_result, updated_working_cctv, unresponsive_cctv)
+    FinalizeUtils.log_scrapingHLS_summary(
+        total_time=total_time,
+        cctvURL=cctvURL,
+        working_cctv=working_cctv,
+        offline_cctv=offline_cctv,
+        image_result=image_result,
+        updated_working_cctv=updated_working_cctv,
+        unresponsive_cctv=unresponsive_cctv,
+        logger=logger
+    )
 
-    # Process the results
-    logger.info(f"Scraping completed in {total_time:.2f} seconds")
-    logger.info(f"Successfully scraped {len(results['image_result'])} cameras")
-    logger.info(f"Working CCTV: {len(results['working_cctv'])}")
-    logger.info(f"Unresponsive CCTV: {len(results['unresponsive_cctv'])}")
+    '''
+    Disable for now as these functions moved to multiprocessing module
+    When multiprocessing module does not work, you can uncomment this and use it
+    '''
 
-    # Calculate and print statistics
-    success_rate = len(results['working_cctv']) / len(working_cctv) * 100
-    logger.info(f"Success rate: {success_rate:.2f}%")
-    logger.info(f"Average time per camera: {total_time / len(working_cctv):.4f} seconds")
+    # logger.info(f"[THREADING-S-HLS] Scraping started, Images: {config['target_image_count']}, Interval: {config['interval']} second")
+    # included_keys = ['interval', 'wait_before_get_image', 'wait_to_get_image', 'target_image_count', 'timeout', 'max_retries', 'max_fail', 'resolution']
+    # scraper_args = {k: config[k] for k in included_keys if k in config}
+    # run_threaded(scrape_image_HLS, semaphore_2, *[(camera_id, url, image_result, working_cctv, unresponsive_cctv, *scraper_args.values()) 
+    #                                  for camera_id, url in working_cctv.items()])
+    
+    # logger.info("[THREADING-S-HLS] Scraping done.")
 
-    logger.info("working cctv\n\n")
-    logger.info(results['working_cctv'])
-    logger.info("unresponsive cctv\n\n")
-    logger.info(results['unresponsive_cctv'])
-    logger.info("saving images\n\n")
+    # sort_results(working_cctv, unresponsive_cctv, image_result)
+    # logger.info(f"[THREADING-S-HLS] {len(working_cctv)} CCTVs are successfully captured: {list(working_cctv.keys())}")
+    # logger.info(f"[THREADING-S-HLS] {len(unresponsive_cctv)} CCTVs are unresponsive: {list(unresponsive_cctv.keys())}")
 
-
-    return results['working_cctv'], results['unresponsive_cctv'], offline_cctv, results['image_result']
+    return updated_working_cctv, unresponsive_cctv, offline_cctv, image_result
 
 
 def prepare_scrape_image_BMA_workers(cctvSessions: Dict[str, str]) -> Tuple[Dict[str, str], Dict[str, str], List[Tuple[str, Tuple[bytes], Tuple[datetime]]]]:
@@ -120,6 +137,7 @@ def prepare_scrape_image_BMA_workers(cctvSessions: Dict[str, str]) -> Tuple[Dict
         'target_image_count': 2
     }
 
+    start_time = time.time()
     semaphore = Semaphore(config['max_workers'])
     working_session, unresponsive_session = {}, {}
     image_result: List[Tuple[str, Tuple[bytes, ...], Tuple[datetime, ...]]] = []
@@ -133,47 +151,23 @@ def prepare_scrape_image_BMA_workers(cctvSessions: Dict[str, str]) -> Tuple[Dict
     logger.info("[THREADING-S-BMA] Scraping done.")
 
     SortingUtils.sort_results(working_session, unresponsive_session, image_result)
-    logger.info(f"[THREADING-S-BMA] {len(working_session)} sessions are working from CCTV: {list(working_session.keys())}")
-    logger.info(f"[THREADING-S-BMA] {len(unresponsive_session)} sessions are unresponsive from CCTV: {unresponsive_session}")
+    logger.info(f"[THREADING-S-BMA] {len(working_session)} sessions are working from CCTV")
+    logger.info(f"[THREADING-S-BMA] {len(unresponsive_session)} sessions are unresponsive from CCTV")
+
+    end_time = time.time()
+    total_time = end_time - start_time
+    SortingUtils.sort_results(image_result, working_session, unresponsive_session)
+    FinalizeUtils.log_scrapingBMA_summary(
+        total_time=total_time,
+        cctvSessions=cctvSessions,
+        image_result=image_result,
+        working_session=working_session,
+        unresponsive_session=unresponsive_session,
+        logger=logger
+    )
 
     return working_session, unresponsive_session, image_result
 
-
-
-
-'''
-Step 0: Get cctv list
-have to create a function that get all session id based on latest update in database (online cctv in db), if cannot get from db, just get from bma
-
-Step 1: get session ID
-give cctv list to prepare_create_sessionID_workers()
-
-Step 2: verify session ID
-after having all session id, have to verify that image is valid or not.
-
-Step 3: scrape the image
-image from this step could use the one from step 2
-
-
-***For other cctv, have to write a separate function, but at the end it should output the same data
-
-
-the scraping output should be in byte data
-Create a dictionary that have a key as cctv provider and value as a list of tuple containing a cctv id as string, image data as byte, and capture time as datetime object
-
-result = {'BMA': [('001', byte data, time), ('002', byte data, time)],
-        'BMA': [('001', byte data, time), ('002', byte data, time)]
-}
-result: Dict[str, List[Tuple[str, bytes, datetime]]]
-
-
-*** Futher processing
-
-then save it to file or database
-but the problem is that other cctv have big file, might not good for database
-
-anyway I have to put the image in numpy array and send directly to model and update the result
-'''
 
 def getHLSInfo():
     HLS_information = retrieve_data(
@@ -238,7 +232,7 @@ def getBMAInfo():
 
 
 if __name__ == "__main__":
-    log_setup("./logs/imageScraper","Scraper")
+    log_setup("./logs/imageScraper3","Scraper")
     # get_video_resolution("ITICM_BMAMI0257", "https://camerai1.iticfoundation.org/hls/pty56.m3u8")
     # get_video_resolution("ITICM_BMAMI0272", "https://camerai1.iticfoundation.org/hls/pty71.m3u8")
     # get_video_resolution("ITICM_BMAMI0257", "https://camerai1.iticfoundation.org/hls/pty56.m3u8")

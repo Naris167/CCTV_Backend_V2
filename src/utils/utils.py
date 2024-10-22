@@ -208,6 +208,7 @@ class CCTVUtils:
         
         return False
 
+class FinalizeUtils:
     @staticmethod
     def check_cctv_integrity(cctv_working: Dict[str, str], cctv_unresponsive: Dict[str, str], cctv_fail: List[str]) -> Tuple[bool, List[str]]:
         integrity_issues = []
@@ -258,6 +259,199 @@ class CCTVUtils:
                 integrity_issues.append(f"Same key-value pair found in both dictionaries: key '{key}', value '{value}'")
 
         return len(integrity_issues) == 0, integrity_issues
+    
+    @staticmethod    
+    def log_scrapingHLS_summary(
+        total_time: float,
+        cctvURL: dict[str, str],
+        working_cctv: dict[str, str],
+        offline_cctv: dict[str, str],
+        image_result: list[tuple[str, tuple[bytes], tuple[datetime]]],
+        updated_working_cctv: dict[str, str],
+        unresponsive_cctv: dict[str, str],
+        logger
+    ) -> None:
+        """
+        Log a detailed summary of CCTV scraping results with performance metrics and statistics.
+        
+        Flow:
+        1. Start with cctvURL (all cameras)
+        2. Quick check creates working_cctv and offline_cctv
+        3. Scraping working_cctv produces image_result, updated_working_cctv, and unresponsive_cctv
+        
+        Args:
+            total_time: Total execution time in seconds
+            cctvURL: Initial dictionary of all CCTV cameras {id: url}
+            working_cctv: Dictionary of cameras that passed initial check {id: url}
+            offline_cctv: Dictionary of cameras that failed initial check {id: url}
+            image_result: List of tuples [(camera_id, image_bytes, timestamp)]
+            updated_working_cctv: Dictionary of cameras successfully scraped {id: url}
+            unresponsive_cctv: Dictionary of cameras that failed during scraping {id: url}
+            logger: Logger instance
+        """
+        # Calculate statistics
+        initial_total = len(cctvURL)
+        passed_initial_check = len(working_cctv)
+        failed_initial_check = len(offline_cctv)
+        successfully_scraped = len(image_result)
+        final_working = len(updated_working_cctv)
+        failed_during_scraping = len(unresponsive_cctv)
+        
+        # Calculate rates
+        initial_check_success_rate = (passed_initial_check / initial_total * 100) if initial_total > 0 else 0
+        scraping_success_rate = (successfully_scraped / passed_initial_check * 100) if passed_initial_check > 0 else 0
+        overall_success_rate = (successfully_scraped / initial_total * 100) if initial_total > 0 else 0
+        avg_time_per_camera = total_time / passed_initial_check if passed_initial_check > 0 else 0
+        
+        # Header
+        logger.info("="*60)
+        logger.info("CCTV SCRAPING PIPELINE SUMMARY")
+        logger.info("="*60 + "\n")
+        
+        # Initial check statistics
+        logger.info("INITIAL CHECK RESULTS")
+        logger.info(f"Total CCTV cameras: {initial_total}")
+        logger.info(f"Passed initial check (200 response): {passed_initial_check}")
+        logger.info(f"Failed initial check (non-200 response): {failed_initial_check}")
+        logger.info(f"Initial check success rate: {initial_check_success_rate:.2f}%" + "\n")
+        
+        # Scraping statistics
+        logger.info("SCRAPING RESULTS")
+        logger.info(f"Cameras attempted to scrape: {passed_initial_check}")
+        logger.info(f"Successfully scraped images: {successfully_scraped}")
+        logger.info(f"Currently working cameras: {final_working}")
+        logger.info(f"Failed during scraping: {failed_during_scraping}")
+        logger.info(f"Scraping success rate: {scraping_success_rate:.2f}%" + "\n")
+        
+        # Overall statistics
+        logger.info("OVERALL PERFORMANCE")
+        logger.info(f"Total execution time: {total_time:.2f} seconds")
+        logger.info(f"Average time per camera: {avg_time_per_camera:.4f} seconds")
+        logger.info(f"Overall success rate: {overall_success_rate:.2f}%" + "\n")
+        
+        # Detailed camera status
+        logger.info("DETAILED CAMERA STATUS")
+
+        if offline_cctv:
+            logger.info("Failed Initial Check:")
+            *items, last_item = offline_cctv.items()
+            for camera_id, url in items:
+                logger.info(f"Camera ID: {camera_id} | URL: {url}")
+            last_camera_id, last_url = last_item
+            logger.info(f"Camera ID: {last_camera_id} | URL: {last_url}\n")
+
+        if updated_working_cctv:
+            logger.info("Successfully Working:")
+            *items, last_item = updated_working_cctv.items()
+            for camera_id, url in items:
+                logger.info(f"Camera ID: {camera_id} | URL: {url}")
+            last_camera_id, last_url = last_item
+            logger.info(f"Camera ID: {last_camera_id} | URL: {last_url}\n")
+
+        if unresponsive_cctv:
+            logger.info("Failed During Scraping:")
+            *items, last_item = unresponsive_cctv.items()
+            for camera_id, url in items:
+                logger.info(f"Camera ID: {camera_id} | URL: {url}")
+            last_camera_id, last_url = last_item
+            logger.info(f"Camera ID: {last_camera_id} | URL: {last_url}\n")
+
+        # Image result summary
+        logger.info("IMAGE RESULT SUMMARY")
+        logger.info(f"Total images captured: {len(image_result)}")
+        if image_result:  # Only process if there are results
+            *items, last_item = image_result
+            for camera_id, _, timestamp in items:
+                logger.info(f"Camera ID: {camera_id} | Timestamp: {timestamp}")
+            last_camera_id, _, last_timestamp = last_item
+            logger.info(f"Camera ID: {last_camera_id} | Timestamp: {last_timestamp}\n")
+        
+        logger.info("STARTING IMAGE SAVE PROCESS")
+        logger.info("="*60 + "\n")
+
+    @staticmethod
+    def log_scrapingBMA_summary(
+        total_time: float,
+        cctvSessions: dict[str, str],
+        image_result: list[tuple[str, tuple[bytes], tuple[datetime]]],
+        working_session: dict[str, str],
+        unresponsive_session: dict[str, str],
+        logger
+    ) -> None:
+        """
+        Log a detailed summary of session-based CCTV scraping results with performance metrics and statistics.
+        
+        Flow:
+        1. Start with cctvSessions (pre-verified cameras with session IDs)
+        2. Scraping process produces image_result, working_session, and unresponsive_session
+        
+        Args:
+            total_time: Total execution time in seconds
+            cctvSessions: Initial dictionary of pre-verified CCTV cameras {id: session_id}
+            image_result: List of tuples [(camera_id, image_bytes, timestamp)]
+            working_session: Dictionary of cameras successfully scraped {id: session_id}
+            unresponsive_session: Dictionary of cameras that failed during scraping {id: session_id}
+            logger: Logger instance
+        """
+        # Calculate statistics
+        initial_total = len(cctvSessions)
+        successfully_scraped = len(image_result)
+        final_working = len(working_session)
+        failed_during_scraping = len(unresponsive_session)
+        
+        # Calculate rates
+        scraping_success_rate = (successfully_scraped / initial_total * 100) if initial_total > 0 else 0
+        avg_time_per_camera = total_time / initial_total if initial_total > 0 else 0
+        
+        # Header
+        logger.info("="*60)
+        logger.info("SESSION-BASED CCTV SCRAPING SUMMARY")
+        logger.info("="*60 + "\n")
+        
+        # Scraping statistics
+        logger.info("SCRAPING RESULTS")
+        logger.info(f"Total cameras with sessions: {initial_total}")
+        logger.info(f"Successfully scraped images: {successfully_scraped}")
+        logger.info(f"Currently working cameras: {final_working}")
+        logger.info(f"Failed during scraping: {failed_during_scraping}")
+        logger.info(f"Scraping success rate: {scraping_success_rate:.2f}%" + "\n")
+        
+        # Performance statistics
+        logger.info("PERFORMANCE METRICS")
+        logger.info(f"Total execution time: {total_time:.2f} seconds")
+        logger.info(f"Average time per camera: {avg_time_per_camera:.4f} seconds" + "\n")
+        
+        # Detailed camera status
+        logger.info("DETAILED CAMERA STATUS")
+        
+        if working_session:
+            logger.info("Successfully Working:")
+            *items, last_item = working_session.items()
+            for camera_id, session_id in items:
+                logger.info(f"Camera ID: {camera_id} | Session ID: {session_id}")
+            last_camera_id, last_session_id = last_item
+            logger.info(f"Camera ID: {last_camera_id} | Session ID: {last_session_id}\n")
+        
+        if unresponsive_session:
+            logger.info("Failed During Scraping:")
+            *items, last_item = unresponsive_session.items()
+            for camera_id, session_id in items:
+                logger.info(f"Camera ID: {camera_id} | Session ID: {session_id}")
+            last_camera_id, last_session_id = last_item
+            logger.info(f"Camera ID: {last_camera_id} | Session ID: {last_session_id}\n")
+        
+        # Image result summary
+        logger.info("IMAGE RESULT SUMMARY")
+        logger.info(f"Total images captured: {len(image_result)}")
+        if image_result:  # Only process if there are results
+            *items, last_item = image_result
+            for camera_id, _, timestamp in items:
+                logger.info(f"Camera ID: {camera_id} | Timestamp: {timestamp}")
+            last_camera_id, _, last_timestamp = last_item
+            logger.info(f"Camera ID: {last_camera_id} | Timestamp: {last_timestamp}\n")
+        
+        logger.info("STARTING IMAGE SAVE PROCESS")
+        logger.info("="*60 + "\n")
 
 class JSONUtils:
     @staticmethod

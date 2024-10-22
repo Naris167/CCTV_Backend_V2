@@ -53,7 +53,7 @@ class MultiprocessingImageScraper:
     def run_multiprocessing(self, func: Callable, 
                             max_concurrent: int,
                             working_cctv: Dict[str, str],
-                            **kwargs: Any) -> Dict[str, Any]:
+                            **kwargs: Any) -> Tuple[List[Tuple[str, Tuple[bytes, ...], Tuple[datetime, ...]]], Dict[str, Any], Dict[str, Any]]:
         
         num_pools = math.ceil(max_concurrent / 60)
         workers_per_pool = min(60, max(1, max_concurrent // num_pools))
@@ -86,11 +86,7 @@ class MultiprocessingImageScraper:
         for pool in pools:
             pool.shutdown()
 
-        return {
-            "image_result": image_result,
-            "working_cctv": updated_working_cctv,
-            "unresponsive_cctv": unresponsive_cctv
-        }
+        return image_result, updated_working_cctv, unresponsive_cctv
 
 def capture_screenshots(
     camera_id: str,
