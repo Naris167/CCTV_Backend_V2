@@ -89,12 +89,16 @@ def update_cctv_database(meters: int) -> Tuple[List[str], List[str]]:
                     ('cam_id', 'cam_code', 'cam_name', 'cam_name_e', 'cam_location', 'cam_direction', 'latitude', 'longitude', 'ip', 'icon'),
                     new_cams_info
         )
+
+        groups = [(coord[1],) for coord in clustered_cams_coordinate]
+        cam_ids = [coord[0] for coord in clustered_cams_coordinate]
+
         update_data(
             'cctv_locations_preprocessing',
-            ('cam_group'),
-            ((coord[1],) for coord in clustered_cams_coordinate),
-            ('cam_id'),
-            (coord[0] for coord in clustered_cams_coordinate)
+            ('cam_group',),
+            groups,
+            ('cam_id',),
+            (cam_ids,)  # Note: Wrapped in tuple since we're passing a single condition
         )
         
         logger.info(f"[UPDATER] Added {len(new_cams_info)} new cameras and updated clusters in the database.")
@@ -108,3 +112,5 @@ def update_cctv_database(meters: int) -> Tuple[List[str], List[str]]:
     logger.info("[UPDATER] Note: Online status doesn't guarantee operational status. Further checks will be initiated.")
 
     return cctv_list_bma, cctv_list_all_db
+
+update_cctv_database(170)

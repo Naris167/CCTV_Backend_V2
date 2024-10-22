@@ -532,7 +532,7 @@ class ClusteringUtils:
 
         return degrees
 
-    @staticmethod
+    @classmethod
     def cluster(cls, meters: int, all_cams_coordinate: List[Tuple[str, float, float]]) -> List[Tuple[str, str, float, float]]:
         logger.info(f"[CLUSTER] Distance set to {meters} meters")
         from sklearn.cluster import DBSCAN
@@ -553,8 +553,8 @@ class ClusteringUtils:
 
         # Combine Cam_ID, cluster group, latitude, and longitude into a list of tuples
         clustered_data = [(cam_id, str(label), float(lat), float(lon)) for cam_id, label, (lat, lon) in zip(cam_ids, labels, coordinates)]
-        clustered_data = None
         logger.info("[CLUSTER] Clustering completed!")
+        
         return clustered_data
 
 class ProgressGUI:

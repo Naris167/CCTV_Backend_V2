@@ -109,11 +109,11 @@ def retrieve_data(
         # Execute the query
         results = execute_db_operation(query, "fetch", params if params else None)
         
-        logger.info(f"[DATABASE] Successfully retrieved data from {table}")
+        logger.info(f"[DATABASE-RETRIEVE] Successfully retrieved data from {table}")
         return results
 
     except Exception as e:
-        logger.error(f"[DATABASE] Error retrieving data from {table}: {e}")
+        logger.error(f"[DATABASE-RETRIEVE] Error retrieving data from {table}: {e}")
         return tuple()
 '''
 table = 'cctv_locations_general'
@@ -140,11 +140,11 @@ def insert_data(table: str, columns: Tuple[str, ...], data_to_insert: Tuple[Tupl
 
         # Execute the query
         rows_inserted = execute_db_operation(query, "insert", data_to_insert)
-        logger.info(f"[DATABASE] Successfully inserted {rows_inserted} rows to {table}")
+        logger.info(f"[DATABASE-INSERT] Successfully inserted {rows_inserted} rows to {table}")
         return rows_inserted
 
     except Exception as e:
-        logger.error(f"[DATABASE] Error inserting data into {table}: {e}")
+        logger.error(f"[DATABASE-INSERT] Error inserting data into {table}: {e}")
         return 0
 
 
@@ -187,11 +187,11 @@ def delete_data(table: str, columns_to_check_condition: Tuple[str, ...], data_to
 
         rows_deleted = execute_db_operation(query, "delete", params)
                 
-        logger.info(f"[DATABASE] Successfully deleted {rows_deleted} rows from {table}")
+        logger.info(f"[DATABASE-DELETE] Successfully deleted {rows_deleted} rows from {table}")
         return rows_deleted
 
     except Exception as e:
-        logger.error(f"[DATABASE] Error deleting data from {table}: {e}")
+        logger.error(f"[DATABASE-DELETE] Error deleting data from {table}: {e}")
         return 0
 
 
@@ -230,36 +230,54 @@ WHERE cam_id = ANY(%s::text[])
 def update_data(
     table: str,
     columns_to_update: Tuple[str, ...],
-    data_to_update: Tuple[Any, ...],
+    data_to_update: Any,
     columns_to_check_condition: Optional[Tuple[str, ...]] = None,
-    data_to_check_condition: Optional[Tuple[Any, ...]] = None
+    data_to_check_condition: Optional[Any] = None
 ) -> int:
     try:
-        # Construct the base query
-        set_clause = ", ".join([f"{col} = %s" for col in columns_to_update])
-        query = f"UPDATE {table} SET {set_clause}"
+        # Convert generators to lists
+        update_data = list(data_to_update)
+        logger.info(f"[DATABASE-UPDATE] Update data: {update_data}")
         
-        # Prepare the parameters
-        params = data_to_update
-
-        # Construct WHERE clause if conditions are provided
         if columns_to_check_condition and data_to_check_condition:
-            where_conditions = []
-            for col, data in zip(columns_to_check_condition, data_to_check_condition):
-                if isinstance(data, tuple):
-                    where_conditions.append(f"{col} = ANY(%s::text[])")
-                    params += (list(data),)  # Convert tuple to list for ANY clause
+            # Convert condition data to lists
+            condition_data = []
+            for data in data_to_check_condition:
+                if hasattr(data, '__iter__') and not isinstance(data, (str, bytes)):
+                    condition_data.append(list(data))
                 else:
-                    where_conditions.append(f"{col} = %s")
-                    params += (data,)
-            query += " WHERE " + " AND ".join(where_conditions)
+                    condition_data.append([data])
+            
+            # Build CASE WHEN for each column to update
+            set_clauses = []
+            params = []
+            
+            for col in columns_to_update:
+                when_clauses = []
+                for i, update_val in enumerate(update_data):
+                    # Handle tuple or single value
+                    val = update_val[0] if isinstance(update_val, (tuple, list)) else update_val
+                    when_clauses.append(f"WHEN {columns_to_check_condition[0]} = %s THEN %s")
+                    params.extend([condition_data[0][i], val])
+                
+                set_clauses.append(
+                    f"{col} = (CASE {' '.join(when_clauses)} ELSE {col} END)"
+                )
+            
+            # Construct the query
+            query = f"UPDATE {table} SET {', '.join(set_clauses)} WHERE {columns_to_check_condition[0]} = ANY(%s::text[])"
+            params.append(condition_data[0])  # Add the array for ANY clause
 
-        # Execute the query
-        rows_updated = execute_db_operation(query, "update", params)
+            # Debug logs
+            logger.info(f"[DATABASE-UPDATE] Query: {query}")
+            logger.info(f"[DATABASE-UPDATE] Params: {params}")
 
-        logger.info(f"[DATABASE] Successfully updated {rows_updated} records in {table}")
-        return rows_updated
+            # Execute the query
+            rows_updated = execute_db_operation(query, "update", tuple(params))
+            
+            logger.info(f"[DATABASE-UPDATE] Successfully updated {rows_updated} records in {table}")
+            return rows_updated
 
     except Exception as e:
-        logger.error(f"[DATABASE] Error updating data in {table}: {e}")
-        return 0
+        logger.error(f"[DATABASE-UPDATE] Error updating data in {table}: {e}")
+        # raise
