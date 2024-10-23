@@ -4,7 +4,7 @@ import requests
 import time
 from typing import List, Tuple, Union, Literal, Dict
 
-from utils.database import retrieve_data, update_data, insert_data
+from utils.database import retrieve_data, update_data, insert_data, update_pair_data
 from utils.log_config import logger
 from utils.utils import BASE_URL, SortingUtils, ClusteringUtils
 
@@ -79,7 +79,7 @@ def update_cctv_database(meters: int) -> Tuple[List[str], List[str]]:
     cctv_list_bma = sorted([str(t[0]) for t in onlineCamInfo], key=SortingUtils.sort_key)
     new_cams_info, all_cams_coordinate = filter_new_and_all_cams(onlineCamInfo, dbCamCoordinate)
 
-    if new_cams_info:
+    if not new_cams_info:
         logger.info(f"[UPDATER] {len(new_cams_info)} new cameras found: {(cam[0] for cam in new_cams_info)}")
         logger.info("[UPDATER] Initializing clustering...")
         
@@ -90,17 +90,17 @@ def update_cctv_database(meters: int) -> Tuple[List[str], List[str]]:
                     new_cams_info
         )
 
-        groups = [(coord[1],) for coord in clustered_cams_coordinate]
+        groups = [coord[1] for coord in clustered_cams_coordinate]
         cam_ids = [coord[0] for coord in clustered_cams_coordinate]
 
-        update_data(
-            'cctv_locations_preprocessing',
-            ('cam_group',),
-            groups,
-            ('cam_id',),
-            (cam_ids,)  # Note: Wrapped in tuple since we're passing a single condition
+        update_pair_data(
+            table="cctv_locations_preprocessing",
+            column_to_update="cam_group",
+            data_to_update=groups,
+            column_to_check_condition="cam_id",
+            data_to_check_condition=cam_ids
         )
-        
+
         logger.info(f"[UPDATER] Added {len(new_cams_info)} new cameras and updated clusters in the database.")
     else:
         logger.info("[UPDATER] No new cameras found.")
@@ -112,5 +112,3 @@ def update_cctv_database(meters: int) -> Tuple[List[str], List[str]]:
     logger.info("[UPDATER] Note: Online status doesn't guarantee operational status. Further checks will be initiated.")
 
     return cctv_list_bma, cctv_list_all_db
-
-update_cctv_database(170)

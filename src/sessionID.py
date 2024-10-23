@@ -8,7 +8,7 @@ from cctv_operation_BMA.cam_update import update_cctv_database, retrieve_camInfo
 from utils.log_config import logger, log_setup
 from utils.database import retrieve_data, update_data
 from cctv_operation_BMA.worker import create_sessionID, validate_sessionID, quick_refresh_sessionID
-from utils.utils import SortingUtils, TimeUtils, CCTVUtils, JSONUtils
+from utils.utils import SortingUtils, TimeUtils, CCTVUtils, JSONUtils, FinalizeUtils
 
 def initialize() -> int:
     while True:
@@ -19,7 +19,7 @@ def initialize() -> int:
                 user_input = input("Please enter the parameter number: ")
                 param = int(user_input)
             
-            log_setup("./logs/sessionID","sessionID")
+            log_setup("./logs/sessionID2","sessionID")
             logger.info(f"[MAIN] Application initialized with parameter {param}")
             logger.info("[MAIN] Application started...")
             return param
@@ -75,7 +75,7 @@ def finalize(cctv_list: Optional[List[str]], cctv_working: Dict[str, str], cctv_
         tuple(list(cctv_unresponsive.keys()) + cctv_fail)
     )
 
-    integrity_passed, issues = CCTVUtils.check_cctv_integrity(cctv_working, cctv_unresponsive, cctv_fail)
+    integrity_passed, issues = FinalizeUtils.check_cctv_integrity(cctv_working, cctv_unresponsive, cctv_fail)
     logger.info(f"[MAIN] Integrity check {'passed' if integrity_passed else 'failed'}.")
     if not integrity_passed:
         for issue in issues:
@@ -260,22 +260,22 @@ def start():
         logger.info(f"[INFO] The latest update occurred at {latestUpdateTime}, which was {readable_diff_update} ago.")
         logger.info(f"[INFO] The latest refresh occurred at {latestRefreshTime}, which was {readable_diff_refresh} ago.")
 
-        # if timeDiffUpdate < max_timeDiffUpdate and timeDiffRefresh < max_timeDiffRefresh:
-        #     # Case 1: Both the update and refresh times are within the valid range, so simply update and verify the sessionID.
-        #     startValidatingSessionID(camDistance, cctvSessions, latestUpdateTime)
-        # elif timeDiffUpdate < max_timeDiffUpdate and timeDiffRefresh >= max_timeDiffRefresh:
-        #     # Case 2: The update time is still valid, but the refresh time has expired, meaning all sessionIDs have expired. A new sessionID must be obtained.
-        #     logger.info(f"[INFO] The latest refresh occurred {readable_diff_refresh} ago, exceeding the maximum allowed time difference of {TimeUtils.readable_time(max_timeDiffRefresh.total_seconds())}.")
-        #     startGettingNewSessionID(camDistance)
-        # elif timeDiffUpdate >= max_timeDiffUpdate and timeDiffRefresh <= max_timeDiffRefresh:
-        #     # Case 3: It is time to update the sessionID, but before that, a quick refresh is necessary to ensure that all sessionIDs remain usable during the update.
-        #     logger.info(f"[INFO] The latest update occurred {readable_diff_update} ago, exceeding the maximum allowed time difference of {TimeUtils.readable_time(max_timeDiffUpdate.total_seconds())}.")
-        #     startQuickRefreshSessionID(cctvSessions)
-        #     startGettingNewSessionID(camDistance)
-        # else:
-        #     # Case 4: Both the update and refresh times have expired, indicating that all sessionIDs have expired, and a new one must be acquired.
-        #     logger.info(f"[INFO] Both update and refresh times exceed their maximum allowed time differences.")
-        #     startGettingNewSessionID(camDistance)
+        if timeDiffUpdate < max_timeDiffUpdate and timeDiffRefresh < max_timeDiffRefresh:
+            # Case 1: Both the update and refresh times are within the valid range, so simply update and verify the sessionID.
+            startValidatingSessionID(camDistance, cctvSessions, latestUpdateTime)
+        elif timeDiffUpdate < max_timeDiffUpdate and timeDiffRefresh >= max_timeDiffRefresh:
+            # Case 2: The update time is still valid, but the refresh time has expired, meaning all sessionIDs have expired. A new sessionID must be obtained.
+            logger.info(f"[INFO] The latest refresh occurred {readable_diff_refresh} ago, exceeding the maximum allowed time difference of {TimeUtils.readable_time(max_timeDiffRefresh.total_seconds())}.")
+            startGettingNewSessionID(camDistance)
+        elif timeDiffUpdate >= max_timeDiffUpdate and timeDiffRefresh <= max_timeDiffRefresh:
+            # Case 3: It is time to update the sessionID, but before that, a quick refresh is necessary to ensure that all sessionIDs remain usable during the update.
+            logger.info(f"[INFO] The latest update occurred {readable_diff_update} ago, exceeding the maximum allowed time difference of {TimeUtils.readable_time(max_timeDiffUpdate.total_seconds())}.")
+            startQuickRefreshSessionID(cctvSessions)
+            startGettingNewSessionID(camDistance)
+        else:
+            # Case 4: Both the update and refresh times have expired, indicating that all sessionIDs have expired, and a new one must be acquired.
+            logger.info(f"[INFO] Both update and refresh times exceed their maximum allowed time differences.")
+            startGettingNewSessionID(camDistance)
 
         startQuickRefreshSessionID(cctvSessions)
 

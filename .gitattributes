@@ -1,0 +1,14 @@
+# Mark Jupyter notebooks as documentation
+*.ipynb linguist-documentation
+
+# Mark Python as the primary language
+*.py linguist-language=Python
+*.py linguist-detectable=true
+
+# Handle JavaScript files - more comprehensive
+node_modules/* linguist-vendored
+**/node_modules/* linguist-vendored
+*.js linguist-vendored
+**/package-lock.json linguist-vendored
+**/package.json linguist-vendored
+**/yarn.lock linguist-vendored

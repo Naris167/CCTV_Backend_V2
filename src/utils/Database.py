@@ -1,5 +1,6 @@
 import psycopg2
 from psycopg2.extras import RealDictCursor
+from psycopg2.sql import SQL, Identifier
 import os
 from dotenv import load_dotenv
 from contextlib import contextmanager
@@ -27,6 +28,8 @@ def execute_db_operation(query: str, operation_type: str, params: Optional[Union
         try:
             cursor_factory = RealDictCursor if fetch_type == 'dict' else None
             with conn.cursor(cursor_factory=cursor_factory) as cur:
+                logger.info(f"[DATABASE-{operation_type.upper()}-QUERY] {query}")
+                logger.info(f"[DATABASE-{operation_type.upper()}-PARAMS] {params}")
                 match operation_type:
                     case 'fetch':
                         cur.execute(query, params)
@@ -97,13 +100,16 @@ def retrieve_data(
         if columns_to_check_condition and data_to_check_condition:
             where_clauses = []
             for col, data in zip(columns_to_check_condition, data_to_check_condition):
-                if isinstance(data, tuple):
-                    placeholders = ', '.join(['%s'] * len(data))
+                # Check if data is either a tuple or a list
+                if isinstance(data, (tuple, list)):
+                    # Create the correct number of placeholders for IN clause
+                    placeholders = ','.join(['%s' for _ in data])
                     where_clauses.append(f"{col} IN ({placeholders})")
-                    params += data
+                    # Extend params with each element of the list/tuple
+                    params = params + tuple(data)
                 else:
                     where_clauses.append(f"{col} = %s")
-                    params += (data,)
+                    params = params + (data,)
             query += " WHERE " + " AND ".join(where_clauses)
 
         # Execute the query
@@ -227,57 +233,185 @@ WHERE cam_id = ANY(%s::text[])
   AND status = %s
 '''
 
+
+
+
 def update_data(
     table: str,
-    columns_to_update: Tuple[str, ...],
-    data_to_update: Any,
-    columns_to_check_condition: Optional[Tuple[str, ...]] = None,
-    data_to_check_condition: Optional[Any] = None
-) -> int:
+    columns_to_update: Union[Tuple[str, ...], str],
+    data_to_update: Union[Tuple[Any, ...], List[Any]],
+    columns_to_check_condition: Union[Tuple[str, ...], str],
+    data_to_check_condition: Union[Tuple[Any, ...], List[Any]]
+) -> Optional[int]:
+    """
+    Build and execute UPDATE query with dynamic conditions using PostgreSQL's ANY operator.
+    Supports both single value updates and multiple row updates.
+    """
     try:
-        # Convert generators to lists
-        update_data = list(data_to_update)
-        logger.info(f"[DATABASE-UPDATE] Update data: {update_data}")
-        
-        if columns_to_check_condition and data_to_check_condition:
-            # Convert condition data to lists
-            condition_data = []
-            for data in data_to_check_condition:
-                if hasattr(data, '__iter__') and not isinstance(data, (str, bytes)):
-                    condition_data.append(list(data))
-                else:
-                    condition_data.append([data])
+        # Convert single string columns to tuples
+        if isinstance(columns_to_update, str):
+            columns_to_update = (columns_to_update,)
+        if isinstance(columns_to_check_condition, str):
+            columns_to_check_condition = (columns_to_check_condition,)
             
-            # Build CASE WHEN for each column to update
-            set_clauses = []
-            params = []
+        # Convert single values to tuples
+        if not isinstance(data_to_update, (list, tuple)):
+            data_to_update = (data_to_update,)
+        if not isinstance(data_to_check_condition, (list, tuple)):
+            data_to_check_condition = (data_to_check_condition,)
+
+        # Check if we're doing a multi-row update
+        is_multi_row = any(isinstance(val, (list, tuple)) for val in data_to_update)
+        
+        if is_multi_row:
+            """Handle updates where data_to_update contains lists for multiple rows"""
+    
+            # Validate that all update data lists have the same length
+            first_list = next(val for val in data_to_update if isinstance(val, (list, tuple)))
+            expected_length = len(first_list)
+            
+            # Normalize all inputs to lists of the same length
+            normalized_data = []
+            for val in data_to_update:
+                if isinstance(val, (list, tuple)):
+                    if len(val) != expected_length:
+                        raise ValueError("All input lists must have the same length")
+                    normalized_data.append(val)
+                else:
+                    normalized_data.append([val] * expected_length)
+            
+            # Build the UPDATE query
+            set_clause = ", ".join(f"{col} = %s" for col in columns_to_update)
+            where_clause = " AND ".join(f"{col} = %s" for col in columns_to_check_condition)
+            
+            query = f"""
+                UPDATE {table} 
+                SET {set_clause}
+                WHERE {where_clause}
+            """
+            
+            # Prepare data tuples for batch execution
+            data_tuples = []
+            for i in range(expected_length):
+                row_data = []
+                # Add update values
+                for col_data in normalized_data:
+                    row_data.append(col_data[i])
+                # Add condition values
+                if isinstance(data_to_check_condition[0], (list, tuple)):
+                    for condition_data in data_to_check_condition:
+                        row_data.append(condition_data[i])
+                else:
+                    row_data.extend(data_to_check_condition)
+                data_tuples.append(tuple(row_data))
+            
+            return execute_db_operation(query, 'update', data_tuples)
+        else:
+            """Handle regular updates with possible ANY conditions"""
+    
+            # Build SET clause
+            set_clause_parts = []
+            params: List[Any] = []
             
             for col in columns_to_update:
-                when_clauses = []
-                for i, update_val in enumerate(update_data):
-                    # Handle tuple or single value
-                    val = update_val[0] if isinstance(update_val, (tuple, list)) else update_val
-                    when_clauses.append(f"WHEN {columns_to_check_condition[0]} = %s THEN %s")
-                    params.extend([condition_data[0][i], val])
+                set_clause_parts.append(f"{col} = %s")
+            params.extend(data_to_update)
+            
+            query = f"UPDATE {table} SET {', '.join(set_clause_parts)}"
+            
+            # Build WHERE clause
+            where_clause_parts = []
+            if columns_to_check_condition and data_to_check_condition:
+                for col, value in zip(columns_to_check_condition, data_to_check_condition):
+                    if isinstance(value, (list, tuple)):
+                        where_clause_parts.append(f"{col}::text = ANY(%s::text[])")
+                        params.append(list(map(str, value)))
+                    else:
+                        where_clause_parts.append(f"{col} = %s")
+                        params.append(value)
                 
-                set_clauses.append(
-                    f"{col} = (CASE {' '.join(when_clauses)} ELSE {col} END)"
-                )
+                query += " WHERE " + " AND ".join(where_clause_parts)
             
-            # Construct the query
-            query = f"UPDATE {table} SET {', '.join(set_clauses)} WHERE {columns_to_check_condition[0]} = ANY(%s::text[])"
-            params.append(condition_data[0])  # Add the array for ANY clause
-
-            # Debug logs
-            logger.info(f"[DATABASE-UPDATE] Query: {query}")
-            logger.info(f"[DATABASE-UPDATE] Params: {params}")
-
-            # Execute the query
-            rows_updated = execute_db_operation(query, "update", tuple(params))
+            return execute_db_operation(query, 'update', tuple(params))
             
-            logger.info(f"[DATABASE-UPDATE] Successfully updated {rows_updated} records in {table}")
-            return rows_updated
-
     except Exception as e:
-        logger.error(f"[DATABASE-UPDATE] Error updating data in {table}: {e}")
-        # raise
+        logger.error(f"[UPDATE] Error building update query: {str(e)}")
+        raise
+
+
+    
+
+def update_pair_data(
+    table: str,
+    column_to_update: str,
+    data_to_update: List[Any],
+    column_to_check_condition: str,
+    data_to_check_condition: List[Any],
+    batch_size: int = 1000
+) -> tuple[bool, str]:
+    """
+    Perform optimized batch updates on a PostgreSQL table using value pairs.
+    
+    Args:
+        table (str): Name of the table to update
+        column_to_update (str): Column name to be updated
+        data_to_update (List[Any]): List of values to update
+        column_to_check_condition (str): Column name for WHERE condition
+        data_to_check_condition (List[Any]): List of condition values
+        batch_size (int): Size of batches for processing (default: 1000)
+    
+    Returns:
+        tuple[bool, str]: (Success status, Message)
+    """
+    if len(data_to_update) != len(data_to_check_condition):
+        return False, "Update and condition data lists must have the same length"
+        
+    if not data_to_update or not data_to_check_condition:
+        return False, "Empty data provided for update"
+
+    with get_db_connection() as conn:
+        try:
+            with conn.cursor() as cur:
+                # Process updates in batches
+                for i in range(0, len(data_to_update), batch_size):
+                    batch_update = data_to_update[i:i + batch_size]
+                    batch_condition = data_to_check_condition[i:i + batch_size]
+                    
+                    # Create tuples for values
+                    value_pairs = list(zip(batch_update, batch_condition))
+                    
+                    # Construct the VALUES part of the query
+                    values_template = ",".join([f"(%s, %s)"] * len(value_pairs))
+                    
+                    # Construct the complete query
+                    query = SQL("""
+                        UPDATE {table}
+                        SET {update_col} = v.new_value
+                        FROM (VALUES {values}) AS v(new_value, condition_value)
+                        WHERE {condition_col}::text = v.condition_value
+                    """).format(
+                        table=Identifier(table),
+                        update_col=Identifier(column_to_update),
+                        values=SQL(values_template),
+                        condition_col=Identifier(column_to_check_condition)
+                    )
+                    
+                    # Flatten the value pairs for the execute parameters
+                    flattened_values = [val for pair in value_pairs for val in pair]
+                    
+                    # Execute the query with the batch
+                    cur.execute(query, flattened_values)
+                    
+                    # Log the batch progress
+                    logger.info(f"[DATABASE-UPDATE-PAIR] Processed batch of {len(batch_update)} records")
+                
+                # Commit the transaction
+                conn.commit()
+                
+                return True, f"Successfully updated {len(data_to_update)} records"
+                
+        except Exception as e:
+            conn.rollback()
+            error_msg = f"[DATABASE-UPDATE-PAIR] Error executing update operation: {str(e)}"
+            logger.error(error_msg)
+            return False, error_msg
