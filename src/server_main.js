@@ -7,23 +7,36 @@ import path from 'path';
 import { setupLogger, getLogger, resetLogger } from './server_logger.js';
 import { getLatestJsonFile, deleteOldJsonFiles } from './server_json.js';
 import { formatDate, calculateRuntime } from './server_utils.js';
+import { file } from "bun";
+import { join } from "path";
+const envFile = await file(join(import.meta.dir, "../.env.server")).text();
+
+process.env = { 
+  ...process.env, 
+  ...Object.fromEntries(
+      envFile
+          .split('\n')
+          .filter(line => line && !line.startsWith('#'))
+          .map(line => line.split('='))
+  )
+};
 
 const CONFIG = {
-  PORT: 7000,
-  API_KEY: 'rTqn57BPAyKSRc6mkaLeNbWptHUw9Dhj3GsQg48zfXdVZuMvEJ',
+  PORT: parseInt(process.env.PORT) || 7000,
+  API_KEY: process.env.API_KEY,
   CCTV: {
-    jsonDirectory: './cctvSessionTemp/',
-    jsonMaxAgeHours: 96,
-    updateCamInfoPath: './sessionID.py',
-    cctvDistance: 170,
-    updateInterval: 10 * 1 * 60 * 1000, // 10 minutes
+    jsonDirectory: process.env.CCTV_JSON_DIRECTORY || './cctvSessionTemp/',
+    jsonMaxAgeHours: parseInt(process.env.CCTV_JSON_MAX_AGE_HOURS) || 96,
+    updateCamInfoPath: process.env.CCTV_UPDATE_CAM_INFO_PATH || './sessionID.py',
+    cctvDistance: parseInt(process.env.CCTV_DISTANCE) || 170,
+    updateInterval: parseInt(process.env.CCTV_UPDATE_INTERVAL) || 10 * 60 * 1000,
   },
   LOGGING: {
-    directory: './logs/ServerLogs',
-    toConsole: true,
-    toFile: true,
-    rotationInterval: 1 * 60 * 60 * 1000, // 1 hour
-    logMaxAgeHours: 96,
+    directory: process.env.LOGGING_DIRECTORY || './logs/ServerLogs',
+    toConsole: process.env.LOGGING_TO_CONSOLE === 'true',
+    toFile: process.env.LOGGING_TO_FILE === 'true',
+    rotationInterval: parseInt(process.env.LOGGING_ROTATION_INTERVAL) || 1 * 60 * 60 * 1000,
+    logMaxAgeHours: parseInt(process.env.LOGGING_MAX_AGE_HOURS) || 96,
   },
 };
 

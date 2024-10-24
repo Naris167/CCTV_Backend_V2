@@ -27,8 +27,34 @@ BASE_URL = "http://www.bmatraffic.com"
 JSON_DIRECTORY = Path(global_config['json_path'])
 
 class ThreadingUtils:
+    """
+    A utility class providing helper methods for managing threaded operations.
+    This class offers static methods to simplify common threading patterns
+    and provide controlled concurrent execution of functions.
+    """
     @staticmethod
     def run_threaded(func, semaphore, *args):
+        """
+        Executes a given function concurrently across multiple threads with semaphore control.
+        
+        Args:
+            func (callable): The function to be executed in threads. Must accept a semaphore
+                           as its first argument, followed by any additional arguments.
+            semaphore (threading.Semaphore): A semaphore object to control concurrent access.
+            *args (tuple): Variable length argument list where each item is a tuple of arguments 
+                         to be passed to the function. Each tuple will be unpacked and passed 
+                         to a separate thread execution of the function.
+        
+        Example:
+            semaphore = threading.Semaphore(3)
+            def worker(sem, x, y):
+                with sem:
+                    # do work
+                    pass
+            
+            # Run worker with different args in threads
+            ThreadingUtils.run_threaded(worker, semaphore, (1, 2), (3, 4), (5, 6))
+        """
         threads = []
         for arg in args:
             thread = Thread(target=func, args=(semaphore, *arg))
@@ -38,8 +64,24 @@ class ThreadingUtils:
             thread.join()
 
 class ImageUtils:
+    """
+    A utility class for handling image-related operations, including binary conversion,
+    file saving, and image selection functions for CCTV data management.
+    """
     @staticmethod
     def image_to_binary(image_input):
+        """
+        Converts an image file or bytes to binary format suitable for database storage.
+        
+        Args:
+            image_input (Union[bytes, str]): Either a path to an image file (str) or image bytes data
+        
+        Returns:
+            psycopg2.Binary: Binary object ready for PostgreSQL database storage
+            
+        Raises:
+            ValueError: If input type is neither bytes nor string
+        """
         if isinstance(image_input, bytes):
             return psycopg2.Binary(image_input)
         elif isinstance(image_input, str):
@@ -50,6 +92,17 @@ class ImageUtils:
 
     @staticmethod
     def binary_to_image(binary_data, output_path):
+        """
+        Saves binary image data to a file at the specified path.
+        
+        Args:
+            binary_data (bytes): Binary image data to be saved
+            output_path (str): Destination path where the image will be saved
+            
+        Raises:
+            PermissionError: If writing to output_path is not permitted
+            IOError: If there's an error during file writing
+        """
         try:
             with open(output_path, 'wb') as file:
                 file.write(binary_data)
@@ -61,6 +114,20 @@ class ImageUtils:
 
     @staticmethod
     def save_cctv_images(data: List[Tuple[str, Tuple[bytes, ...], Tuple[datetime, ...]]], base_path: str, subfolder_name: str):
+        """
+        Saves multiple CCTV images with their timestamps in an organized folder structure.
+        
+        Args:
+            data (List[Tuple[str, Tuple[bytes, ...], Tuple[datetime, ...]]]): List of tuples containing
+                (cctv_id, images_data, timestamps)
+            base_path (str): Base directory path where images will be saved
+            subfolder_name (str): Name of the subfolder to create (will be appended with timestamp)
+            
+        Logs:
+            - Success/failure counts
+            - Individual file saving status
+            - Final save location
+        """
         current_datetime = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
         subfolder = f"{subfolder_name}_{current_datetime}"
         save_path = os.path.join(base_path, subfolder)
@@ -90,6 +157,25 @@ class ImageUtils:
         datetimes: List[datetime],
         num_select: int
     ) -> Tuple[List[bytes], List[datetime]]:
+        """
+        Selects evenly distributed samples from a sequence of images and their corresponding timestamps.
+        
+        Args:
+            images (List[bytes]): List of image binary data
+            datetimes (List[datetime]): List of corresponding timestamps
+            num_select (int): Number of images to select
+            
+        Returns:
+            Tuple[List[bytes], List[datetime]]: Selected images and their corresponding timestamps
+            
+        Raises:
+            ValueError: If num_select is invalid or lists have different lengths
+            
+        Note:
+            If num_select is 1, returns the middle image and timestamp
+            Otherwise, returns evenly distributed samples across the sequence
+        """
+        
         if not 1 <= num_select <= len(images) or len(images) != len(datetimes):
             raise ValueError("Invalid input: Check number of selections or list lengths.")
 
@@ -110,12 +196,44 @@ class ImageUtils:
 
 
 class SortingUtils:
+    """
+    A utility class providing methods for natural sorting of strings, numbers, 
+    and mixed content in various data structures.
+    """
     @staticmethod
     def sort_key(item):
+        """
+        Creates a key for Natural Order Sorting (other sort function use Lexicographical Sort) 
+        that handles mixed string-number content.
+        
+        Args:
+            item: Any sortable item that can be converted to string
+            
+        Returns:
+            List: A list where numbers are converted to integers and strings to lowercase,
+                 suitable for natural sorting comparison
+                 
+        Example:
+            ['string1', 'string11', 'string2'] will sort as ['string1', 'string2', 'string11']
+        """
         return [int(part) if part.isdigit() else part.lower() for part in re.split('([0-9]+)', str(item))]
 
     @staticmethod
     def sort_results(*args: Union[Dict[str, Any], List[Any]]) -> None:
+        """
+        Performs in-place natural sorting on dictionaries and lists.
+        
+        Args:
+            *args: Variable number of dictionaries or lists to be sorted
+                  - For dictionaries: Sorts by keys
+                  - For lists: Sorts items directly, or by first element if items are tuples
+                  
+        Logs:
+            Warning: If an unsupported data type is passed for sorting
+            
+        Note:
+            Modifies the input collections in-place rather than returning new ones
+        """
         for i, arg in enumerate(args):
             if isinstance(arg, dict):
                 sorted_items = sorted(arg.items(), key=lambda x: SortingUtils.sort_key(x[0]))
@@ -127,8 +245,25 @@ class SortingUtils:
                 logger.warning(f"Unsupported type for sorting: {type(arg)}")
 
 class TimeUtils:
+    """
+    A utility class for handling time-related conversions and formatting.
+    """
     @staticmethod
     def readable_time(total_seconds: int) -> str:
+        """
+        Converts total seconds into a human-readable time format.
+        
+        Args:
+            total_seconds (int): Number of seconds to convert
+            
+        Returns:
+            str: Formatted string like "2 hours and 30 minutes and 15 seconds"
+                or "0 seconds" if total_seconds is 0
+                
+        Example:
+            >>> TimeUtils.readable_time(3665)
+            "1 hour and 1 minute and 5 seconds"
+        """
         units = [
             (3600, "hour"),
             (60, "minute"),
@@ -144,12 +279,40 @@ class TimeUtils:
         return " and ".join(parts) if parts else "0 seconds"
 
 class CCTVUtils:
+    """
+    A utility class for managing CCTV-related operations including status checking,
+    name processing, and motion detection.
+    """
     @staticmethod
     def create_cctv_status_dict(cctv_list: List[str], status: bool) -> Dict[str, bool]:
+        """
+        Creates a dictionary mapping CCTV IDs to a specified status.
+        
+        Args:
+            cctv_list (List[str]): List of CCTV identifiers
+            status (bool): Status value to assign to all CCTVs
+            
+        Returns:
+            Dict[str, bool]: Dictionary with CCTV IDs as keys and status as values
+        """
         return dict.fromkeys(cctv_list, status)
 
     @staticmethod
     def select_non_empty(*items: Tuple[Any, str], item_description: str = "item") -> Tuple[Any, str]:
+        """
+        Selects the first non-empty item from a series of tuples.
+        
+        Args:
+            *items: Variable number of (value, name) tuples to check
+            item_description (str): Description of the item type for logging purposes
+            
+        Returns:
+            Tuple[Any, str]: First non-empty (value, name) tuple, or (None, None) if all empty
+            
+        Logs:
+            Info: When a non-empty item is selected
+            Error: When all items are empty
+        """
         for value, name in items:
             if value:
                 logger.info(f"[SELECTOR] Using {name} {item_description} of type {type(value)}")
@@ -160,6 +323,22 @@ class CCTVUtils:
 
     @staticmethod
     def detect_cctv_status(all_cctv_ids, *args):
+        """
+        Determines online/offline status of CCTVs based on their configuration.
+        
+        Args:
+            all_cctv_ids: List of all CCTV IDs to check
+            *args: Variable number of CCTV configuration lists
+            
+        Returns:
+            Tuple[List[str], List[str]]: Sorted lists of (offline_cctvs, online_cctvs)
+            
+        Note:
+            CCTVs are considered offline if they:
+            - Are not in all_cctv_ids
+            - Have "UNKNOWN" stream method
+            - Have empty stream link
+        """
         offline_cctvs = set()
         online_cctvs = set()
         all_cctv_ids_set = set(all_cctv_ids)
@@ -177,6 +356,22 @@ class CCTVUtils:
 
     @staticmethod
     def process_cctv_names(tuple_list):
+        """
+        Processes and standardizes CCTV names from a list of tuples.
+        
+        Args:
+            tuple_list: List of tuples containing CCTV information where the second element is the name
+            
+        Returns:
+            List[Tuple]: Updated list with processed names
+            
+        Note:
+            Processing includes:
+            - Standardizing dashes
+            - Removing parenthetical content
+            - Handling Thai characters
+            - Removing leading identifiers
+        """
         def process_name(name):
             name = name.replace("–", "-")
             if re.match(r'^[a-zA-Z\s]+$', name):
@@ -191,6 +386,22 @@ class CCTVUtils:
 
     @staticmethod
     def detect_movement(image_list: List[bytes], threshold_percentage: int = 1, min_changed_pixels: int = 100) -> bool:
+        """
+        Detects significant movement between consecutive images in a sequence.
+        
+        Args:
+            image_list (List[bytes]): List of image binary data
+            threshold_percentage (int): Percentage of total pixels that must change to detect movement
+            min_changed_pixels (int): Minimum number of pixels that must change regardless of percentage
+            
+        Returns:
+            bool: True if movement detected, False otherwise
+            
+        Note:
+            - Requires at least 2 images for comparison
+            - Converts images to grayscale for comparison
+            - Uses pixel difference threshold of 10 for change detection
+        """
         if len(image_list) < 2:
             return False
         
@@ -209,8 +420,37 @@ class CCTVUtils:
         return False
 
 class FinalizeUtils:
+    """
+    A utility class for finalizing and logging CCTV scraping operations, including
+    integrity checks and detailed summaries.
+    """
     @staticmethod
     def check_cctv_integrity(cctv_working: Dict[str, str], cctv_unresponsive: Dict[str, str], cctv_fail: List[str]) -> Tuple[bool, List[str]]:
+        """
+        Checks for data integrity issues across CCTV status collections.
+        
+        Args:
+            cctv_working (Dict[str, str]): Dictionary of working CCTVs
+            cctv_unresponsive (Dict[str, str]): Dictionary of unresponsive CCTVs
+            cctv_fail (List[str]): List of failed CCTV IDs
+            
+        Returns:
+            Tuple[bool, List[str]]: 
+                - Boolean indicating if integrity check passed (True) or failed (False)
+                - List of detailed integrity issue descriptions
+                
+        Note:
+            Checks for:
+            - Duplicate entries across collections
+            - Multiple occurrences within the fail list
+            - Same key-value pairs in working and unresponsive dictionaries
+
+        Example Usage:
+            logger.info(f"[MAIN] Integrity check {'passed' if integrity_passed else 'failed'}.")
+            if not integrity_passed:
+                for issue in issues:
+                    logger.warning(f"[MAIN] {issue}")
+        """
         integrity_issues = []
         
         def get_item_info(item: str, source: str, item_type: str) -> str:
@@ -280,14 +520,21 @@ class FinalizeUtils:
         3. Scraping working_cctv produces image_result, updated_working_cctv, and unresponsive_cctv
         
         Args:
-            total_time: Total execution time in seconds
-            cctvURL: Initial dictionary of all CCTV cameras {id: url}
-            working_cctv: Dictionary of cameras that passed initial check {id: url}
-            offline_cctv: Dictionary of cameras that failed initial check {id: url}
-            image_result: List of tuples [(camera_id, image_bytes, timestamp)]
-            updated_working_cctv: Dictionary of cameras successfully scraped {id: url}
-            unresponsive_cctv: Dictionary of cameras that failed during scraping {id: url}
-            logger: Logger instance
+            total_time (float): Total execution time in seconds
+            cctvURL (dict[str, str]): Initial dictionary of all CCTV cameras {id: url}
+            working_cctv (dict[str, str]): Dictionary of cameras that passed initial check
+            offline_cctv (dict[str, str]): Dictionary of cameras that failed initial check
+            image_result (list[tuple]): List of tuples [(camera_id, image_bytes, timestamp)]
+            updated_working_cctv (dict[str, str]): Dictionary of cameras successfully scraped
+            unresponsive_cctv (dict[str, str]): Dictionary of cameras that failed during scraping
+            logger: Logger instance for output
+            
+        Logs:
+            - Initial check statistics
+            - Scraping results and success rates
+            - Performance metrics
+            - Detailed camera status
+            - Image capture summary
         """
         # Calculate statistics
         initial_total = len(cctvURL)
@@ -379,19 +626,25 @@ class FinalizeUtils:
         logger
     ) -> None:
         """
-        Log a detailed summary of session-based CCTV scraping results with performance metrics and statistics.
+        Log a detailed summary of session-based CCTV scraping results with performance metrics.
         
         Flow:
         1. Start with cctvSessions (pre-verified cameras with session IDs)
         2. Scraping process produces image_result, working_session, and unresponsive_session
         
         Args:
-            total_time: Total execution time in seconds
-            cctvSessions: Initial dictionary of pre-verified CCTV cameras {id: session_id}
-            image_result: List of tuples [(camera_id, image_bytes, timestamp)]
-            working_session: Dictionary of cameras successfully scraped {id: session_id}
-            unresponsive_session: Dictionary of cameras that failed during scraping {id: session_id}
-            logger: Logger instance
+            total_time (float): Total execution time in seconds
+            cctvSessions (dict[str, str]): Initial dictionary of pre-verified cameras {id: session_id}
+            image_result (list[tuple]): List of tuples [(camera_id, image_bytes, timestamp)]
+            working_session (dict[str, str]): Dictionary of successfully scraped cameras
+            unresponsive_session (dict[str, str]): Dictionary of failed cameras
+            logger: Logger instance for output
+            
+        Logs:
+            - Scraping statistics and success rates
+            - Performance metrics
+            - Detailed camera status by session
+            - Image capture summary
         """
         # Calculate statistics
         initial_total = len(cctvSessions)
@@ -454,8 +707,29 @@ class FinalizeUtils:
         logger.info("="*60 + "\n")
 
 class JSONUtils:
+    """
+    A utility class for handling JSON operations related to CCTV session data,
+    including loading from and saving to files.
+    """
     @staticmethod
     def load_latest_cctv_sessions_from_json() -> Optional[Tuple[str, str, Dict[str, str]]]:
+        """
+        Loads the most recently modified CCTV sessions data from JSON file.
+        
+        Returns:
+            Optional[Tuple[str, str, Dict[str, str]]]: If successful, returns tuple containing:
+                - Latest refresh time
+                - Latest update time
+                - Dictionary of CCTV sessions {camera_id: session_id}
+            Returns None if any error occurs
+            
+        Logs:
+            Error: When directory doesn't exist, no JSON files found, or loading fails
+            Info: When JSON data is successfully loaded
+            
+        Note:
+            Files are sorted by modification time to get the most recent one
+        """
         try:
             if not JSON_DIRECTORY.exists():
                 logger.error(f"[JSON] Directory does not exist: {JSON_DIRECTORY}")
@@ -483,6 +757,21 @@ class JSONUtils:
 
     @staticmethod
     def save_alive_session_to_file(cctv_sessions: Dict[str, str], latest_refresh_time: str, latest_update_time: str) -> None:
+        """
+        Saves current CCTV session data to a timestamped JSON file.
+        
+        Args:
+            cctv_sessions (Dict[str, str]): Dictionary of active CCTV sessions
+            latest_refresh_time (str): Timestamp of last refresh
+            latest_update_time (str): Timestamp of last update
+            
+        Logs:
+            Info: When JSON data is successfully written
+            Error: If any exception occurs during save process
+            
+        Note:
+            Creates JSON file named 'cctv_sessions_YYYY-MM-DD_HH-MM-SS.json'
+        """
         try:
             isDirExist(JSON_DIRECTORY)
             timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
@@ -507,18 +796,23 @@ class ClusteringUtils:
 
     @staticmethod
     def meters_to_degrees(meters: int) -> Decimal:
-        """
-        This fomular is calculated using brute force method
-        It convert a distance in meters to degrees using a known conversion factor.
-
-        This calculation maintains high precision using the Decimal class.
-        The precision is +- 1-5 meter in the distance less than 2236 meters
+        '''
+        Converts distance in meters to degrees for geographic calculations.
         
-        position 1 = 13.769741049467855, 100.57298223507024
-        position 2 = 13.789905618799368, 100.57434272643398
-        distance in degree = 0.00035269290326066755967941712679447618938866071403026580810546874999
-        distance in km (approx) (calculate from given position) = 2235.799051227861
-        """
+        Args:
+            meters (int): Distance in meters to convert
+            
+        Returns:
+            Decimal: Equivalent distance in degrees with high precision
+            
+        Note:
+            - Uses empirically derived conversion factor
+            - Precision is ±1-5 meters for distances under 2236 meters
+            - Calibrated using reference points:
+                pos1 = (13.769741049467855, 100.57298223507024)
+                pos2 = (13.789905618799368, 100.57434272643398)
+                with known distance of 2235.799051227861 meters
+        '''
 
         # Define the numbers as Decimal types
         numerator = Decimal('2235.799051227861')
@@ -534,8 +828,31 @@ class ClusteringUtils:
 
     @classmethod
     def cluster(cls, meters: int, all_cams_coordinate: List[Tuple[str, float, float]]) -> List[Tuple[str, str, float, float]]:
-        logger.info(f"[CLUSTER] Distance set to {meters} meters")
+        """
+        Performs spatial clustering on CCTV camera locations using DBSCAN algorithm.
+        
+        Args:
+            meters (int): Maximum distance between points in a cluster (eps parameter)
+            all_cams_coordinate (List[Tuple]): List of (camera_id, latitude, longitude) tuples
+            
+        Returns:
+            List[Tuple[str, str, float, float]]: List of 
+                (camera_id, cluster_label, latitude, longitude) tuples
+            
+        Note:
+            - Uses haversine metric for distance calculations
+            - Converts distances to degrees for geographic consistency
+            - Sets min_samples=1 to ensure all points are classified
+            
+        Logs:
+            Info: Distance setting and clustering progress
+        """
+
+        
+        '''PLEASE DO NOT move this import out from this method. It will casue error to HLS scraper'''
         from sklearn.cluster import DBSCAN
+
+        logger.info(f"[CLUSTER] Distance set to {meters} meters")
 
         # Extract Cam_IDs and coordinates (Latitude, Longitude)
         cam_ids = [cam[0] for cam in all_cams_coordinate]

@@ -1,7 +1,5 @@
 # Environment and local configuration files
-.env
-.env.local
-.env.prod
+.env.*
 
 # Python-related files and directories
 __pycache__/
@@ -34,5 +32,8 @@ src/General/downloads
 
 # Microsoft Office files
 ~$*
+~*
 *.docx
 
+# PDF File
+*.pdf

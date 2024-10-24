@@ -10,7 +10,7 @@ if %errorlevel% neq 0 (
 )
 
 echo Starting backend server...
-bun run .\src\backend.js
+bun run .\src\server_main.js
 if %errorlevel% neq 0 (
     echo Server exited with an error. Error code: %errorlevel%
 )
