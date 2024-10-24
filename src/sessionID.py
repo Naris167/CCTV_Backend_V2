@@ -4,6 +4,7 @@ from threading import Semaphore
 from datetime import datetime, timedelta
 from typing import Dict, List, Tuple, Union, Optional, Literal
 
+from script_config import global_config
 from cctv_operation_BMA.cam_update import update_cctv_database, retrieve_camInfo_BMA
 from utils.log_config import logger, log_setup
 from utils.database import retrieve_data, update_data
@@ -19,7 +20,7 @@ def initialize() -> int:
                 user_input = input("Please enter the parameter number: ")
                 param = int(user_input)
             
-            log_setup("./logs/sessionID2","sessionID")
+            log_setup("./logs/sessionID","sessionID")
             logger.info(f"[MAIN] Application initialized with parameter {param}")
             logger.info("[MAIN] Application started...")
             return param
@@ -85,7 +86,7 @@ def finalize(cctv_list: Optional[List[str]], cctv_working: Dict[str, str], cctv_
     logger.info("[MAIN] Finalization process completed.")
 
 def prepare_create_sessionID_workers(cctv_list: List[str], alive_session: Dict[str, str] = None) -> Tuple[Dict[str, str], List[str]]:
-    max_workers = 80
+    max_workers = global_config['max_workers']
     semaphore = Semaphore(max_workers)
     threads = []
     cctv_fail = []
@@ -112,7 +113,7 @@ def prepare_create_sessionID_workers(cctv_list: List[str], alive_session: Dict[s
     return alive_session, cctv_fail
 
 def prepare_validate_sessionID_workers(cctvSessions: Dict[str, str]) -> Tuple[Dict[str, str], Dict[str, str]]:
-    max_workers = 80
+    max_workers = global_config['max_workers']
     semaphore = Semaphore(max_workers)
     threads = []
     working_session = {}
@@ -141,7 +142,7 @@ def prepare_validate_sessionID_workers(cctvSessions: Dict[str, str]) -> Tuple[Di
     return working_session, unresponsive_session
 
 def prepare_quick_refresh_sessionID_workers(loaded_JSON_cctvSessions: Dict[str, str]) -> None:
-    max_workers = 80
+    max_workers = global_config['max_workers']
     semaphore = Semaphore(max_workers)
     threads = []
 

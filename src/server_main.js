@@ -13,7 +13,7 @@ const CONFIG = {
   API_KEY: 'rTqn57BPAyKSRc6mkaLeNbWptHUw9Dhj3GsQg48zfXdVZuMvEJ',
   CCTV: {
     jsonDirectory: './cctvSessionTemp/',
-    jsonMaxAgeHours: 2400000000,
+    jsonMaxAgeHours: 96,
     updateCamInfoPath: './sessionID.py',
     cctvDistance: 170,
     updateInterval: 10 * 1 * 60 * 1000, // 10 minutes
@@ -23,7 +23,7 @@ const CONFIG = {
     toConsole: true,
     toFile: true,
     rotationInterval: 1 * 60 * 60 * 1000, // 1 hour
-    logMaxAgeHours: 2400000000,
+    logMaxAgeHours: 96,
   },
 };
 

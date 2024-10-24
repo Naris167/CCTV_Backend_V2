@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 from typing import Dict, List, Tuple, Union, Optional, Literal
 import time
 
+from script_config import global_config
 from utils.log_config import logger, log_setup
 from utils.database import retrieve_data, update_data
 from cctv_operation_BMA.worker import scrape_image_BMA
@@ -60,9 +61,9 @@ def scraper_factory(BMA_JSON_result: Tuple[str, str, Dict[str, str]], isBMAReady
 
 
 def prepare_scrape_image_HLS_workers(cctvURL: Dict[str, str]) -> Tuple[Dict[str, str], Dict[str, str], Dict[str, str], List[Tuple[str, Tuple[bytes], Tuple[datetime]]]]:
-    config = {
-        'interval': 1.0,
-        'target_image_count': 1,
+    _config = {
+        'interval': global_config['download_interval'],
+        'target_image_count': global_config['target_image_count'],
         'timeout': 30.0,
         'max_retries': 3,
         'logger': logger
@@ -85,16 +86,16 @@ def prepare_scrape_image_HLS_workers(cctvURL: Dict[str, str]) -> Tuple[Dict[str,
     logger.info(f"[THREADING-S-HLS] {len(working_cctv)} CCTVs are online")
     logger.info(f"[THREADING-S-HLS] {len(offline_cctv)} CCTVs are offline")
     
-    logger.info(f"[THREADING-S-HLS] Scraping started, Images: {config['target_image_count']}, Interval: {config['interval']} second")
+    logger.info(f"[THREADING-S-HLS] Scraping started, Images: {_config['target_image_count']}, Interval: {_config['interval']} second")
 
     logger.info(f"[THREADING-S-HLS] Starting scraping for {len(working_cctv)} CCTVs...")
  
     scraper = MultiprocessingImageScraper(logger)
     image_result, updated_working_cctv, unresponsive_cctv = scraper.run_multiprocessing(
         scrape_image_HLS,
-        80,  # Number of concurrent processes
+        global_config['max_workers'],  # Number of concurrent processes
         working_cctv,
-        **config
+        **_config
     )
 
     end_time = time.time()
@@ -132,20 +133,15 @@ def prepare_scrape_image_HLS_workers(cctvURL: Dict[str, str]) -> Tuple[Dict[str,
 
 
 def prepare_scrape_image_BMA_workers(cctvSessions: Dict[str, str]) -> Tuple[Dict[str, str], Dict[str, str], List[Tuple[str, Tuple[bytes], Tuple[datetime]]]]:
-    config = {
-        'max_workers': 80,
-        'target_image_count': 2
-    }
-
     start_time = time.time()
-    semaphore = Semaphore(config['max_workers'])
+    semaphore = Semaphore(global_config['max_workers'])
     working_session, unresponsive_session = {}, {}
     image_result: List[Tuple[str, Tuple[bytes, ...], Tuple[datetime, ...]]] = []
 
     logger.info("[THREADING-S-BMA] Initializing BMA workers.")
     logger.info("[THREADING-S-BMA] Scraping started.")
 
-    ThreadingUtils.run_threaded(scrape_image_BMA, semaphore, *[(camera_id, session_id, image_result, working_session, unresponsive_session, config['target_image_count']) 
+    ThreadingUtils.run_threaded(scrape_image_BMA, semaphore, *[(camera_id, session_id, image_result, working_session, unresponsive_session, global_config['target_image_count']) 
                                      for camera_id, session_id in cctvSessions.items()])
 
     logger.info("[THREADING-S-BMA] Scraping done.")

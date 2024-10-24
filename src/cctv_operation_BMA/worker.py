@@ -4,6 +4,7 @@ import time
 from typing import List, Dict, Tuple
 from datetime import datetime
 
+from script_config import global_config
 from cctv_operation_BMA.getDataBMA import get_cctv_session_id, play_video, get_image
 from utils.utils import CCTVUtils, ImageUtils
 from utils.log_config import logger
@@ -116,7 +117,7 @@ def scrape_image_BMA(semaphore: Semaphore,
                     max_attempts = max(min_image_count * 2, 14)
 
                     while collected_images < min_image_count and total_attempts < max_attempts:
-                        time.sleep(4)
+                        time.sleep(global_config['download_interval'])
                         new_image = get_image(camera_id, session_id)
                         if new_image and len(new_image) > 5120:
                             image_list.append(new_image)

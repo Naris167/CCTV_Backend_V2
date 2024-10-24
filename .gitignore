@@ -32,6 +32,7 @@ src/General/downloads
 # Compressed files
 *.zip
 
-# Microsoft Office temporary files
+# Microsoft Office files
 ~$*
+*.docx
 

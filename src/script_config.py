@@ -1,20 +1,13 @@
-config = {
-    # Image Capture Settings
-    'img_per_cam': 1,  # Number of images to scrape per camera
+global_config = {
+    # Image Scraper Setting
+    'target_image_count': 1,  # Number of images to scrape per camera
+    'download_interval': 4,  # Waiting time (in seconds) between each image download
 
-    # Timing Settings
-    'sleep_after_connect': 1,  # Waiting time (in seconds) after obtaining the session ID
-    'sleep_between_download': 1,  # Waiting time (in seconds) between each image download
-
-    # Storage Settings
+    # SessionID Scraper Settings
     'json_path': "./cctvSessionTemp/",
-    'save_path': "./images_new/",  # Directory path to save images when 'save_to_db' is set to False
-    'save_to_db': True,  # Set to True to save images to the database
 
-    # Image Quality Settings
+    # Golbal Check Setting
     'img_size': 5120,  # Minimum acceptable image size in bytes (images smaller than this will be skipped)
-
-    # Multi-threading Settings
-    'max_workers': 2,  # Maximum number of concurrent connections to scrape images (applicable in multi-threading mode)
+    'max_workers': 80,  # Maximum number of concurrent connections to scrape images (applicable in multi-threading mode)
 }
 

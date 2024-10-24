@@ -21,10 +21,10 @@ from tkinter import ttk
 
 # Local/custom imports
 from utils.log_config import logger, isDirExist
-from script_config import config
+from script_config import global_config
 
 BASE_URL = "http://www.bmatraffic.com"
-JSON_DIRECTORY = Path(config['json_path'])
+JSON_DIRECTORY = Path(global_config['json_path'])
 
 class ThreadingUtils:
     @staticmethod
